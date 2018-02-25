@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.wxmp.backstage.img.mapper.ImgResourceDao">
+    
+	<select id="getImgById" parameterType="java.lang.String" 
+	resultType="com.wxmp.backstage.img.domain.ImgResource">
+		SELECT * FROM t_wxcms_img_resource WHERE ID = #{id}
+	</select>
+    
+	<insert id="add" parameterType="com.wxmp.backstage.img.domain.ImgResource">
+		INSERT INTO t_wxcms_img_resource 
+		 (id,
+		  mediaId,
+		  trueName,
+		  type,
+		  name,
+		  url,
+		  httpUrl,
+		  size,
+		  createTime,
+		  updateTime,
+		  flag)
+		  VALUES(#{id},
+		          #{mediaId},
+		          #{trueName},
+		          #{type},
+		          #{name},
+		          #{url},
+		          #{httpUrl},
+		          #{size},
+		          #{createTime},
+		          #{updateTime},
+		          #{flag}) 
+	</insert>
+
+    <!-- 根据媒体资源 -->
+	<delete id="deleteByMediaId" parameterType="java.lang.String" >
+		DELETE FROM t_wxcms_img_resource t WHERE t.mediaId = #{mediaId}
+	</delete>
+
+</mapper>

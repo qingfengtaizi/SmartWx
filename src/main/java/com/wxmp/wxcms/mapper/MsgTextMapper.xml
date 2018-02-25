@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.wxmp.wxcms.mapper.MsgTextDao">
+
+	<select id="listForPage" parameterType="com.wxmp.wxcms.domain.MsgText" resultType="com.wxmp.wxcms.domain.MsgText">
+		SELECT * FROM t_wxcms_msg_text t , t_wxcms_msg_base b WHERE t.base_id = b.id ORDER BY t.ID
+	</select>
+
+	<select id="getById" parameterType="java.lang.String" resultType="com.wxmp.wxcms.domain.MsgText">
+		SELECT * FROM t_wxcms_msg_text WHERE ID = #{id}
+	</select>
+	
+	<select id="getRandomMsg" parameterType="java.lang.String" resultType="com.wxmp.wxcms.domain.MsgText">
+		SELECT t.* from t_wxcms_msg_text t , t_wxcms_msg_base b
+		WHERE b.inputCode = #{inputCode} and t.base_id = b.id 
+		ORDER BY RAND() LIMIT 1
+	</select>
+	
+	<select id="getRandomMsg2" resultType="com.wxmp.wxcms.domain.MsgText">
+		SELECT t.* from t_wxcms_msg_text t , t_wxcms_msg_base b
+		WHERE t.base_id = b.id 
+		ORDER BY RAND() LIMIT 1
+	</select>
+
+	<insert id="add" parameterType="com.wxmp.wxcms.domain.MsgText" flushCache="true">
+		INSERT INTO t_wxcms_msg_text ( CONTENT,BASE_ID)  VALUES ( #{content},#{baseId} ) 
+	</insert>
+
+	<update id="update" parameterType="com.wxmp.wxcms.domain.MsgText" flushCache="true">
+		UPDATE t_wxcms_msg_text SET CONTENT = #{content} WHERE ID = #{id} 
+	</update>
+
+	<delete id="delete" parameterType="com.wxmp.wxcms.domain.MsgText" >
+		DELETE FROM t_wxcms_msg_text WHERE ID = #{id}
+	</delete>
+
+	<select id="getByBaseId" parameterType="java.lang.String" resultType="com.wxmp.wxcms.domain.MsgText">
+		SELECT * FROM t_wxcms_msg_text WHERE base_id = #{baseid}
+	</select>
+</mapper>

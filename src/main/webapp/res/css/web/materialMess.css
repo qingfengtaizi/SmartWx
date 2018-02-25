@@ -1,0 +1,7 @@
+@charset "utf-8";
+/* CSS Document */
+
+.mateMessInfo tbody td{ height:35px;}
+.mateMessInfo .firstTd{ width:80%}
+.mateMessInfo .secondTd{ width:20%}			
+.materialUp{ background:#23b3cd; color:#fff; width:160px; height:35px; border:none; font-weight:bold; float:right; margin-bottom:5px;}

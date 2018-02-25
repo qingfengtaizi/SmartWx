@@ -1,0 +1,11 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+.utInfo li{ margin-bottom:5px;}
+.utInfo li span{ background:#f7f7f7; text-align:right; padding:0px 10px; width:80px; height:35px; display: inline-block; 
+			   line-height:35px; width:10%}
+.gzhID input{ width:30%!important}
+.messNum select{ width:20%; height:35px; border:1px solid #cecece;}
+.utInfo h6{ color:#ff0e0e; display:inline-block; margin-left:10px;}
+.utInfo li input{ height:35px; width:80%; border:1px solid #cecece;}
