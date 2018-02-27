@@ -83,7 +83,7 @@
 						<div></div>
 					</div>
 					<div class="tuijian-block">
-						<img src="<%=path%>/res/images/wxp.jpg" />
+						<img src="<%=path%>/res/images/wxmp.png" />
 					</div>
 				</div>
 				<div class="clearfloat"></div>
