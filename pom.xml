@@ -11,6 +11,7 @@
 
     <!-- 项目属性 -->
     <properties>
+        <lib.path>${basedir}/src/main/webapp/WEB-INF/lib</lib.path>
         <!-- main version setting -->
         <spring.version>4.3.5.RELEASE</spring.version>
         <mybatis.version>3.2.8</mybatis.version>
@@ -514,6 +515,8 @@
             <groupId>cpdetector</groupId>
             <artifactId>cpdetector</artifactId>
             <version>1.0.7</version>
+            <systemPath>${lib.path}/cpdetector-1.0.7.jar</systemPath>
+            <scope>system</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.jdom/jdom -->
         <dependency>

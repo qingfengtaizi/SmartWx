@@ -35,17 +35,18 @@
 	 <mvc:default-servlet-handler />
      <mvc:resources mapping="/res/**"  location="/res/"/>
      <mvc:resources mapping="/upload/**"  location="/upload/"/>
-<!-- 	<mvc:interceptors>
+ 	<mvc:interceptors>
 		<bean class="com.wxmp.core.interceptor.AuthInterceptor">
 			<property name="allowUrls">
 				<list>
+					<value>/</value>
 					<value>/wxcms/main</value>
 					<value>/login/logout</value>
 					<value>/login/checkLogin</value>
 				</list>
 			</property>
 		</bean>
-	</mvc:interceptors> -->
+	</mvc:interceptors>
 	<!-- 视图解析器（ViewResolver）配置 <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>-->
 	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/template/views/"/>

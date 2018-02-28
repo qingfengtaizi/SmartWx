@@ -1,3 +1,17 @@
+/*
+SQLyog Ultimate v11.24 (32 bit)
+MySQL - 5.7.18 : Database - wxmp
+*********************************************************************
+*/
+
+/*!40101 SET NAMES utf8 */;
+
+/*!40101 SET SQL_MODE=''*/;
+
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 CREATE DATABASE /*!32312 IF NOT EXISTS*/`wxmp` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
 USE `wxmp`;
@@ -18,6 +32,8 @@ CREATE TABLE `t_wxcms_account` (
   `createTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+/*Data for the table `t_wxcms_account` */
 
 /*Table structure for table `t_wxcms_account_fans` */
 
@@ -42,6 +58,8 @@ CREATE TABLE `t_wxcms_account_fans` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=252 DEFAULT CHARSET=utf8;
 
+/*Data for the table `t_wxcms_account_fans` */
+
 /*Table structure for table `t_wxcms_account_menu` */
 
 DROP TABLE IF EXISTS `t_wxcms_account_menu`;
@@ -61,6 +79,8 @@ CREATE TABLE `t_wxcms_account_menu` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=163 DEFAULT CHARSET=utf8;
 
+/*Data for the table `t_wxcms_account_menu` */
+
 /*Table structure for table `t_wxcms_account_menu_group` */
 
 DROP TABLE IF EXISTS `t_wxcms_account_menu_group`;
@@ -72,6 +92,8 @@ CREATE TABLE `t_wxcms_account_menu_group` (
   `createtime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+
+/*Data for the table `t_wxcms_account_menu_group` */
 
 /*Table structure for table `t_wxcms_article` */
 
@@ -90,6 +112,8 @@ CREATE TABLE `t_wxcms_article` (
   `media_id` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Data for the table `t_wxcms_article` */
 
 /*Table structure for table `t_wxcms_img_resource` */
 
@@ -110,6 +134,8 @@ CREATE TABLE `t_wxcms_img_resource` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+/*Data for the table `t_wxcms_img_resource` */
+
 /*Table structure for table `t_wxcms_media_files` */
 
 DROP TABLE IF EXISTS `t_wxcms_media_files`;
@@ -128,6 +154,8 @@ CREATE TABLE `t_wxcms_media_files` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
+/*Data for the table `t_wxcms_media_files` */
+
 /*Table structure for table `t_wxcms_msg_base` */
 
 DROP TABLE IF EXISTS `t_wxcms_msg_base`;
@@ -143,6 +171,8 @@ CREATE TABLE `t_wxcms_msg_base` (
   `createTime` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+/*Data for the table `t_wxcms_msg_base` */
 
 /*Table structure for table `t_wxcms_msg_news` */
 
@@ -166,6 +196,8 @@ CREATE TABLE `t_wxcms_msg_news` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
+/*Data for the table `t_wxcms_msg_news` */
+
 /*Table structure for table `t_wxcms_msg_news_combin` */
 
 DROP TABLE IF EXISTS `t_wxcms_msg_news_combin`;
@@ -176,6 +208,8 @@ CREATE TABLE `t_wxcms_msg_news_combin` (
   `msgnews_id` int(11) NOT NULL,
   PRIMARY KEY (`id`,`main_id`,`msgnews_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Data for the table `t_wxcms_msg_news_combin` */
 
 /*Table structure for table `t_wxcms_msg_text` */
 
@@ -188,6 +222,8 @@ CREATE TABLE `t_wxcms_msg_text` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
+/*Data for the table `t_wxcms_msg_text` */
+
 /*Table structure for table `t_wxcms_sys_user` */
 
 DROP TABLE IF EXISTS `t_wxcms_sys_user`;
@@ -199,186 +235,18 @@ CREATE TABLE `t_wxcms_sys_user` (
   `trueName` varchar(50) DEFAULT NULL COMMENT '姓名',
   `sex` varchar(1) DEFAULT '0' COMMENT '性别：0是男 1是女',
   `phone` varchar(11) DEFAULT '' COMMENT '手机号码',
-  `createTime` varchar(20) DEFAULT NULL COMMENT '创建时间',
-  `updateTime` varchar(20) DEFAULT NULL COMMENT '更新时间',
+  `createTime` datetime DEFAULT NULL COMMENT '创建时间',
+  `updateTime` datetime DEFAULT NULL COMMENT '更新时间',
   `email` varchar(50) DEFAULT '' COMMENT '邮箱',
   `flag` int(1) DEFAULT NULL COMMENT '状态',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*!50106 set global event_scheduler = 1*/;
+/*Data for the table `t_wxcms_sys_user` */
 
-/* Event structure for event `event_update_adv_state` */
+insert  into `t_wxcms_sys_user`(`id`,`account`,`pwd`,`trueName`,`sex`,`phone`,`createTime`,`updateTime`,`email`,`flag`) values ('1','admin','admin','admin','0','',NULL,NULL,'',NULL);
 
-/*!50106 DROP EVENT IF EXISTS `event_update_adv_state`*/;
-
-DELIMITER $$
-
-/*!50106 CREATE DEFINER=`root`@`%` EVENT `event_update_adv_state` ON SCHEDULE EVERY 1 DAY STARTS '2017-10-10 01:15:24' ON COMPLETION PRESERVE ENABLE DO call reback() */$$
-DELIMITER ;
-
-/* Procedure structure for procedure `reback` */
-
-/*!50003 DROP PROCEDURE IF EXISTS  `reback` */;
-
-DELIMITER $$
-
-/*!50003 CREATE DEFINER=`root`@`%` PROCEDURE `reback`()
-BEGIN
-	UPDATE adv_advert SET STATUS='0',update_date=now() WHERE STATUS='5';
-    END */$$
-DELIMITER ;
-
-/* Procedure structure for procedure `updateadvert` */
-
-/*!50003 DROP PROCEDURE IF EXISTS  `updateadvert` */;
-
-DELIMITER $$
-
-/*!50003 CREATE DEFINER=`root`@`%` PROCEDURE `updateadvert`()
-BEGIN
--- 定义一个变量接受广告主日限额
-	DECLARE
-		advRule DOUBLE default 0.00;
--- 定义一个变量接受广告主日消费总额
-DECLARE result VARCHAR(200);
-DECLARE
-	advTrans DOUBLE DEFAULT 0.00;
-DECLARE counts INT;
--- 消费总额是否大于广告主日限额 1 标示大于 默认为0
-DECLARE
-	flag INT DEFAULT 0;
-DECLARE
-	countt INT DEFAULT 0;
--- 广告主id
-DECLARE 
-advertiserId VARCHAR(50);
--- 遍历数据结束标志
-DECLARE
-	done INT DEFAULT 0;
--- 定义一个游标 接受来自sql语句返回的多条广告主id
-DECLARE
-	cur_account CURSOR FOR SELECT
-		DISTINCT(user_id) 
-	FROM
-		adv_advert AS d
-	WHERE
-		d.`status` = '0' AND d.del_flag='0';
--- 将结束标志绑定到游标
-DECLARE
-	CONTINUE HANDLER FOR NOT FOUND
-SET done = 1;
--- 打开游标
-OPEN cur_account;
--- 使用loop遍历
-read_loop :LOOP
-	-- 取值 取多个字段
-	FETCH 
--- 取到此时的广告主id 赋值给变量
-	cur_account INTO advertiserId;
--- 如果遍历次数到了 自动停止遍历
-IF done = 1 THEN
-	LEAVE read_loop;
-END IF;
--- 查询出广告主的日限额
-SELECT
-	count(daily_money) INTO counts
-FROM
-	adv_advertiser_dailyrule AS b
-WHERE
-	b.advertiser_id = advertiserId and b.del_flag='0';
-IF counts >0
-THEN
-SELECT
-	daily_money INTO advRule
-FROM
-	adv_advertiser_dailyrule AS b
-WHERE
-	b.advertiser_id = advertiserId and b.del_flag='0';
-ELSE
-	ITERATE read_loop;
-end IF;
--- 查询出广告主日消费总额
-SELECT
-	count(trans_amount) INTO counts
-FROM
-	adv_advertiser_trans_log AS a
-WHERE
--- 条件为当天数据
-	DATE_FORMAT(a.create_date, '%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d')
-AND a.user_id = advertiserId and a.del_flag='0' and a.trans_type='3';
-IF counts >0
-THEN
-SELECT
-	sum(trans_amount) INTO advTrans
-FROM
-	adv_advertiser_trans_log AS a
-WHERE
--- 条件为当天数据
-	DATE_FORMAT(a.create_date, '%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d')
-AND a.user_id = advertiserId and a.del_flag='0' and a.trans_type='3';
-ELSE
-	ITERATE read_loop;
-END IF;
-IF advTrans >0 and advRule >0
-THEN
--- 如果广告主日消费额度大于或者等于广告主限制额度
-IF   advTrans >=advRule
- THEN
--- 把此广告主的所有广告置为失效
-UPDATE adv_advert
-SET `status` = 3
-WHERE
-	user_id = advertiserId AND del_flag='0';
-ELSE
-UPDATE adv_advert
-SET `status` = 0
-WHERE
-	user_id = advertiserId AND del_flag='0';
-END IF;
-END IF;
-set done = 0;
--- 关闭loop循环
-END LOOP;
--- 关闭游标
-CLOSE cur_account;
-END */$$
-DELIMITER ;
-
-/*Table structure for table `user_view` */
-
-DROP TABLE IF EXISTS `user_view`;
-
-/*!50001 DROP VIEW IF EXISTS `user_view` */;
-/*!50001 DROP TABLE IF EXISTS `user_view` */;
-
-/*!50001 CREATE TABLE  `user_view`(
- `id` varchar(64) ,
- `company_id` varchar(64) ,
- `office_id` varchar(64) ,
- `login_name` varchar(100) ,
- `PASSWORD` varchar(100) ,
- `NO` varchar(100) ,
- `NAME` varchar(100) ,
- `email` varchar(200) ,
- `phone` varchar(200) ,
- `mobile` varchar(200) ,
- `user_type` char(1) ,
- `login_ip` varchar(100) ,
- `login_date` datetime ,
- `remarks` varchar(255) ,
- `login_flag` varchar(64) ,
- `company_name` varchar(100) ,
- `company_addr` varchar(100) ,
- `company_url` varchar(100) ,
- `abbreviation` varchar(100) ,
- `adv_user_type` char(1) ,
- `expected_costs` varchar(64) ,
- `adv_company_id` varchar(64) ,
- `photo` text ,
- `create_by` varchar(64) ,
- `create_date` datetime ,
- `update_by` varchar(64) ,
- `update_date` datetime ,
- `del_flag` char(1) 
-)*/;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;

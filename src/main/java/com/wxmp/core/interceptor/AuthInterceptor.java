@@ -11,8 +11,8 @@ import com.wxmp.core.util.SessionUtilsWeb;
 
 
 /**
- * 权限拦截器
- * @author  www.bufeng.org
+ * 用户拦截器
+ * @author  hermit
  *
  */
 public class AuthInterceptor extends HandlerInterceptorAdapter {
@@ -30,9 +30,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 		String userAgent = request.getHeader("user-agent");
 		// HandlerMethod method = (HandlerMethod)handler;
 		// Auth auth = method.getMethod().getAnnotation(Auth.class);
-		log.debug("进入拦截器。。。。。。。。。。。。。。。。。。。。。");
 		String requestUrl = request.getRequestURI().replace(request.getContextPath(), "");
-		System.out.println(requestUrl);
 		if (null != allowUrls && allowUrls.length >= 1)
 			for (String url : allowUrls) {
 				if (requestUrl.equals(url)) {
@@ -49,7 +47,6 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 		
 	
 		if(user  == null){
-			log.debug("用户为空即将跳走。。。。。。。。。。。。。。。。。。。。。");
 			response.setStatus(response.SC_GATEWAY_TIMEOUT);
 			response.sendRedirect(baseUri+"/");
 			return false;

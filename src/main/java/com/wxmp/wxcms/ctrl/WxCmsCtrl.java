@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.wxmp.core.util.SessionUtilsWeb;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -79,7 +80,7 @@ public class WxCmsCtrl {
 	private MsgNewsService msgNewsService;
 	
 	@RequestMapping(value = "/urltoken")
-	public ModelAndView urltoken(String save,
+	public ModelAndView urltoken(HttpServletRequest request ,String save,
 			@RequestParam(required=false) String userId,
 			HttpSession session){
 		
@@ -102,7 +103,7 @@ public class WxCmsCtrl {
 		}
 		mv.addObject("msgCountList", msgCountList);
 		
-		SysUser sysUser = sysUserService.getSysUserById(userId);
+		SysUser sysUser =  SessionUtilsWeb.getUser(request);
 		session.setAttribute("sysUser", sysUser);
 		return mv;
 	}

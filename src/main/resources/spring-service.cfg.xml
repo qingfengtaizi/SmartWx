@@ -30,14 +30,6 @@
 	        			<list> 
 							<value>/wxweb/sendmsg.html</value>
 							<value>/wxapi/oauthOpenid.html</value>
-							<!-- 接单员跳转页面 -->
-							<value>/member/pre.html</value>
-							<!-- 投递员跳转页面 -->
-							<value>/advert/emp.html</value>
-							<!-- 广告主跳转页面 -->
-							<value>/advertiser/login.html</value>
-							<!-- 我的钱包 -->
-							<value>/advert/myred.html</value>
 						</list>
 	        		</property>
 	        	</bean>
