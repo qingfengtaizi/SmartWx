@@ -1,26 +1,23 @@
 package com.wxmp.backstage.sys.web.action;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import com.wxmp.backstage.common.DataModel;
+import com.wxmp.backstage.sys.ISysUserService;
+import com.wxmp.backstage.sys.domain.SysUser;
+import com.wxmp.backstage.util.ValidateUtil;
+import com.wxmp.core.util.SessionUtilsWeb;
+import com.wxmp.core.util.wx.MD5Util;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.wxmp.backstage.common.DataModel;
-import com.wxmp.backstage.sys.ISysUserService;
-import com.wxmp.backstage.sys.domain.SysUser;
-import com.wxmp.backstage.util.HashUtil;
-import com.wxmp.backstage.util.ValidateUtil;
-import com.wxmp.core.util.SessionUtilsWeb;
-
-import org.apache.log4j.LogManager;  
-import org.apache.log4j.Logger;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
@@ -38,12 +35,9 @@ public class LoginAction {
 	
 	private static Logger log = LogManager.getLogger(LoginAction.class);
 
-
-	
 	@Autowired
 	private ISysUserService sysUserService;
 
-	
 	/**
 	 * 登录验证
 	 * @return
@@ -62,33 +56,10 @@ public class LoginAction {
 			data.setCode(2);
 			return data;
 		}
-
-		
 		//test
 		session.setAttribute("sysUser", "adminPO");
-		
-			
 		data.setCode(0);
-
 		return data;
-	}
-	
-	
-	/**
-	 * 登录验证
-	 * @return
-	 */
-	@ResponseBody
-    @RequestMapping(value = "/checkLogin2", method = RequestMethod.POST)
-	public String checkLogin2(SysUser paramUser,HttpSession session) {
-		String code = "0";
-		SysUser sysUser = null;
-		sysUser = this.sysUserService.getSysUser(paramUser);
-		if(sysUser == null){
-			//用户名或者密码错误
-			code = "-1";
-		}
-		return code;
 	}
 	
 	@ResponseBody
@@ -97,6 +68,7 @@ public class LoginAction {
 		Map<String, Object> resMap = new HashMap<String, Object>();
 		String code = "0";
 		SysUser sysUser = null;
+		paramUser.setPwd(MD5Util.getMD5Code(paramUser.getPwd()));
 		sysUser = this.sysUserService.getSysUser(paramUser);
 		if(sysUser == null){
 			//用户名或者密码错误
@@ -109,6 +81,21 @@ public class LoginAction {
 		return resMap;
 	}
 
+	/**
+	 * 密码校验
+	 *
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/checkPwd")
+	public String checkPwd(String pwd, HttpServletRequest request) {
+		String code = "0";
+		if (!SessionUtilsWeb.getUser(request).getPwd().equals(MD5Util.getMD5Code(pwd))) {
+			//用户名或者密码错误
+			code = "1";
+		}
+		return code;
+	}
 
 	/**
 	 * 修改登录密码
@@ -119,6 +106,7 @@ public class LoginAction {
 	public String updateLoginPwd(SysUser paramUser,HttpSession session) {
 		String code = "0";
 		int m = 0;
+		paramUser.setNewpwd(MD5Util.getMD5Code(paramUser.getNewpwd()));
 		m = this.sysUserService.updateLoginPwd(paramUser);
 		if(m > 0){
 			//用户名或者密码错误

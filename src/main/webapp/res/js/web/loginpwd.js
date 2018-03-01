@@ -92,22 +92,35 @@ function doUpdate(user){
 }
 
 //验证新密码
-function checkOldPwd(oldPwdInput){
-   //之前保存的
-   var oldPwdValue = $("#oldPwd").val().trim();
+function checkOldPwd(oldPwdInput) {
+	var flag=false;
+    //之前保存的
+    var oldPwdValue = $("#oldPwd").val().trim();
 
-   if(oldPwdInput.length == 0){
-	   $("#oldpwd_Tip").html("请输入旧密码");
-       return false;
-   } else {
-	   if(oldPwdValue != oldPwdInput){
-		   $("#oldpwd_Tip").html("旧密码输入有误");
-		   return false;
-	   }else{
-		   $("#oldpwd_Tip").html("");
-		   return true;
-	   }
-   }
+    if (oldPwdInput.length == 0) {
+        $("#oldpwd_Tip").html("请输入旧密码");
+        return false;
+    } else {
+        $.ajax({
+            url: path + '/login/checkPwd',
+            type: 'POST',
+            async: false,
+            dataType: 'json',
+            data: {pwd: oldPwdInput},
+            success: function (result) {
+                if (result == "1") {
+                    $("#oldpwd_Tip").html("旧密码输入有误");
+                } else {
+                    $("#oldpwd_Tip").html("");
+                    flag=true;
+                }
+            },
+            error: function (msg) {
+                alert(msg);
+            }
+        });
+        return flag;
+    }
 }
 
 

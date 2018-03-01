@@ -65,12 +65,6 @@
             <name>Central Repository 1</name>
             <url>http://repo1.maven.org/maven2/</url>
         </repository>
-
-        <repository>
-            <id>ebi-repos</id>
-            <name>ebi Repository</name>
-            <url>https://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo/</url>
-        </repository>
     </repositories>
     <build>
         <finalName>wxmp</finalName>
@@ -516,6 +510,13 @@
             <artifactId>cpdetector</artifactId>
             <version>1.0.7</version>
             <systemPath>${lib.path}/cpdetector-1.0.7.jar</systemPath>
+            <scope>system</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mozilla.intl</groupId>
+            <artifactId>chardet</artifactId>
+            <version>1.0</version>
+            <systemPath>${lib.path}/chardet-1.0.jar</systemPath>
             <scope>system</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.jdom/jdom -->

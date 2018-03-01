@@ -2,7 +2,8 @@
 SQLyog Ultimate v11.24 (32 bit)
 MySQL - 5.7.18 : Database - wxmp
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 
@@ -244,7 +245,7 @@ CREATE TABLE `t_wxcms_sys_user` (
 
 /*Data for the table `t_wxcms_sys_user` */
 
-insert  into `t_wxcms_sys_user`(`id`,`account`,`pwd`,`trueName`,`sex`,`phone`,`createTime`,`updateTime`,`email`,`flag`) values ('1','admin','admin','admin','0','',NULL,NULL,'',NULL);
+insert  into `t_wxcms_sys_user`(`id`,`account`,`pwd`,`trueName`,`sex`,`phone`,`createTime`,`updateTime`,`email`,`flag`) values ('1','admin','e10adc3949ba59abbe56e057f20f883e','admin','0','',NULL,NULL,'',NULL);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
