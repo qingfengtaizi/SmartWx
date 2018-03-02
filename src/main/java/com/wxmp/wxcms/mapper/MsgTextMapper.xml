@@ -4,7 +4,7 @@
 <mapper namespace="com.wxmp.wxcms.mapper.MsgTextDao">
 
 	<select id="listForPage" parameterType="com.wxmp.wxcms.domain.MsgText" resultType="com.wxmp.wxcms.domain.MsgText">
-		SELECT * FROM t_wxcms_msg_text t , t_wxcms_msg_base b WHERE t.base_id = b.id ORDER BY t.ID
+		SELECT b.msgType,b.inputCode,t.* FROM t_wxcms_msg_text t , t_wxcms_msg_base b WHERE t.base_id = b.id ORDER BY t.ID
 	</select>
 
 	<select id="getById" parameterType="java.lang.String" resultType="com.wxmp.wxcms.domain.MsgText">

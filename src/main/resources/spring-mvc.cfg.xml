@@ -43,6 +43,8 @@
 					<value>/wxcms/main</value>
 					<value>/login/logout</value>
 					<value>/login/checkLogin</value>
+					<value>/wxweb/sendmsg.html</value>
+					<value>/wxapi/oauthOpenid.html</value>
 				</list>
 			</property>
 		</bean>

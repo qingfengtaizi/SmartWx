@@ -27,13 +27,12 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler) throws Exception {
-		String userAgent = request.getHeader("user-agent");
 		// HandlerMethod method = (HandlerMethod)handler;
 		// Auth auth = method.getMethod().getAnnotation(Auth.class);
 		String requestUrl = request.getRequestURI().replace(request.getContextPath(), "");
 		if (null != allowUrls && allowUrls.length >= 1)
 			for (String url : allowUrls) {
-				if (requestUrl.equals(url)) {
+				if (requestUrl.contains(".css") || requestUrl.contains(".js") || requestUrl.contains(".png") || requestUrl.contains(".jpg")||requestUrl.contains("/message") || requestUrl.equals(url)) {
 					return true;
 				}
 			}
@@ -42,7 +41,6 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 		}
 		//验证登陆超时问题 auth = null，默认验证
 		String baseUri = request.getContextPath();
-		String path = request.getServletPath();
 		SysUser user =SessionUtilsWeb.getUser(request);
 		
 	
