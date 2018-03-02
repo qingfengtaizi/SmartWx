@@ -1,45 +1,15 @@
 package com.wxmp.wxcms.ctrl;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import com.wxmp.core.util.SessionUtilsWeb;
-import net.sf.json.JSONObject;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.wxmp.backstage.common.DataModel;
-import com.wxmp.backstage.common.Identities;
 import com.wxmp.backstage.img.domain.ImgResource;
 import com.wxmp.backstage.img.service.ImgResourceService;
-import com.wxmp.backstage.sys.ISysUserService;
 import com.wxmp.backstage.sys.domain.SysUser;
-import com.wxmp.backstage.util.ImgTypeUtil;
+import com.wxmp.backstage.sys.service.ISysUserService;
 import com.wxmp.core.page.Pagination;
 import com.wxmp.core.spring.SpringFreemarkerContextPathUtil;
 import com.wxmp.core.util.PropertiesConfigUtil;
+import com.wxmp.core.util.SessionUtilsWeb;
 import com.wxmp.core.util.UploadUtil;
 import com.wxmp.wxapi.process.MediaType;
 import com.wxmp.wxapi.process.MpAccount;
@@ -55,6 +25,24 @@ import com.wxmp.wxcms.domain.MsgText;
 import com.wxmp.wxcms.mapper.AccountDao;
 import com.wxmp.wxcms.mapper.MsgNewsDao;
 import com.wxmp.wxcms.service.MsgNewsService;
+import net.sf.json.JSONObject;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * 
