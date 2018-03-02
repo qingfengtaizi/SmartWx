@@ -1,6 +1,4 @@
-package com.wxmp.backstage.sys;
-
-import java.util.List;
+package com.wxmp.backstage.sys.service;
 
 import com.wxmp.backstage.sys.domain.SysUser;
 

@@ -1,11 +1,11 @@
-package com.wxmp.backstage.sys.web.action;
+package com.wxmp.backstage.sys.ctrl;
 
-import com.wxmp.backstage.common.DataModel;
-import com.wxmp.backstage.sys.ISysUserService;
-import com.wxmp.backstage.sys.domain.SysUser;
-import com.wxmp.backstage.util.ValidateUtil;
-import com.wxmp.core.util.SessionUtilsWeb;
-import com.wxmp.core.util.wx.MD5Util;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,16 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.Map;
+import com.wxmp.backstage.common.DataModel;
+import com.wxmp.backstage.sys.service.ISysUserService;
+import com.wxmp.backstage.sys.domain.SysUser;
+import com.wxmp.backstage.util.ValidateUtil;
+import com.wxmp.core.util.SessionUtilsWeb;
+import com.wxmp.core.util.wx.MD5Util;
 
 /**
- * 
- * @title : 
- * @description : 
- * @projectname : wxmp
  * @classname : LoginAction
  * @version 1.0
  * @author : hermit
@@ -31,9 +29,9 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("login")
-public class LoginAction {
+public class LoginCtrl {
 	
-	private static Logger log = LogManager.getLogger(LoginAction.class);
+	private static Logger log = LogManager.getLogger(LoginCtrl.class);
 
 	@Autowired
 	private ISysUserService sysUserService;

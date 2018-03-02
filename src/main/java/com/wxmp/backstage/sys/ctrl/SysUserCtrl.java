@@ -1,22 +1,15 @@
-package com.wxmp.backstage.sys.web.action;
-
-import javax.servlet.http.HttpSession;
-
-
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
-
-import com.wxmp.backstage.sys.ISysUserService;
-import com.wxmp.backstage.sys.domain.SysUser;
+package com.wxmp.backstage.sys.ctrl;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.wxmp.backstage.sys.domain.SysUser;
+import com.wxmp.backstage.sys.service.ISysUserService;
 
 
 /**
@@ -31,8 +24,8 @@ import org.apache.log4j.Logger;
  */
 @Controller
 @RequestMapping("sysuser")
-public class SysUserAction {
-	private static Logger log = LogManager.getLogger(SysUserAction.class);
+public class SysUserCtrl {
+	private static Logger log = LogManager.getLogger(SysUserCtrl.class);
 	
 	@Autowired
 	private ISysUserService sysUserService;

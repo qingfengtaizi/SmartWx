@@ -1,21 +1,16 @@
-package com.wxmp.backstage.sys.web.action;
+package com.wxmp.backstage.sys.ctrl;
 
 import javax.servlet.http.HttpSession;
 
-
-
-
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.wxmp.backstage.sys.ISysUserService;
+import com.wxmp.backstage.sys.service.ISysUserService;
 import com.wxmp.core.annotation.Auth;
-
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -30,8 +25,8 @@ import org.apache.log4j.Logger;
  */
 @Controller
 @RequestMapping("view")
-public class ViewAction {
-	private static Logger log = LogManager.getLogger(ViewAction.class);
+public class ViewCtrl {
+	private static Logger log = LogManager.getLogger(ViewCtrl.class);
 	
 	@Autowired
 	private ISysUserService sysUserService;
