@@ -9,11 +9,13 @@ import com.wxmp.wxcms.domain.AccountMenu;
 import com.wxmp.wxcms.mapper.AccountMenuDao;
 import com.wxmp.wxcms.service.AccountMenuService;
 
+import javax.annotation.Resource;
+
 
 @Service
 public class AccountMenuServiceImpl implements AccountMenuService{
 
-	@Autowired
+	@Resource
 	private AccountMenuDao entityDao;
 
 	public AccountMenu getById(String id){

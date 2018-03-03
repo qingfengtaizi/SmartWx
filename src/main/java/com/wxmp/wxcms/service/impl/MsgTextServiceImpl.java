@@ -13,14 +13,16 @@ import com.wxmp.wxcms.mapper.MsgBaseDao;
 import com.wxmp.wxcms.mapper.MsgTextDao;
 import com.wxmp.wxcms.service.MsgTextService;
 
+import javax.annotation.Resource;
+
 
 @Service
 public class MsgTextServiceImpl implements MsgTextService{
 
-	@Autowired
+	@Resource
 	private MsgTextDao entityDao;
-	
-	@Autowired
+
+	@Resource
 	private MsgBaseDao baseDao;
 
 	public MsgText getById(String id){

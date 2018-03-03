@@ -12,14 +12,16 @@ import com.wxmp.wxcms.mapper.AccountMenuDao;
 import com.wxmp.wxcms.mapper.AccountMenuGroupDao;
 import com.wxmp.wxcms.service.AccountMenuGroupService;
 
+import javax.annotation.Resource;
+
 
 @Service
 public class AccountMenuGroupServiceImpl implements AccountMenuGroupService{
 
-	@Autowired
+	@Resource
 	private AccountMenuGroupDao entityDao;
-	
-	@Autowired
+
+	@Resource
 	private AccountMenuDao menuDao;
 
 	public AccountMenuGroup getById(String id){

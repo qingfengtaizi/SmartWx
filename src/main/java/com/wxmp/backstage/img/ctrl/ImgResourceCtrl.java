@@ -1,21 +1,5 @@
 package com.wxmp.backstage.img.ctrl;
 
-import java.io.File;
-import java.util.Random;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.wxmp.backstage.common.DataModel;
-import com.wxmp.backstage.common.Identities;
 import com.wxmp.backstage.img.domain.ImgResource;
 import com.wxmp.backstage.img.service.ImgResourceService;
 import com.wxmp.backstage.util.ImgTypeUtil;
@@ -24,15 +8,25 @@ import com.wxmp.wxapi.process.MediaType;
 import com.wxmp.wxapi.process.MpAccount;
 import com.wxmp.wxapi.process.WxApiClient;
 import com.wxmp.wxapi.process.WxMemoryCacheClient;
-
 import net.sf.json.JSONObject;
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.util.Random;
 
 /** 
  * @author : hermit
 */
 @Controller
 @RequestMapping("managerImg")
-public class ImgResourceAction {
+public class ImgResourceCtrl {
 
 	@Autowired
 	private ImgResourceService imgResourceService;

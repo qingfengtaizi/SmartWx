@@ -19,17 +19,19 @@ import com.wxmp.wxcms.mapper.MsgBaseDao;
 import com.wxmp.wxcms.mapper.MsgNewsDao;
 import com.wxmp.wxcms.service.MsgNewsService;
 
+import javax.annotation.Resource;
+
 
 @Service
 public class MsgNewsServiceImpl implements MsgNewsService{
 
-	@Autowired
+	@Resource
 	private MsgBaseDao baseDao;
-	
-	@Autowired
+
+	@Resource
 	private MsgNewsDao entityDao;
-	
-	@Autowired
+
+	@Resource
 	private MediaFilesDao mediaFilesDao;
 
 	public MsgNews getById(String id){

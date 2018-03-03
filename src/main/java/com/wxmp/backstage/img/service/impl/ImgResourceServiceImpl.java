@@ -1,13 +1,13 @@
-package com.wxmp.backstage.img;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+package com.wxmp.backstage.img.service.impl;
 
 import com.wxmp.backstage.contents.ATTContents;
 import com.wxmp.backstage.img.domain.ImgResource;
 import com.wxmp.backstage.img.mapper.ImgResourceDao;
 import com.wxmp.backstage.img.service.ImgResourceService;
 import com.wxmp.core.util.CommonUtil;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 /** 
  * @title : 
@@ -20,8 +20,8 @@ import com.wxmp.core.util.CommonUtil;
 */
 @Service
 public class ImgResourceServiceImpl implements ImgResourceService {
-    
-	@Autowired
+
+	@Resource
     private ImgResourceDao imgResourceDao;
 	
 	

@@ -10,11 +10,13 @@ import com.wxmp.wxcms.domain.AccountFans;
 import com.wxmp.wxcms.mapper.AccountFansDao;
 import com.wxmp.wxcms.service.AccountFansService;
 
+import javax.annotation.Resource;
+
 
 @Service
 public class AccountFansServiceImpl implements AccountFansService{
 
-	@Autowired
+	@Resource
 	private AccountFansDao entityDao;
 
 	public AccountFans getById(String id){

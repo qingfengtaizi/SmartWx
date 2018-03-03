@@ -35,6 +35,9 @@ import com.wxmp.wxcms.mapper.AccountMenuDao;
 import com.wxmp.wxcms.mapper.AccountMenuGroupDao;
 import com.wxmp.wxcms.mapper.MsgBaseDao;
 import com.wxmp.wxcms.mapper.MsgNewsDao;
+
+import javax.annotation.Resource;
+
 /**
  * 业务消息处理
  * 开发者根据自己的业务自行处理消息的接收与回复；
@@ -43,19 +46,19 @@ import com.wxmp.wxcms.mapper.MsgNewsDao;
 @Service
 public class MyServiceImpl implements MyService{
 
-	@Autowired
+	@Resource
 	private MsgBaseDao msgBaseDao;
-	
-	@Autowired
+
+	@Resource
 	private MsgNewsDao msgNewsDao;
-	
-	@Autowired
+
+	@Resource
 	private AccountMenuDao menuDao;
-	
-	@Autowired
+
+	@Resource
 	private AccountMenuGroupDao menuGroupDao;
-	
-	@Autowired
+
+	@Resource
 	private AccountFansDao fansDao;
 	
 	private Logger logger=Logger.getLogger(MyServiceImpl.class);

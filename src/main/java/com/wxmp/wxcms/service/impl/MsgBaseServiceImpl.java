@@ -9,11 +9,13 @@ import com.wxmp.wxcms.domain.MsgBase;
 import com.wxmp.wxcms.mapper.MsgBaseDao;
 import com.wxmp.wxcms.service.MsgBaseService;
 
+import javax.annotation.Resource;
+
 
 @Service
 public class MsgBaseServiceImpl implements MsgBaseService{
 
-	@Autowired
+	@Resource
 	private MsgBaseDao entityDao;
 
 	public MsgBase getById(String id){

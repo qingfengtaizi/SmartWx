@@ -106,7 +106,7 @@
 
 
 	     <!-- 服务器启动时自动加载，目前主要提取加载需要缓存的公众号信息 -->
-        <bean id="appServiceImpl" class="com.wxmp.wxcms.AppDefineInitService"></bean>
+        <bean id="appServiceImpl" class="com.wxmp.wxcms.service.AppDefineInitService"></bean>
         <bean id="beanDefineConfigue" class="com.wxmp.core.spring.SpringBeanDefineConfigue">
         	<property name="appService" ref="appServiceImpl"></property>
         </bean>

@@ -9,11 +9,13 @@ import com.wxmp.wxcms.domain.Account;
 import com.wxmp.wxcms.mapper.AccountDao;
 import com.wxmp.wxcms.service.AccountService;
 
+import javax.annotation.Resource;
+
 
 @Service
 public class AccountServiceImpl implements AccountService{
 
-	@Autowired
+	@Resource
 	private AccountDao entityDao;
 
 	public Account getById(String id){

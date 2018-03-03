@@ -6,6 +6,8 @@ import com.wxmp.backstage.sys.service.ISysUserService;
 import com.wxmp.backstage.sys.domain.SysUser;
 import com.wxmp.backstage.sys.mapper.SysUserDao;
 
+import javax.annotation.Resource;
+
 
 /**
  * 
@@ -21,7 +23,7 @@ import com.wxmp.backstage.sys.mapper.SysUserDao;
 @Service
 public class SysUserServiceImpl  implements ISysUserService{
 
-	@Autowired
+	@Resource
 	private SysUserDao sysUserDao;
 	
 	
