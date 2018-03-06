@@ -1,11 +1,13 @@
 package com.wxmp.wxcms.service;
 
-import java.util.List;
-
 import com.wxmp.core.page.Pagination;
 import com.wxmp.wxcms.domain.AccountMenuGroup;
 
+import java.util.List;
 
+/**
+ * @author : hermit
+ */
 public interface AccountMenuGroupService {
 
 	public AccountMenuGroup getById(String id);

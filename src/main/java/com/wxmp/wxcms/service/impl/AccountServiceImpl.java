@@ -1,16 +1,16 @@
 package com.wxmp.wxcms.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.wxmp.wxcms.domain.Account;
 import com.wxmp.wxcms.mapper.AccountDao;
 import com.wxmp.wxcms.service.AccountService;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
+/**
+ * @author : hermit
+ */
 
 @Service
 public class AccountServiceImpl implements AccountService{

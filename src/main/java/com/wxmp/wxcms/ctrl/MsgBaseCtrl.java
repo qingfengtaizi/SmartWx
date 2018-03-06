@@ -1,9 +1,6 @@
 package com.wxmp.wxcms.ctrl;
 
 import java.util.List;
-
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,13 +14,14 @@ import com.wxmp.wxcms.domain.MsgText;
 import com.wxmp.wxcms.service.MsgBaseService;
 import com.wxmp.wxcms.service.MsgNewsService;
 import com.wxmp.wxcms.service.MsgTextService;
+
 /**
- * 
+ * @author : hermit
  */
 
 @Controller
 @RequestMapping("/msgbase")
-public class MsgBaseCtrl{
+public class MsgBaseCtrl extends BaseCtrl{
 
 	@Autowired
 	private MsgBaseService entityService;

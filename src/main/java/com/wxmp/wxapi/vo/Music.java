@@ -3,8 +3,6 @@ package com.wxmp.wxapi.vo;
 /**
  * 
  * 音乐消息
- * 
- * 
  */
 public class Music {
 	

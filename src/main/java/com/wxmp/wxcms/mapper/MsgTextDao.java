@@ -1,10 +1,11 @@
 package com.wxmp.wxcms.mapper;
 
 import java.util.List;
-
 import com.wxmp.wxcms.domain.MsgText;
 
-
+/**
+ * @author : hermit
+ */
 public interface MsgTextDao {
 
 	public MsgText getById(String id);

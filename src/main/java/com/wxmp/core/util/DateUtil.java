@@ -100,6 +100,5 @@ public class DateUtil {
 		return (afterTime - beforeTime) / (1000 * 60 * 60 * 24);
 	}
 	
-	
 }
 

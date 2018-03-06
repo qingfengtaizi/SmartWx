@@ -1,16 +1,15 @@
 package com.wxmp.wxcms.domain;
 
-/** 
+import com.wxmp.core.domain.BaseEntity;
+
+import java.util.Date;
+
+/**
  * @title : 多图文主表
- * @description : 
- * @projectname : wxmp
- * @classname : MediaFiles
  * @version 1.0
  * @author : hermit
- * @createtime : 2016年6月14日 下午1:11:48 
 */
-public class MediaFiles {
-	private int id;
+public class MediaFiles extends BaseEntity {
    	private String mediaType;
    	private String title;
    	private String introduction;
@@ -18,20 +17,7 @@ public class MediaFiles {
    	private String mediaId;
    	private String uploadUrl;
    	private String rmk;
-   	private long createTime;
-   	private long updateTime;
-	/**
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
-	}
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
+   	private Date updateTime;
 	/**
 	 * @return the mediaType
 	 */
@@ -105,27 +91,15 @@ public class MediaFiles {
 		this.rmk = rmk;
 	}
 	/**
-	 * @return the createTime
-	 */
-	public long getCreateTime() {
-		return createTime;
-	}
-	/**
-	 * @param createTime the createTime to set
-	 */
-	public void setCreateTime(long createTime) {
-		this.createTime = createTime;
-	}
-	/**
 	 * @return the updateTime
 	 */
-	public long getUpdateTime() {
+	public Date getUpdateTime() {
 		return updateTime;
 	}
 	/**
 	 * @param updateTime the updateTime to set
 	 */
-	public void setUpdateTime(long updateTime) {
+	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
 	/**

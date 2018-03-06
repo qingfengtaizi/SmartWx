@@ -18,12 +18,12 @@ import com.wxmp.wxcms.service.MsgBaseService;
 import com.wxmp.wxcms.service.MsgTextService;
 
 /**
- * 
+ * @author : hermit
  */
 
 @Controller
 @RequestMapping("/msgtext")
-public class MsgTextCtrl{
+public class MsgTextCtrl extends BaseCtrl{
 
 	@Autowired
 	private MsgTextService entityService;

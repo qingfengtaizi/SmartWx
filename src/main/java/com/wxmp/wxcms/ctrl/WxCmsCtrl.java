@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -45,32 +46,24 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * 
+ * @author : hermit
  */
 
 @Controller
 @RequestMapping("/wxcms")
-public class WxCmsCtrl {
+public class WxCmsCtrl extends BaseCtrl{
 
-	@Autowired
+	@Resource
 	AccountDao accountDao;
 	
 	@Autowired
-	MsgNewsDao msgNewsDao;
-	
-	@Autowired
 	private ISysUserService sysUserService;
-	
-	@Autowired
-	private ImgResourceService imgResourceService;
-	
+
 	@Autowired
 	private MsgNewsService msgNewsService;
 	
 	@RequestMapping(value = "/urltoken")
-	public ModelAndView urltoken(HttpServletRequest request ,String save,
-			@RequestParam(required=false) String userId,
-			HttpSession session){
+	public ModelAndView urltoken(String save){
 		
 		ModelAndView mv = new ModelAndView("wxcms/urltoken");
 		List<Account> accounts = accountDao.listForPage(null);
@@ -92,7 +85,7 @@ public class WxCmsCtrl {
 		mv.addObject("msgCountList", msgCountList);
 		
 		SysUser sysUser =  SessionUtilsWeb.getUser(request);
-		session.setAttribute("sysUser", sysUser);
+		request.getSession().setAttribute("sysUser", sysUser);
 		return mv;
 	}
 	

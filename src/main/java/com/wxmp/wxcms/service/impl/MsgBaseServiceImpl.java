@@ -1,17 +1,16 @@
 package com.wxmp.wxcms.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.wxmp.wxcms.domain.MsgBase;
 import com.wxmp.wxcms.mapper.MsgBaseDao;
 import com.wxmp.wxcms.service.MsgBaseService;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
-
+/**
+ * @author : hermit
+ */
 @Service
 public class MsgBaseServiceImpl implements MsgBaseService{
 

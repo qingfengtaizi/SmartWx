@@ -4,8 +4,7 @@ import com.wxmp.core.domain.BaseEntity;
 
 /**
  * 消息基本信息
- * 
- *
+ * @author : hermit
  */
 public class MsgBase extends BaseEntity{
 

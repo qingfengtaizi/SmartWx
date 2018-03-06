@@ -16,12 +16,12 @@ import com.wxmp.wxcms.domain.MsgText;
 import com.wxmp.wxcms.service.AccountFansService;
 
 /**
- * 
+ * @author : hermit
  */
 
 @Controller
 @RequestMapping("/accountfans")
-public class AccountFansCtrl{
+public class AccountFansCtrl extends BaseCtrl{
 
 	@Autowired
 	private AccountFansService entityService;

@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.wxmp.wxcms.domain.Account;
 
-
+/**
+ * @author : hermit
+ */
 public interface AccountService {
 
 	public Account getById(String id);

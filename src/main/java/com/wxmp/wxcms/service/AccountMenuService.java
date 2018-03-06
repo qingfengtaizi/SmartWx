@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.wxmp.wxcms.domain.AccountMenu;
 
-
+/**
+ * @author : hermit
+ */
 public interface AccountMenuService {
 
 	public AccountMenu getById(String id);

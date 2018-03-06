@@ -1,10 +1,9 @@
 package com.wxmp.backstage.sys.service.impl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import com.wxmp.backstage.sys.service.ISysUserService;
 import com.wxmp.backstage.sys.domain.SysUser;
 import com.wxmp.backstage.sys.mapper.SysUserDao;
+import com.wxmp.backstage.sys.service.ISysUserService;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 

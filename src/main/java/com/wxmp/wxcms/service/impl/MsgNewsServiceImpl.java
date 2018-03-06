@@ -1,13 +1,5 @@
 package com.wxmp.wxcms.service.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.wxmp.core.page.Pagination;
 import com.wxmp.wxapi.process.MsgType;
 import com.wxmp.wxcms.domain.MediaFiles;
@@ -18,10 +10,17 @@ import com.wxmp.wxcms.mapper.MediaFilesDao;
 import com.wxmp.wxcms.mapper.MsgBaseDao;
 import com.wxmp.wxcms.mapper.MsgNewsDao;
 import com.wxmp.wxcms.service.MsgNewsService;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-
+/**
+ * @author : hermit
+ */
 @Service
 public class MsgNewsServiceImpl implements MsgNewsService{
 

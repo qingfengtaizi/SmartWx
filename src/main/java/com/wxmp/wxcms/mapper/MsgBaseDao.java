@@ -1,11 +1,13 @@
 package com.wxmp.wxcms.mapper;
 
 import java.util.List;
-
 import com.wxmp.wxcms.domain.MsgBase;
 import com.wxmp.wxcms.domain.MsgNews;
 import com.wxmp.wxcms.domain.MsgText;
 
+/**
+ * @author : hermit
+ */
 
 public interface MsgBaseDao {
 
