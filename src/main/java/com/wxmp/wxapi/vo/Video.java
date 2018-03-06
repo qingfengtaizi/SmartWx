@@ -1,10 +1,7 @@
 package com.wxmp.wxapi.vo;
 
 /**
- * 
  * 视频消息
- * 
- * 
  */
 
 public class Video {

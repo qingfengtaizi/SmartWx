@@ -5,7 +5,9 @@ import java.util.List;
 import com.wxmp.core.page.Pagination;
 import com.wxmp.wxcms.domain.AccountFans;
 
-
+/**
+ * @author : hermit
+ */
 public interface AccountFansService {
 
 	public AccountFans getById(String id);

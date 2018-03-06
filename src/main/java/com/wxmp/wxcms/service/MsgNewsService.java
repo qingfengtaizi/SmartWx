@@ -7,7 +7,9 @@ import com.wxmp.wxcms.domain.MediaFiles;
 import com.wxmp.wxcms.domain.MsgNews;
 import com.wxmp.wxcms.domain.MsgNewsVO;
 
-
+/**
+ * @author : hermit
+ */
 public interface MsgNewsService {
 
 	public MsgNews getById(String id);

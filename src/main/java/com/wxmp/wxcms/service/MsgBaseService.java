@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.wxmp.wxcms.domain.MsgBase;
 
-
+/**
+ * @author : hermit
+ */
 public interface MsgBaseService {
 
 	public MsgBase getById(String id);

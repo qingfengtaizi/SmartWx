@@ -4,8 +4,7 @@ package com.wxmp.wxcms.domain;
 
 /**
  * 图文消息
- * 
- *
+ * @author : hermit
  */
 public class MsgNews extends MsgBase{
 

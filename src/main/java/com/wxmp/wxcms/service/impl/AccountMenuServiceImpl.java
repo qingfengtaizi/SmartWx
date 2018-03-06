@@ -1,17 +1,16 @@
 package com.wxmp.wxcms.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.wxmp.wxcms.domain.AccountMenu;
 import com.wxmp.wxcms.mapper.AccountMenuDao;
 import com.wxmp.wxcms.service.AccountMenuService;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
-
+/**
+ * @author : hermit
+ */
 @Service
 public class AccountMenuServiceImpl implements AccountMenuService{
 

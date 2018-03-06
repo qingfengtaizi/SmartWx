@@ -2,7 +2,9 @@ package com.wxmp.wxcms.domain;
 
 import com.wxmp.core.domain.BaseEntity;
 
-
+/**
+ * @author : hermit
+ */
 public class AccountMenuGroup extends BaseEntity{
 
 	private String name;

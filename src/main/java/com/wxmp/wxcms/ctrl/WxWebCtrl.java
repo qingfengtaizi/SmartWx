@@ -20,18 +20,16 @@ import com.wxmp.wxcms.domain.MsgNewsVO;
 import com.wxmp.wxcms.service.MsgNewsService;
 
 /**
- * 手机微信页面
+ * @author : hermit
  */
 @Controller
 @RequestMapping("/wxweb")
-public class WxWebCtrl {
+public class WxWebCtrl extends BaseCtrl{
 	
 	private static Logger log = LogManager.getLogger(WxWebCtrl.class);
 	
 	@Autowired
 	private MsgNewsService msgNewsService;
-	
-
 	
 	@RequestMapping(value = "/msg/newsread")
 	public ModelAndView newsread(HttpServletRequest request,String id){

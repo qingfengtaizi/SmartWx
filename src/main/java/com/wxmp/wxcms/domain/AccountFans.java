@@ -1,12 +1,12 @@
 package com.wxmp.wxcms.domain;
 
-import java.io.UnsupportedEncodingException;
-
 import com.wxmp.core.domain.BaseEntity;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * 账号粉丝用户信息
- * 
+ * @author : hermit
  */
 public class AccountFans extends BaseEntity{
 

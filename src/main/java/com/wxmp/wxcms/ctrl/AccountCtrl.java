@@ -12,12 +12,12 @@ import com.wxmp.wxcms.domain.Account;
 import com.wxmp.wxcms.service.AccountService;
 
 /**
- * 
+ * @author : hermit
  */
 
 @Controller
 @RequestMapping("/account")
-public class AccountCtrl{
+public class AccountCtrl extends BaseCtrl{
 
 	@Autowired
 	private AccountService entityService;
@@ -53,7 +53,4 @@ public class AccountCtrl{
 		entityService.delete(entity);
 		return new ModelAndView();
 	}
-
-
-
 }

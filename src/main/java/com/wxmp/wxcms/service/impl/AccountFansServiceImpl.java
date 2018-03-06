@@ -1,17 +1,16 @@
 package com.wxmp.wxcms.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.wxmp.core.page.Pagination;
 import com.wxmp.wxcms.domain.AccountFans;
 import com.wxmp.wxcms.mapper.AccountFansDao;
 import com.wxmp.wxcms.service.AccountFansService;
-
+import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
+import java.util.List;
 
+/**
+ * @author : hermit
+ */
 
 @Service
 public class AccountFansServiceImpl implements AccountFansService{

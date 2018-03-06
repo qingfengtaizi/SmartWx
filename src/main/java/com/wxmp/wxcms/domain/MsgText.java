@@ -1,10 +1,8 @@
 package com.wxmp.wxcms.domain;
 
-
 /**
  * 文本消息
- * 
- *
+ * @author : hermit
  */
 public class MsgText extends MsgBase{
 

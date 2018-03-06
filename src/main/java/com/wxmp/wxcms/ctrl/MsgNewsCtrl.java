@@ -27,17 +27,20 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.wxmp.core.util.DateUtil.COMMON_FULL;
+
 /**
- * 
+ * @author : hermit
  */
 
 @Controller
 @RequestMapping("/msgnews")
-public class MsgNewsCtrl {
+public class MsgNewsCtrl  extends BaseCtrl{
 
 	@Autowired
 	private MsgNewsService entityService;
@@ -200,7 +203,7 @@ public class MsgNewsCtrl {
 	 */
 	@RequestMapping(value = "/addSingleNews", method = RequestMethod.POST)
 	@ResponseBody
-	public String addSingleNews(MsgNews msgNews, HttpServletRequest request) {
+	public String addSingleNews(MsgNews msgNews, HttpServletRequest request) throws Exception{
 
 		String filePath = request.getSession().getServletContext().getRealPath("/");
 
@@ -288,8 +291,8 @@ public class MsgNewsCtrl {
 			MediaFiles entity = new MediaFiles();
 			entity.setMediaId(newsMediaId);
 			entity.setMediaType("news");
-			entity.setCreateTime(Long.parseLong(newsResult.getString("create_time")));
-			entity.setUpdateTime(Long.parseLong(newsResult.getString("update_time")));
+			entity.setCreatetime(COMMON_FULL.getTextDate(newsResult.getString("create_time")));
+			entity.setUpdateTime(COMMON_FULL.getTextDate(newsResult.getString("update_time")));
 
 			int resultCount = this.entityService.addSingleNews(newsPo, entity);
 
@@ -314,7 +317,7 @@ public class MsgNewsCtrl {
 	 */
 	@RequestMapping(value = "/addSingleNews_old", method = RequestMethod.POST)
 	@ResponseBody
-	public String addSingleNews_old(MsgNews msgNews, HttpServletRequest request) {
+	public String addSingleNews_old(MsgNews msgNews, HttpServletRequest request) throws Exception{
 		String code = "";
 		List<MsgNews> msgNewsList = new ArrayList<MsgNews>();
 		msgNewsList.add(msgNews);
@@ -347,8 +350,8 @@ public class MsgNewsCtrl {
 			MediaFiles entity = new MediaFiles();
 			entity.setMediaId(newsMediaId);
 			entity.setMediaType("news");
-			entity.setCreateTime(Long.parseLong(newsResult.getString("create_time")));
-			entity.setUpdateTime(Long.parseLong(newsResult.getString("update_time")));
+			entity.setCreatetime(COMMON_FULL.getTextDate(newsResult.getString("create_time")));
+			entity.setUpdateTime(COMMON_FULL.getTextDate(newsResult.getString("update_time")));
 
 			int resultCount = this.entityService.addSingleNews(newsPo, entity);
 
@@ -367,7 +370,7 @@ public class MsgNewsCtrl {
 	/**
 	 * 添加多图文
 	 * 
-	 * @param msgNews
+	 * @param rows
 	 * @param request
 	 * @return
 	 */
@@ -415,8 +418,8 @@ public class MsgNewsCtrl {
 			MediaFiles entity = new MediaFiles();
 			entity.setMediaId(newsMediaId);
 			entity.setMediaType("more");
-			entity.setCreateTime(System.currentTimeMillis());
-			entity.setUpdateTime(System.currentTimeMillis());
+			entity.setCreatetime(new Date());
+			entity.setUpdateTime(new Date());
 
 			int fileCount = this.entityService.addMediaFiles(entity);
 
@@ -467,7 +470,7 @@ public class MsgNewsCtrl {
 	/**
 	 * 跳转到更新页面
 	 * 
-	 * @param entity
+	 * @param mediaId
 	 * @return
 	 */
 	@RequestMapping(value = "/toUpdateSingleNews")
@@ -524,7 +527,7 @@ public class MsgNewsCtrl {
 	/**
 	 * 跳转到更新页面
 	 * 
-	 * @param entity
+	 * @param mediaId
 	 * @return
 	 */
 	@RequestMapping(value = "/toUpdateMoreNews")

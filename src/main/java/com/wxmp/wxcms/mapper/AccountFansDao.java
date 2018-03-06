@@ -1,11 +1,12 @@
 package com.wxmp.wxcms.mapper;
 
 import java.util.List;
-
 import com.wxmp.core.page.Pagination;
 import com.wxmp.wxcms.domain.AccountFans;
 
-
+/**
+ * @author : hermit
+ */
 public interface AccountFansDao {
 
 	public AccountFans getById(String id);

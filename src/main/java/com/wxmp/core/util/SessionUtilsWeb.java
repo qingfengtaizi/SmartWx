@@ -17,7 +17,7 @@ import com.wxmp.backstage.sys.domain.SysUser;
  */
 public final class SessionUtilsWeb {
 
-	protected static final Logger logger = Logger.getLogger(SessionUtils.class);
+	protected static final Logger logger = Logger.getLogger(SessionUtilsWeb.class);
 
 	public static final String SESSION_USER = "session_user_web";
 

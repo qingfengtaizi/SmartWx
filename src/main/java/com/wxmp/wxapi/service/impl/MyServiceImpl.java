@@ -66,8 +66,7 @@ public class MyServiceImpl implements MyService{
 	 * 处理消息
 	 * 开发者可以根据用户发送的消息和自己的业务，自行返回合适的消息；
 	 * @param msgRequest : 接收到的消息
-	 * @param appId ： appId
-	 * @param appSecret : appSecret
+	 * @param mpAccount ： appId
 	 */
 	public String processMsg(MsgRequest msgRequest,MpAccount mpAccount){
 		String msgtype = msgRequest.getMsgType();//接收到的消息类型
@@ -235,10 +234,7 @@ public class MyServiceImpl implements MyService{
 		if(jsonObject.containsKey("data")){
 			if(jsonObject.getJSONObject("data").containsKey("openid")){
 				JSONArray openidArr = jsonObject.getJSONObject("data").getJSONArray("openid");
-				int length = 5;//同步5个
-				if(openidArr.size() > length){
-					length = openidArr.size();
-				}
+				int length = openidArr.size();
 				for(int i = 0; i < length ;i++){
 					Object openId = openidArr.get(i);
 					AccountFans fans = WxApiClient.syncAccountFans(openId.toString(), mpAccount);

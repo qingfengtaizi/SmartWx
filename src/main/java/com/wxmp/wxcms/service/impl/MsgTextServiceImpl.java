@@ -1,21 +1,20 @@
 package com.wxmp.wxcms.service.impl;
 
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.wxmp.wxapi.process.MsgType;
 import com.wxmp.wxcms.domain.MsgBase;
 import com.wxmp.wxcms.domain.MsgText;
 import com.wxmp.wxcms.mapper.MsgBaseDao;
 import com.wxmp.wxcms.mapper.MsgTextDao;
 import com.wxmp.wxcms.service.MsgTextService;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
+import java.util.List;
 
-
+/**
+ * @author : hermit
+ */
 @Service
 public class MsgTextServiceImpl implements MsgTextService{
 

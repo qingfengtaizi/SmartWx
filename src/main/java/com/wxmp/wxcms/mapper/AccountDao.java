@@ -1,9 +1,11 @@
 package com.wxmp.wxcms.mapper;
 
+import com.wxmp.wxcms.domain.Account;
 import java.util.List;
 
-import com.wxmp.wxcms.domain.Account;
-
+/**
+ * @author : hermit
+ */
 
 public interface AccountDao {
 

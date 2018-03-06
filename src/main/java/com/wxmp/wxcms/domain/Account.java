@@ -6,6 +6,7 @@ import com.wxmp.wxapi.process.MpAccount;
 
 /**
  * 微信公众账号
+ * @author : hermit
  */
 public class Account extends MpAccount{
 

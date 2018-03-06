@@ -1,9 +1,10 @@
 package com.wxmp.wxcms.service;
 
-import java.util.List;
-
 import com.wxmp.wxcms.domain.MsgText;
-
+import java.util.List;
+/**
+ * @author : hermit
+ */
 public interface MsgTextService {
 
 	public MsgText getById(String id);

@@ -1,10 +1,12 @@
 package com.wxmp.wxcms.mapper;
 
 import java.util.List;
-
 import com.wxmp.core.page.Pagination;
 import com.wxmp.wxcms.domain.AccountMenuGroup;
 
+/**
+ * @author : hermit
+ */
 
 public interface AccountMenuGroupDao {
 

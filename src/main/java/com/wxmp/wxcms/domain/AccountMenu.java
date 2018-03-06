@@ -1,13 +1,11 @@
 package com.wxmp.wxcms.domain;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
-
 import com.wxmp.core.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * 账号菜单
- * 
+ * @author : hermit
  */
 
 public class AccountMenu extends BaseEntity{

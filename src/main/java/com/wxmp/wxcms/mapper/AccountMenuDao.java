@@ -1,9 +1,11 @@
 package com.wxmp.wxcms.mapper;
 
 import java.util.List;
-
 import com.wxmp.wxcms.domain.AccountMenu;
 
+/**
+ * @author : hermit
+ */
 
 public interface AccountMenuDao {
 

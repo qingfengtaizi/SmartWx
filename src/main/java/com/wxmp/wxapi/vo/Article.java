@@ -1,8 +1,6 @@
 package com.wxmp.wxapi.vo;
 /**
  * 图文消息
- *  
- * 
  */
 public class Article {
 	

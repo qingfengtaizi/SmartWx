@@ -15,12 +15,12 @@ import com.wxmp.wxcms.service.AccountMenuGroupService;
 import com.wxmp.wxcms.service.AccountMenuService;
 
 /**
- * 
+ * @author : hermit
  */
 
 @Controller
 @RequestMapping("/wxcms/accountMenuGroup")
-public class AccountMenuGroupCtrl{
+public class AccountMenuGroupCtrl extends BaseCtrl{
 
 	@Autowired
 	private AccountMenuGroupService entityService;
