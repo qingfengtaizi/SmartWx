@@ -1,6 +1,3 @@
-# wxmp-web
-微信公众号的web管理工具 本项目采用springmvc+bootstarp实现。https://github.com/qingfengtaizi/wxmp-web
-=======
 ## 本项目是一个完整的微信公众号web操作版，直接编译即可运行。让用户不再用关心微信的底层接口，直接使用页面进行操作，简单方便。
 ### 包括服务器绑定、文本管理、图文管理、菜单管理、粉丝管理、群发消息等
 ---------------------------------
@@ -39,6 +36,6 @@
  
 ---------------------------------
 ### 我们能做什么
-![登陆页](https://github.com/qingfengtaizi/wxmp-web/blob/master/src/main/webapp/res/images/logo.png "登陆页.png")
+![登陆页](https://github.com/qingfengtaizi/wxmp-web/blob/master/src/main/webapp/res/images/login.png "登陆页.png")
 ![输入图片说明](https://github.com/qingfengtaizi/wxmp-web/blob/master/src/main/webapp/res/images/main.png "首页.png")
 ![输入图片说明](https://github.com/qingfengtaizi/wxmp-web/blob/master/src/main/webapp/res/images/index.png "功能页.png")
