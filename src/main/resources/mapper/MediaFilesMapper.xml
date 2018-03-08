@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.wxmp.wxcms.mapper.MediaFilesDao">
+    
+	<insert id="add" parameterType="com.wxmp.wxcms.domain.MediaFiles">
+		INSERT INTO t_wxcms_media_files 
+		 (mediaType,
+		  media_id,
+		  createTime,
+		  updateTime)
+		  VALUES(#{mediaType},
+		          #{mediaId},
+		          #{createTime},
+		          #{updateTime}) 
+	</insert>
+    <!-- 查询主表的媒体信息  -->
+	<select id="getMediaFileList" resultType="com.wxmp.wxcms.domain.MediaFiles">
+		SELECT mediaType as mediaType,
+		       media_id as mediaId
+		 FROM t_wxcms_media_files t
+		  ORDER BY t.createTime desc 
+	</select>
+	
+	
+    <!-- 删除临时订单 -->
+    <delete id="deleteByMediaId" parameterType="java.lang.String" >
+		DELETE FROM t_wxcms_media_files WHERE media_id = #{mediaId}
+	</delete>
+</mapper>

@@ -1,0 +1,9 @@
+@charset "utf-8";
+/*------------// Overall //------------------*/
+body{font:12px/180% Arial,Helvetica,Verdana;color:#5a5a5a; margin:0; background:#FFF;}
+
+
+
+body.login{ background:url(../../images/loginBgRepeat.jpg) repeat;}
+.login-bg{background:url(../../images/login_bgx.gif) no-repeat;width:682px;height:356px;margin:0 auto;}
+

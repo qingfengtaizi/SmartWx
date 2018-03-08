@@ -1,0 +1,5 @@
+@charset "utf-8";
+/* CSS Document */
+
+.OAuthInfo h6{display:inline-block; margin-right:50px;}
+.OAuthInfo input{ width:100px; height:40px;}

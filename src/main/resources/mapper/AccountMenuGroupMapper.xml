@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.wxmp.wxcms.mapper.AccountMenuGroupDao">
+
+
+	<select id="list" parameterType="com.wxmp.wxcms.domain.AccountMenuGroup" resultType="com.wxmp.wxcms.domain.AccountMenuGroup">
+		SELECT * FROM t_wxcms_account_menu_group ORDER BY ID
+	</select>
+
+	<select id="getTotalItemsCount" parameterType="com.wxmp.wxcms.domain.AccountMenuGroup" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM t_wxcms_account_menu_group
+	</select>
+
+	<select id="paginationEntity" resultType="com.wxmp.wxcms.domain.AccountMenuGroup">
+		SELECT * FROM t_wxcms_account_menu_group ORDER BY ID LIMIT #{param2.start} , #{param2.pageSize} 
+	</select>
+
+	<select id="getById" parameterType="java.lang.String" resultType="com.wxmp.wxcms.domain.AccountMenuGroup">
+		SELECT * FROM t_wxcms_account_menu_group WHERE ID = #{id}
+	</select>
+
+	<insert id="add" parameterType="com.wxmp.wxcms.domain.AccountMenuGroup" flushCache="true"  useGeneratedKeys="true" keyProperty="id"  >
+		INSERT INTO t_wxcms_account_menu_group ( NAME,ENABLE,ID,CREATETIME )  VALUES ( #{name},#{enable},#{id},#{createtime} ) 
+	</insert>
+	
+	<update id="updateMenuGroupDisable" flushCache="true">
+		UPDATE t_wxcms_account_menu_group SET ENABLE = 0
+	</update>
+	
+	<update id="updateMenuGroupEnable" parameterType="java.lang.String" flushCache="true">
+		UPDATE t_wxcms_account_menu_group SET ENABLE = 1 WHERE ID = #{id}
+	</update>
+
+	<update id="update" parameterType="com.wxmp.wxcms.domain.AccountMenuGroup" flushCache="true">
+		UPDATE t_wxcms_account_menu_group SET NAME = #{name},ENABLE = #{enable},CREATETIME = #{createtime} WHERE ID = #{id} 
+	</update>
+
+	<delete id="deleteAllMenu" parameterType="com.wxmp.wxcms.domain.AccountMenuGroup" >
+		DELETE FROM t_wxcms_account_menu WHERE GID = #{id}
+	</delete>
+
+	<delete id="delete" parameterType="com.wxmp.wxcms.domain.AccountMenuGroup" >
+		DELETE FROM t_wxcms_account_menu_group WHERE ID = #{id}
+	</delete>
+    <!--根据id删除菜单组  -->
+	<delete id="deleteGroupById" parameterType="java.lang.Long" >
+		DELETE FROM t_wxcms_account_menu_group WHERE ID = #{id}
+	</delete>
+	<!-- 根据菜单组id删除菜单 -->
+	<delete id="deleteMenuByGId" parameterType="java.lang.Long" >
+		DELETE FROM t_wxcms_account_menu WHERE GID = #{id}
+	</delete>
+</mapper>

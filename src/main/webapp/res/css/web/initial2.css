@@ -1,0 +1,165 @@
+@charset "utf-8";
+/* CSS Document */
+
+*{margin:0; padding:0;}
+a{text-decoration:none;}
+img{border:0;}
+ul,ol,li{list-style:none;}
+.clearfix:before, .clearfix:after {content: "";display:table;}
+.clearfix:after {clear:both;}
+.clearfix {clear:both;*zoom: 1;}
+.clear{clear:both;}
+body{font-family:"Microsoft YaHei UI", "Microsoft YaHei UI Light", "微软雅黑"; font-size:14px; color:#666; background:#fff;}
+h1,h2,h3,h4,h5,h6,p,dl,ul{ margin:0; padding:0;}
+
+
+
+
+
+
+
+/*登陆界面样式*/
+#login-bg{ position:absolute; width:100%; height:100%; top:0px; left:0px; z-index:-1;}
+#login-main{position:absolute; top:50%; left:50%; width:300px; height:420px; margin-top:-210px; margin-left:-150px;}
+#login-main img{ width:40%; margin:0 auto; padding:30px 0px;}
+.login-input{ width:85%;margin:0 auto; padding-top:20px; border-top:1px solid #e1e1e1;}
+.login-input .input-group{ width:100%!important; margin-bottom:10px; }
+.login-input .form-control{background:#fcfcfc;}
+.login-input h2{ font-size:1.1em; color:#cecece; margin-bottom:5px; margin-top:5px;}
+
+.login-btn{ width:100%; line-height:45px; background:#00b4ef; box-shadow:none!important; font-size:1.2em; letter-spacing:10px; padding-left:10px; color:#fff;
+margin-top:10px;}
+#forget-pass{ position:relative; margin-top:70px; font-size:1.1em; text-align:center; letter-spacing:1px; color:#656565;}
+#forget-pass a{ color:#1696c0}
+
+
+.box-shadow{
+	filter: progid:DXImageTransform.Microsoft.Shadow(color='#9b9b9b', Direction=135, Strength=5);/*for ie6,7,8*/
+    background-color: #fff;
+    -moz-box-shadow:0px 0px 5px #9b9b9b;/*firefox*/
+    -webkit-box-shadow:0px 0px 5px #9b9b9b;/*webkit*/
+    box-shadow:0px 0px 5px #9b9b9b;/*opera或ie9*/ }
+
+
+.box-radius{
+	-mos-border-radius:3px!important;
+	-webkit-border-radius:3px!important;
+	-ms-border-radius:3px!important;
+	-o-border-radius:3px!important;
+	
+	border-radius:3px!important;
+	}
+	
+
+.box-radius{
+	-mos-border-radius:3px!important;
+	-webkit-border-radius:3px!important;
+	-ms-border-radius:3px!important;
+	-o-border-radius:3px!important;
+	
+	
+	border-radius:3px!important;
+	}
+
+
+
+/*验证码*/
+.login-verify{ overflow:hidden; width:100%}
+.login-verify input{ width:50%!important; float:left; border-radius:3px!important;}
+.login-verify img{ height:46px; float:left; margin-left:5px;}
+
+
+/*table*/
+.tableTitle{ font-size:14px; display:inline-block; margin-left:5px; color:#000;}
+ table{ width:100%; border:1px solid #e5e5e5; text-align:center}
+ table thead tr{ background:#ddd;height:35px; vertical-align:middle;}
+ table td{ border:1px solid #EEE; border-top:none; border-left:none; font-size:14px;}
+.firstTd,.thirdTd{ width:25%}
+.secondTd{ width:50%;}
+
+input[type='button']{border-radius:2px;
+		 -mos-border-radius:2px;-webkit-border-radius:2px;-ms-border-radius:2px;-o-border-radius:2px;border-radius:2px; border:none; color:#fff;}
+
+.addBtn{ width:90px; height:28px; background:#23b3cd; text-align:center; color:#fff; font-weight:bold}
+.deleteBtn,.editeBtn,.viewBtn{ height:35px; width:45px; margin:2px 0px;}
+.deleteBtn{ background:#f5b21b;}
+.editeBtn{ background:#a5d076;}
+.viewBtn{ background:#e6e6e6; color:#5f5f5f!important}
+.creatMenu, .deleteMenu{ width:90px; height:35px; background:#23b3cd; margin: 20px 10px;}
+.fm-form ul li{overflow:hidden;}
+
+/*翻页*/
+.page input,.page label{ padding:8px 12px; color:#000!important; background:#eee; margin:30px 0px; border:none!important}
+
+
+/*文本/输入/按钮*/
+.contentContainer  , .block-content{ border-radius:2px; -mos-border-radius:2px;
+				  -webkit-border-radius:2px;-ms-border-radius:2px;-o-border-radius:2px;border-radius:2px;
+				  border:1px solid #e1e1e1; background:#f7f7f7; width:100%; padding:20px 20px;}
+.content{ background:#fff; padding:20px 0px;}
+.infoTable{ border:none; width:80%; margin:0 auto;}
+.infoTable td{ border:none;}
+.infoTable thead tr{ background:#fff;}
+.fInfo,.tInfo{ width:20%}
+.tInfo,.sInfo{ text-align:left}
+.fInfo{ text-align:right;}
+.fInfo span{ margin-right:15px;}
+.tInfo input{ margin-left:15px;}
+.content input[type='text']{ width:100%; border:1px solid #cecece; height:35px;}
+.infoTable tbody .tInfo{ background:#fff;}
+.creatCode{ width:160px; height:35px; background:#23b3cd;color:#fff;}
+
+/*content样式*/
+
+
+.block-content-nav{background:#F7F7F7;width:500px;height:40px;line-height:40px;margin-left:20px;font-weight:700;text-align:left;padding-left:20px;}
+.block-content-nav span{color:#EDA74B;font-size:16px;marign-left:20px;padding-left:20px;}
+.block-content-description{margin-top:20px;margin-left:40px;}
+.bor{width:80px;height:50px;text-align:right;float:left;/*position:absolute;margin-left:290px;*/    margin-left: 20px;
+    margin-right: 10px;}
+ .helptext{float:left;margin-top:80px;margin-left:10px;}   
+
+
+/*personalx  个人中心样式*/
+
+
+.personalx{margin:0  auto;background:#F7F7F7;padding:20px;}
+.personal_center{background:#fff;padding:30px;margin:0  auto;}
+.per_nav{margin-left:300px;}
+.per_nav li{margin-top:10px;}
+.per_span label{width:130px;text-align:right;height:30px;line-height:30px;background:#f6f9fa;}
+.per_nav li input{height:30px;line-height:30px;width:350px;}
+.save , .back{width:50px;height:40px;line-height:40px;background: #1A9DA7;color: #fff;display:block;text-align:center;text-decoration:none;
+               -moz-border-radius:5px;
+			   -webkit-border-radius:5px;
+			   -ms-border-radius:5px;
+			   border-radius:5px;
+			   
+			   
+           }
+		   
+.save{float:left;}		   
+.back{float:right;}
+.btn_div{width:180px;margin:40px  auto 80px  auto;}
+.save:hover , .back:hover{text-decoration:none;}
+.username ,.useraccount ,.userphone ,.usercarID ,.usermailbox{color:red;margin-left:5px;}
+.getword{width:80px;height:30px;line-height:30px;float:right;margin-right:325px;text-align:center;border:1px  solid  #1A9DA7;color:#EDA74B;}
+.succe{margin:0  auto;width:400px; }
+.PW{color:#F90;font-size:16px;  font-weight:700;margin-left:20px;}
+
+#login-page{font-family:"Microsoft YaHei UI", "Microsoft YaHei UI Light", "微软雅黑"; font-size:14px;}
+
+
+
+
+
+/*main页面样式*/
+.nav-top{margin:0  auto; width: 80%;}
+.font_h3{}
+.main_ul{margin:100px  auto;}
+.main_ul li{margin-top:20px;}
+.main-left{float:left;width:50%;}
+.main-left  img{margin-left:200px;margin-top:30px;}
+.main-right{float:left;width:50%;}
+.boldfont{color:#27B1B3;font-size:20px;font-weight:bold;}
+.radiuss{width:10px;height:10px;border-radius:50%;background:#F60;float:left; margin-right: 20px; margin-top: 5px;}

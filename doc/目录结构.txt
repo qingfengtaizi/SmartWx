@@ -1,0 +1,6 @@
+#目录结构说明
+res->css->common   (存放公共样式)
+res->css->login    (存放登陆页面样式)
+res->js->shared    (存放共用js，比如jquery等)
+res->js->login     (存放登陆页面的js)
+res->plugins       (存放第三方插件)

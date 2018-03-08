@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.wxmp.wxcms.mapper.AccountFansDao">
+
+	<select id="list" parameterType="com.wxmp.wxcms.domain.AccountFans" resultType="com.wxmp.wxcms.domain.AccountFans">
+		SELECT * FROM t_wxcms_account_fans ORDER BY ID
+	</select>
+
+	<select id="getTotalItemsCount" parameterType="com.wxmp.wxcms.domain.AccountFans" resultType="java.lang.Integer">
+		SELECT count(id) FROM t_wxcms_account_fans 
+	</select>
+
+	<select id="paginationEntity" resultType="com.wxmp.wxcms.domain.AccountFans">
+		SELECT * FROM t_wxcms_account_fans 
+		ORDER BY ID 
+		LIMIT #{param2.start} , #{param2.pageSize}
+	</select>
+	
+	<select id="getLastOpenId" resultType="com.wxmp.wxcms.domain.AccountFans">
+		SELECT * FROM t_wxcms_account_fans 
+		ORDER BY ID DESC
+		LIMIT 0 , 1
+	</select>
+
+	<select id="getById" parameterType="java.lang.String" resultType="com.wxmp.wxcms.domain.AccountFans">
+		SELECT * FROM t_wxcms_account_fans WHERE ID = #{id}
+	</select>
+	
+	<select id="getByOpenId" parameterType="java.lang.String" resultType="com.wxmp.wxcms.domain.AccountFans">
+		SELECT * FROM t_wxcms_account_fans WHERE OPENID = #{openId}
+	</select>
+
+	<insert id="add" parameterType="com.wxmp.wxcms.domain.AccountFans" flushCache="true"  useGeneratedKeys="true" keyProperty="id"  >
+		<![CDATA[ 
+		INSERT INTO t_wxcms_account_fans ( OPENID,SUBSCRIBESTATUS,SUBSCRIBETIME,NICKNAME,GENDER,LANGUAGE,COUNTRY,PROVINCE,CITY,HEADIMGURL,REMARK,STATUS,ID,WXID,CREATETIME )  VALUES ( #{openId},#{subscribeStatus},#{subscribeTime},#{nickname},#{gender},#{language},#{country},#{province},#{city},#{headimgurl},#{remark},#{status},#{id},#{wxid},#{createtime} ) 
+		 ]]>
+	</insert>
+	
+	<insert id="addList" parameterType="list">  
+        INSERT INTO t_wxcms_account_fans ( OPENID,SUBSCRIBESTATUS,SUBSCRIBETIME,NICKNAME,GENDER,LANGUAGE,COUNTRY,PROVINCE,CITY,HEADIMGURL,REMARK,STATUS,ID,WXID,CREATETIME )
+        VALUES
+        <foreach  collection="list" item="item" index="index" separator="," >  
+        	<![CDATA[
+            ( #{item.openId},#{item.subscribeStatus},#{item.subscribeTime},#{item.nickname},#{item.gender},#{item.language},#{item.country},#{item.province},#{item.city},#{item.headimgurl},#{item.remark},#{item.status},#{item.id},#{item.wxid},#{item.createtime} ) 
+        	 ]]>
+        </foreach> 
+    </insert>
+	
+	<update id="update" parameterType="com.wxmp.wxcms.domain.AccountFans" flushCache="true">
+		UPDATE t_wxcms_account_fans SET NICKNAME = #{nickname},GENDER = #{gender},COUNTRY = #{country},PROVINCE = #{province},CITY = #{city},WXID=#{wxid} WHERE ID = #{id} 
+	</update>
+
+	<delete id="delete" parameterType="com.wxmp.wxcms.domain.AccountFans" >
+		DELETE FROM t_wxcms_account_fans WHERE ID = #{id}
+	</delete>
+	
+	<delete id="deleteByOpenId" parameterType="java.lang.String" >
+		DELETE FROM t_wxcms_account_fans WHERE OPENID = #{openId}
+	</delete>
+    
+    <!-- 分页查询粉丝列表 -->
+	<select id="getAccountFansList" resultType="com.wxmp.wxcms.domain.AccountFans">
+		SELECT * FROM t_wxcms_account_fans 
+		ORDER BY createtime desc 
+	</select>
+</mapper>
