@@ -1,38 +1,20 @@
 package com.wxmp.wxapi.process;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.math.BigDecimal;
+import com.wxmp.backstage.common.Identities;
+import net.sf.json.JSONException;
+import net.sf.json.JSONObject;
+
+import javax.net.ssl.*;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
-import com.wxmp.core.util.wx.SecurityUtil;
-
-import net.sf.json.JSONException;
-import net.sf.json.JSONObject;
 
 /**
  * 微信 API、微信基本接口
@@ -610,7 +592,7 @@ public class WxApi {
 		String prepay_id = "";
 		String errMsg="";
 		String timestamp = String.valueOf(System.currentTimeMillis()/1000);
-		String nonceStr = SecurityUtil.getRandomString(8);
+		String nonceStr = Identities.getRandomString(8);
 		 //#######jssdk config配置时已设置，从前台传过来######
 		timestamp =str_timestamp;
 		nonceStr=str_nonceStr;//nonce_str:下统一订单时的随机字符串，此时这三个随机变量完全相等

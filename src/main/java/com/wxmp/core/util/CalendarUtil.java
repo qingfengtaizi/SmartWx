@@ -61,7 +61,7 @@ public class CalendarUtil {
         }else{
         	calendar.set(year, month, date+1);
         }
-        return DateUtil.getDateText(calendar.getTime(), format);
+        return DateUtilOld.getDateText(calendar.getTime(), format);
 	}
 	
 	//获取n天后的日期
@@ -145,7 +145,7 @@ public class CalendarUtil {
         }else{
         	calendar.set(year, month, date - x);
         }
-        return DateUtil.getDateText(calendar.getTime(), format);
+        return DateUtilOld.getDateText(calendar.getTime(), format);
 	}
 	
 	//获取当前年
@@ -176,10 +176,10 @@ public class CalendarUtil {
 			m = 0;
 		}
 		calendar.set(Integer.parseInt(year), m, 1);
-		String firstDayTime = DateUtil.COMMON.getDateText(calendar.getTime()) +" 00:00:00";
+		String firstDayTime = DateUtilOld.COMMON.getDateText(calendar.getTime()) +" 00:00:00";
 		
 		calendar.set(Calendar.DATE, calendar.getActualMaximum(Calendar.DATE));//设置本月最大日期
-		String lastDayTime = DateUtil.COMMON.getDateText(calendar.getTime()) +" 23:59:59";
+		String lastDayTime = DateUtilOld.COMMON.getDateText(calendar.getTime()) +" 23:59:59";
 		
 		rst.put(CalendarUtil.MONTH_FIRST_DAY_TIME, firstDayTime);
 		rst.put(CalendarUtil.MONTH_LAST_DAY_TIME, lastDayTime);
@@ -237,7 +237,7 @@ public class CalendarUtil {
 		
 		List<String> months = new ArrayList<String>();
 		while(startCalendar.getTimeInMillis() <= endCalendar.getTimeInMillis()){
-			months.add(DateUtil.getDateText(startCalendar.getTime(),"yyyy-MM"));
+			months.add(DateUtilOld.getDateText(startCalendar.getTime(),"yyyy-MM"));
 			startCalendar.add(Calendar.MONTH, 1);
 		}
 		return months;
@@ -247,8 +247,8 @@ public class CalendarUtil {
 	public static List<String> getBetweenDateStr(String startTime,String endTime){
 		List<String> dateList = new ArrayList<String>();
 		try {
-			Long startM = DateUtil.COMMON.getTextDate(startTime).getTime();
-			Long endM = DateUtil.COMMON.getTextDate(endTime).getTime();
+			Long startM = DateUtilOld.COMMON.getTextDate(startTime).getTime();
+			Long endM = DateUtilOld.COMMON.getTextDate(endTime).getTime();
 			long result = (endM-startM) / (24 * 60 * 60*1000);
 			String[] startTimeStr = startTime.split("-");
 			Calendar startCalendar = Calendar.getInstance();
@@ -256,7 +256,7 @@ public class CalendarUtil {
 			startCalendar.add(Calendar.DATE,-1);
 			for(int i = 0; i <= result ; i++){
 				startCalendar.add(Calendar.DATE,1);
-				dateList.add(DateUtil.COMMON.getDateText(startCalendar.getTime()));
+				dateList.add(DateUtilOld.COMMON.getDateText(startCalendar.getTime()));
 			}
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -267,8 +267,8 @@ public class CalendarUtil {
 	public static List<String> getBetweenDateStr(String startTime,String endTime,String format){
 		List<String> dateList = new ArrayList<String>();
 		try {
-			Long startM = DateUtil.COMMON.getTextDate(startTime).getTime();
-			Long endM = DateUtil.COMMON.getTextDate(endTime).getTime();
+			Long startM = DateUtilOld.COMMON.getTextDate(startTime).getTime();
+			Long endM = DateUtilOld.COMMON.getTextDate(endTime).getTime();
 			long result = (endM-startM) / (24 * 60 * 60*1000);
 			String[] startTimeStr = startTime.split("-");
 			Calendar startCalendar = Calendar.getInstance();
@@ -276,7 +276,7 @@ public class CalendarUtil {
 			startCalendar.add(Calendar.DATE,-1);
 			for(int i = 0; i <= result ; i++){
 				startCalendar.add(Calendar.DATE,1);
-				dateList.add(DateUtil.getDateText(startCalendar.getTime(),format));
+				dateList.add(DateUtilOld.getDateText(startCalendar.getTime(),format));
 			}
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -298,7 +298,7 @@ public class CalendarUtil {
 		
 		List<String> months = new ArrayList<String>();
 		while(tmpCalendar.getTimeInMillis() <= curCalendar.getTimeInMillis()){
-			months.add(DateUtil.getDateText(tmpCalendar.getTime(),"yyyy-MM"));
+			months.add(DateUtilOld.getDateText(tmpCalendar.getTime(),"yyyy-MM"));
 			tmpCalendar.add(Calendar.MONTH, 1);
 		}
 		return months;
@@ -307,7 +307,7 @@ public class CalendarUtil {
 	//获取当前天
 	public static String getToday(String format){
 		Calendar calendar = Calendar.getInstance();
-        return DateUtil.getDateText(calendar.getTime(), format);
+        return DateUtilOld.getDateText(calendar.getTime(), format);
 	}
 	
 	//获取当前月的第一天
@@ -316,14 +316,14 @@ public class CalendarUtil {
 		int month = calendar.get(Calendar.MONTH);
         int year = calendar.get(Calendar.YEAR);
         calendar.set(year, month, 1);
-        return DateUtil.getDateText(calendar.getTime(), format);
+        return DateUtilOld.getDateText(calendar.getTime(), format);
 	}
 	
 	//获取当前月的最后一天
 	public static String getLastDay(String format){
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.DATE, calendar.getActualMaximum(Calendar.DATE));//设置本月最大日期
-        return DateUtil.getDateText(calendar.getTime(), format);
+        return DateUtilOld.getDateText(calendar.getTime(), format);
 	}
 	
 	//获取当前月的第一天
@@ -348,8 +348,8 @@ public class CalendarUtil {
 		if(date1==null || date2 == null){
 			return false;
 		}
-		String date1Str = DateUtil.COMPAT.getDateText(date1);
-		String date2Str = DateUtil.COMPAT.getDateText(date2);
+		String date1Str = DateUtilOld.COMPAT.getDateText(date1);
+		String date2Str = DateUtilOld.COMPAT.getDateText(date2);
 		return date1Str.equals(date2Str);
 	}
 	
@@ -425,8 +425,8 @@ public class CalendarUtil {
 		System.out.println(getLastDay("yyyy-MM-dd"));*/
 		
 		try {
-			Date startTime = DateUtil.COMMON.getTextDate("2015-06-03 00:00:00");
-			Date endTime = DateUtil.COMMON_FULL.getTextDate("2015-06-03 23:59:59");
+			Date startTime = DateUtilOld.COMMON.getTextDate("2015-06-03 00:00:00");
+			Date endTime = DateUtilOld.COMMON_FULL.getTextDate("2015-06-03 23:59:59");
 			System.out.println(isTimeBetween(new Date(),startTime,endTime));
 			
 			List<String> month = getPreNMonths("2015-06",11);
@@ -434,7 +434,7 @@ public class CalendarUtil {
 				System.out.println(s);
 			}
 			
-			String str = DateUtil.COMMON_FULL.getDateText(getPreNDayEnd(new Date(),1));
+			String str = DateUtilOld.COMMON_FULL.getDateText(getPreNDayEnd(new Date(),1));
 			System.out.println(str);
 			
 			List<String> days = getBetweenDateStr("2015-03-09","2015-06-15","MM/dd");

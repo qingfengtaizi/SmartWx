@@ -2,7 +2,7 @@ package com.wxmp.backstage.img.ctrl;
 
 import com.wxmp.backstage.img.domain.ImgResource;
 import com.wxmp.backstage.img.service.ImgResourceService;
-import com.wxmp.backstage.util.ImgTypeUtil;
+import com.wxmp.core.util.ImgTypeUtil;
 import com.wxmp.core.util.PropertiesConfigUtil;
 import com.wxmp.wxapi.process.MediaType;
 import com.wxmp.wxapi.process.MpAccount;
@@ -62,13 +62,13 @@ public class ImgResourceCtrl {
 		 
 		 //图片上传路径
 
-         String resURL = PropertiesConfigUtil.getProperty("upload.properties","res.upload.url").toString();
+         String resURL = PropertiesConfigUtil.getProperty("property/upload.properties","res.upload.url").toString();
          System.out.println("图片上传路径：===== " + resURL);
 		 String filePath = request.getSession().getServletContext().getRealPath("/");
 			
 	     //读取配置文上传件的路径
-		 if(PropertiesConfigUtil.getProperty("upload.properties","res.upload.path") != null){
-			 filePath = PropertiesConfigUtil.getProperty("upload.properties","res.upload.path").toString() + fileName;
+		 if(PropertiesConfigUtil.getProperty("property/upload.properties","res.upload.path") != null){
+			 filePath = PropertiesConfigUtil.getProperty("property/upload.properties","res.upload.path").toString() + fileName;
 		 }else{
 			 filePath = filePath + "/upload/"+fileName;
 		 }

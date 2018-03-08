@@ -1,27 +1,21 @@
 package com.wxmp.wxapi.process;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
-
-import com.wxmp.core.util.wx.SecurityUtil;
+import com.wxmp.backstage.common.Identities;
 import com.wxmp.wxapi.vo.Material;
 import com.wxmp.wxapi.vo.MaterialArticle;
 import com.wxmp.wxapi.vo.MaterialItem;
 import com.wxmp.wxapi.vo.TemplateMessage;
 import com.wxmp.wxcms.domain.AccountFans;
 import com.wxmp.wxcms.domain.MsgNews;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
+
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.util.*;
 
 /**
  * 微信 客户端，统一处理微信相关接口
@@ -447,7 +441,7 @@ public class WxApiClient {
 		String openid="otLBWs_uiGnrWBGgHEemPZTQLatE";
 		
 		String timestamp = String.valueOf(System.currentTimeMillis()/1000);
-		String nonceStr = SecurityUtil.getRandomString(8);
+		String nonceStr = Identities.getRandomString(8);
 		getWSJSPayPara(mpAccount,openid,timestamp,nonceStr);
 	}
 		

@@ -1,10 +1,10 @@
 package com.wxmp.wxapi.process;
 
+import com.wxmp.backstage.common.Identities;
+import com.wxmp.core.util.wx.SignUtil;
+
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import com.wxmp.core.util.wx.SecurityUtil;
-import com.wxmp.core.util.wx.SignUtil;
 
 
 public class WxSign {
@@ -19,7 +19,7 @@ public class WxSign {
 	
 	public WxSign(String appId,String jsTicket,String url){
 		String timestamp = String.valueOf(System.currentTimeMillis()/1000);
-		String nonceStr = SecurityUtil.getRandomString(8);
+		String nonceStr = Identities.getRandomString(8);
 		SortedMap<String,String> map = new TreeMap<String, String>();
 		map.put("jsapi_ticket", jsTicket);
 		map.put("noncestr", nonceStr);

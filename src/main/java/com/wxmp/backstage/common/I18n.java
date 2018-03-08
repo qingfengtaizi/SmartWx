@@ -4,7 +4,7 @@ import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import com.wxmp.backstage.util.ExcptUtil;
+import com.wxmp.core.util.ExcptUtil;
 /**
  * @author : hermit
  */

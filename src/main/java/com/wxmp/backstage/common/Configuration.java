@@ -1,7 +1,6 @@
 package com.wxmp.backstage.common;
 
 import java.io.File;
-import java.net.URL;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -15,9 +14,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.wxmp.backstage.util.FileUtil;
-import com.wxmp.backstage.util.StringUtil;
-import com.wxmp.backstage.util.ValidateUtil;
+import com.wxmp.core.util.FileUtil;
+import com.wxmp.core.util.StringUtil;
+import com.wxmp.core.util.ValidateUtil;
 /**
  * @author : hermit
  */

@@ -3,13 +3,12 @@ package com.wxmp.wxcms.ctrl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wxmp.backstage.img.domain.ImgResource;
-import com.wxmp.backstage.img.service.ImgResourceService;
 import com.wxmp.backstage.sys.domain.SysUser;
 import com.wxmp.backstage.sys.service.ISysUserService;
 import com.wxmp.core.page.Pagination;
 import com.wxmp.core.spring.SpringFreemarkerContextPathUtil;
 import com.wxmp.core.util.PropertiesConfigUtil;
-import com.wxmp.core.util.SessionUtilsWeb;
+import com.wxmp.core.util.SessionUtil;
 import com.wxmp.core.util.UploadUtil;
 import com.wxmp.wxapi.process.MediaType;
 import com.wxmp.wxapi.process.MpAccount;
@@ -23,7 +22,6 @@ import com.wxmp.wxcms.domain.MediaFiles;
 import com.wxmp.wxcms.domain.MsgNews;
 import com.wxmp.wxcms.domain.MsgText;
 import com.wxmp.wxcms.mapper.AccountDao;
-import com.wxmp.wxcms.mapper.MsgNewsDao;
 import com.wxmp.wxcms.service.MsgNewsService;
 import net.sf.json.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
@@ -64,7 +62,6 @@ public class WxCmsCtrl extends BaseCtrl{
 	
 	@RequestMapping(value = "/urltoken")
 	public ModelAndView urltoken(String save){
-		
 		ModelAndView mv = new ModelAndView("wxcms/urltoken");
 		List<Account> accounts = accountDao.listForPage(null);
 		if(!CollectionUtils.isEmpty(accounts)){
@@ -84,7 +81,7 @@ public class WxCmsCtrl extends BaseCtrl{
 		}
 		mv.addObject("msgCountList", msgCountList);
 		
-		SysUser sysUser =  SessionUtilsWeb.getUser(request);
+		SysUser sysUser =  SessionUtil.getUser();
 		request.getSession().setAttribute("sysUser", sysUser);
 		return mv;
 	}
@@ -119,8 +116,8 @@ public class WxCmsCtrl extends BaseCtrl{
 		String realPath = request.getSession().getServletContext().getRealPath("/");
 		
 		//读取配置文上传件的路径
-		if(PropertiesConfigUtil.getProperty("upload.properties","upload.path") != null){
-			realPath = PropertiesConfigUtil.getProperty("upload.properties","upload.path").toString();
+		if(PropertiesConfigUtil.getProperty("property/upload.properties","upload.path") != null){
+			realPath = PropertiesConfigUtil.getProperty("property/upload.properties","upload.path").toString();
 		}
 		
 		JSONObject obj = new JSONObject();
@@ -129,15 +126,13 @@ public class WxCmsCtrl extends BaseCtrl{
 			obj.put("error", 0);
 			obj.put("url", url + tmpPath);
 		}
-		
 		try {
 			response.getWriter().write(obj.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	//上传永久素材，这里以图文消息为例子
 	@RequestMapping(value = "/toUploadMaterial")
 	public  ModelAndView toUploadMaterial(String[] newIds){

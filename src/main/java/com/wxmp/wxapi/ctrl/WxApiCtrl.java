@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.wxmp.core.util.DateUtil;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
@@ -27,7 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.wxmp.core.page.Pagination;
 import com.wxmp.core.spring.JsonView;
-import com.wxmp.core.util.DateUtil;
+import com.wxmp.core.util.DateUtilOld;
 import com.wxmp.core.util.UploadUtil;
 import com.wxmp.core.util.wx.SignUtil;
 
@@ -355,8 +356,8 @@ public class WxApiCtrl {
 		
 		tplMsg.setUrl("http://www.weixinpy.com");
 		Map<String, String> dataMap = new HashMap<String,String>();
-		dataMap.put("first", "微信派官方微信模板消息测试");
-		dataMap.put("keyword1", "时间：" + DateUtil.COMMON.getDateText(new Date()));
+		dataMap.put("first", "微信官方微信模板消息测试");
+		dataMap.put("keyword1", "时间：" + DateUtil.changeDateTOStr(new Date()));
 		dataMap.put("keyword2", "关键字二：你好");
 		dataMap.put("remark", "备注：感谢您的来访");
 		tplMsg.setDataMap(dataMap);

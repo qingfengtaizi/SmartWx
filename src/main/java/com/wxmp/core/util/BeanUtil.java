@@ -112,7 +112,7 @@ public class BeanUtil {
 			}else if(fieldType == Boolean.TYPE){
 				tmpValue = Boolean.valueOf(Boolean.valueOf(value.toString()).booleanValue());
 			}else if (fieldType == java.util.Date.class) {
-				tmpValue = DateUtil.COMPAT.getTextDate((String) value);
+				tmpValue = DateUtil.changeStrToDate2((String) value);
 			}else{
 				tmpValue = null;
 			}

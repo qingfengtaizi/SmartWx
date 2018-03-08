@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.wxmp.backstage.sys.domain.SysUser;
-import com.wxmp.core.util.SessionUtilsWeb;
+import com.wxmp.core.util.SessionUtil;
 
 
 /**
@@ -36,12 +36,12 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 					return true;
 				}
 			}
-		if (SessionUtilsWeb.getUser(request) != null) {
-			SessionUtilsWeb.getSession(request).setMaxInactiveInterval(60 * 60 * 30);
+		if (SessionUtil.getUser() != null) {
+			SessionUtil.session.setMaxInactiveInterval(60 * 60 * 30);
 		}
 		//验证登陆超时问题 auth = null，默认验证
 		String baseUri = request.getContextPath();
-		SysUser user =SessionUtilsWeb.getUser(request);
+		SysUser user = SessionUtil.getUser();
 		
 	
 		if(user  == null){

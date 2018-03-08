@@ -2,12 +2,15 @@ package com.wxmp.backstage.common;
 
 import java.security.SecureRandom;
 import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.wxmp.backstage.util.ConvertUtil;
-import com.wxmp.backstage.util.DateUtil;
-import com.wxmp.backstage.util.StringUtil;
+import com.wxmp.core.util.ConvertUtil;
+import com.wxmp.core.util.DateUtil;
+import com.wxmp.core.util.DateUtilOld;
+import com.wxmp.core.util.StringUtil;
+
 /**
  * @author : hermit
  */
@@ -55,6 +58,21 @@ public class Identities
       preFix = StringUtil.concat(new Object[] { preFix, "0" });
     }
     long last = atomicLongID.getAndIncrement() % 10000L + 10000L;
-    return StringUtil.concat(new Object[] { DateUtil.format(new Date(), "yyyyMMddHHmmssSSS"), preFix, nanoTimeStr, Long.valueOf(last) });
+    return StringUtil.concat(new Object[] { DateUtil.changeDateTOStr5(new Date(), "yyyyMMddHHmmssSSS"), preFix, nanoTimeStr, Long.valueOf(last) });
+  }
+  /**
+   * 获取一定长度的随机字符串
+   * @param length 指定字符串长度
+   * @return 一定长度的字符串
+   */
+  public static String getRandomString(int length) {
+    String base = "abcdefghijklmnopqrstuvwxyz0123456789";
+    Random random = new Random();
+    StringBuffer sb = new StringBuffer();
+    for (int i = 0; i < length; i++) {
+      int number = random.nextInt(base.length());
+      sb.append(base.charAt(number));
+    }
+    return sb.toString();
   }
 }

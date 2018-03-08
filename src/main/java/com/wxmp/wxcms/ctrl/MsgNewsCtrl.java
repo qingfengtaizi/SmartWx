@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.wxmp.core.util.DateUtil.COMMON_FULL;
+import static com.wxmp.core.util.DateUtilOld.COMMON_FULL;
 
 /**
  * @author : hermit
@@ -88,8 +88,8 @@ public class MsgNewsCtrl  extends BaseCtrl{
 		String realPath = request.getSession().getServletContext().getRealPath("/");
 
 		// 读取配置文上传件的路径
-		if (PropertiesConfigUtil.getProperty("upload.properties", "upload.path") != null) {
-			realPath = PropertiesConfigUtil.getProperty("upload.properties", "upload.path").toString();
+		if (PropertiesConfigUtil.getProperty("property/upload.properties", "upload.path") != null) {
+			realPath = PropertiesConfigUtil.getProperty("property/upload.properties", "upload.path").toString();
 		}
 
 		if (file != null && file.getSize() > 0) {

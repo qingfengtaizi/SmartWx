@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.wxmp.backstage.common.DataModel;
 import com.wxmp.backstage.sys.service.ISysUserService;
 import com.wxmp.backstage.sys.domain.SysUser;
-import com.wxmp.backstage.util.ValidateUtil;
-import com.wxmp.core.util.SessionUtilsWeb;
-import com.wxmp.core.util.wx.MD5Util;
+import com.wxmp.core.util.ValidateUtil;
+import com.wxmp.core.util.SessionUtil;
+import com.wxmp.core.util.MD5Util;
 
 /**
  * @classname : LoginAction
@@ -73,7 +73,7 @@ public class LoginCtrl {
 			code = "-1";
 		}else{
 			resMap.put("userId", sysUser.getId());
-			SessionUtilsWeb.setUser(request, sysUser);
+			SessionUtil.setUser(sysUser);
 		}
 		resMap.put("code", code);
 		return resMap;
@@ -88,7 +88,7 @@ public class LoginCtrl {
 	@RequestMapping(value = "/checkPwd")
 	public String checkPwd(String pwd, HttpServletRequest request) {
 		String code = "0";
-		if (!SessionUtilsWeb.getUser(request).getPwd().equals(MD5Util.getMD5Code(pwd))) {
+		if (!SessionUtil.getUser().getPwd().equals(MD5Util.getMD5Code(pwd))) {
 			//用户名或者密码错误
 			code = "1";
 		}

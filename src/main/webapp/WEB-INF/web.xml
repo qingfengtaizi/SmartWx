@@ -19,6 +19,12 @@
     <listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+	<!--request监听-->
+	<listener>
+		<listener-class>
+			org.springframework.web.context.request.RequestContextListener
+		</listener-class>
+	</listener>
 	<!--前端控制器拦截所有的请求-->
     <servlet>
 		<servlet-name>spring-mvc</servlet-name>
@@ -51,55 +57,6 @@
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
-	<!--获取httprequest -->
-
-	<!-- <filter> <filter-name>security</filter-name> <filter-class>com.siwo.backstage.core.web.filter.SecurityFilter</filter-class> 
-		</filter> <filter-mapping> <filter-name>security</filter-name> <url-pattern>/*</url-pattern> 
-		<dispatcher>REQUEST</dispatcher> <dispatcher>FORWARD</dispatcher> </filter-mapping>
-		
-	<filter>
-		<filter-name>UrlRewriteFilter</filter-name>
-		<filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>UrlRewriteFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>FORWARD</dispatcher>
-	</filter-mapping>
-
-	<filter>
-		<filter-name>HiddenHttpMethodFilter</filter-name>
-		<filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>HiddenHttpMethodFilter</filter-name>
-		<servlet-name>spring-mvc</servlet-name>
-	</filter-mapping>
-		
-		 -->
-
-
-    <!-- 本项目采用apache log4j 非logback方式-->
-	<!-- sping集成logback -->
-    <!-- sping4 则不用配置以下 -->
-<!-- 	<listener>    
-	    <listener-class>com.wxmp.backstage.common.LogbackConfigListener</listener-class>    
-	</listener>    
-	<context-param>    
-	    <param-name>logbackConfigLocation</param-name>    
-	    <param-value>WEB-INF/classes/logback.xml</param-value>    
-	</context-param> -->
-
-
-	
-	<!-- <security-constraint> <web-resource-collection> <web-resource-name>JSP</web-resource-name> 
-		<url-pattern>*.jsp</url-pattern> </web-resource-collection> <auth-constraint> 
-		<description>Can't access JSP</description> </auth-constraint> </security-constraint> -->
-	<error-page>
-		<error-code>406</error-code>
-		<location>/WEB-INF/template/views/406.jsp</location>
-	</error-page>
 	<error-page>
 		<error-code>404</error-code>
 		<location>/WEB-INF/template/views/404.jsp</location>
@@ -113,19 +70,6 @@
 		<location>/WEB-INF/template/views/500.jsp</location>
 	</error-page>
 	
-<!-- 	<welcome-file-list>
-		<welcome-file>/WEB-INF/template/views/login.jsp</welcome-file>
-	</welcome-file-list> 
-	
-	 freemarker视图时的配置 
-		<welcome-file-list>
-		  <welcome-file>index.html</welcome-file>
-	    </welcome-file-list>
-	    
-	    	<welcome-file-list>
-	  <welcome-file>index.jsp</welcome-file>
-    </welcome-file-list>
-	-->
 	<welcome-file-list>
 	  <welcome-file>login.jsp</welcome-file>
     </welcome-file-list>
