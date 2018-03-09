@@ -31,8 +31,8 @@ $(function(){
 //-获取当前html的title值
 $(function(){
 	var t=$(document).attr("title");
-	
-	switch (t)
+	console.log(t);
+/*	switch (t)
 	{
 	case "URL和Token":
 	  $(".firstLi").eq(0).css("background","#1e7980");
@@ -62,29 +62,39 @@ $(function(){
 	  $(".firstLi").eq(6).css("background","#1e7980");
 	  $(".firstLi").eq(6).find(".fTitle").css("color","#eda74b");
 	  break;
+	case "OAuth认证":
+		  $(".firstLi").eq(7).css("background","#1e7980");
+		  $(".firstLi").eq(7).find(".fTitle").css("color","#eda74b");
+		  break;
 	case "发送消息":
-	  $(".firstLi").eq(7).css("background","#1e7980");
-	  $(".firstLi").eq(7).find(".fTitle").css("color","#eda74b");
+	  $(".firstLi").eq(8).css("background","#1e7980");
+	  $(".firstLi").eq(8).find(".fTitle").css("color","#eda74b");
 	  break;
 	
 	case "多图文素材管理":
-		  $(".firstLi").eq(8).css("background","#1e7980");
-		  $(".firstLi").eq(8).find(".fTitle").css("color","#eda74b");
+		  $(".firstLi").eq(10).css("background","#1e7980");
+		  $(".firstLi").eq(10).find(".fTitle").css("color","#eda74b");
 		  break;
-		  
-	case "OAuth认证":
-		  $(".firstLi").eq(9).css("background","#1e7980");
-		  $(".firstLi").eq(9).find(".fTitle").css("color","#eda74b");
-		  break;
+	
 	case "JS-SDK":
-	  $(".firstLi").eq(10).css("background","#1e7980");
-	  $(".firstLi").eq(10).find(".fTitle").css("color","#eda74b");
+	  $(".firstLi").eq(12).css("background","#1e7980");
+	  $(".firstLi").eq(12).find(".fTitle").css("color","#eda74b");
 	  break;
 	case "WeUI":
-	  $(".firstLi").eq(11).css("background","#1e7980");
-	  $(".firstLi").eq(11).find(".fTitle").css("color","#eda74b");
+	  $(".firstLi").eq(13).css("background","#1e7980");
+	  $(".firstLi").eq(13).find(".fTitle").css("color","#eda74b");
 	  break;
-	} 
+	} */
+	//迭代
+	$(".leftNav a").each(function(i,obj){
+		var title=$(this).children(".fTitle");
+		if(title.html().toString()==t.toString()){
+			$(this).css("background","#1e7980");
+			title.css("color","#eda74b");
+			return false;
+		}
+	});
+	
 	})
 	
 	
