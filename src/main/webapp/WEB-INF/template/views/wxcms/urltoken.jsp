@@ -6,7 +6,7 @@
 <head>
 <meta name="renderer" content="webkit" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>URL和Token</title>
+<title>URL和TOKEN</title>
 <link href="<%=path%>/res/css/common/bootstrap.min.css" rel="stylesheet">
 <link href="<%=path%>/res/css/web/initial.css" rel="stylesheet">
 <link href="<%=path%>/res/css/web/URL_Token.css" rel="stylesheet">

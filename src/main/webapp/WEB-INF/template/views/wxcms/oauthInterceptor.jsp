@@ -39,7 +39,7 @@
        
        
         <div class="rightInfo">
-        	<h2 class="infoTitle">JS-SDK</h2>
+        	<h2 class="infoTitle">OAuth认证</h2>
 			<p class="warning">
             	<img src="<%=path%>/res/images/warnIcon_03.png">
             		在微信中如果需要通过页面获取粉丝信息，可以通过拦截器实现OAuth的认证。 以通过OAuth接口获取openid为例。

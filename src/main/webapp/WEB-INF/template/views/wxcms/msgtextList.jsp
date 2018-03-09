@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>文本消息</title>
+<title>文本管理</title>
 <link href="<%=path%>/res/css/common/bootstrap.min.css" rel="stylesheet">
 <link href="<%=path%>/res/css/web/initial.css" rel="stylesheet">
 <link href="<%=path%>/res/css/web/URL_Token.css" rel="stylesheet">

@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>菜单管理</title>
+<title>图文消息</title>
 <link href="<%=path%>/res/css/common/bootstrap.min.css" rel="stylesheet">
 <link href="<%=path%>/res/css/web/initial.css" rel="stylesheet">
 <link href="<%=path%>/res/css/web/URL_Token.css" rel="stylesheet">
