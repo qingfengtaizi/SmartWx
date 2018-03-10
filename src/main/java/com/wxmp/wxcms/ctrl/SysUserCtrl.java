@@ -1,4 +1,4 @@
-package com.wxmp.backstage.sys.ctrl;
+package com.wxmp.wxcms.ctrl;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.wxmp.backstage.sys.domain.SysUser;
-import com.wxmp.backstage.sys.service.ISysUserService;
+import com.wxmp.wxcms.domain.SysUser;
+import com.wxmp.wxcms.service.ISysUserService;
 
 
 /**

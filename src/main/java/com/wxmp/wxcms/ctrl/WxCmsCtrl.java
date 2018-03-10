@@ -2,9 +2,9 @@ package com.wxmp.wxcms.ctrl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.wxmp.backstage.img.domain.ImgResource;
-import com.wxmp.backstage.sys.domain.SysUser;
-import com.wxmp.backstage.sys.service.ISysUserService;
+import com.wxmp.wxcms.domain.ImgResource;
+import com.wxmp.wxcms.domain.SysUser;
+import com.wxmp.wxcms.service.ISysUserService;
 import com.wxmp.core.page.Pagination;
 import com.wxmp.core.spring.SpringFreemarkerContextPathUtil;
 import com.wxmp.core.util.PropertiesConfigUtil;

@@ -1,6 +1,6 @@
-package com.wxmp.backstage.img.service;
+package com.wxmp.wxcms.service;
 
-import com.wxmp.backstage.img.domain.ImgResource;
+import com.wxmp.wxcms.domain.ImgResource;
 
 /** 
  * @title : 

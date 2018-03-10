@@ -1,6 +1,6 @@
-package com.wxmp.backstage.sys.mapper;
+package com.wxmp.wxcms.mapper;
 
-import com.wxmp.backstage.sys.domain.SysUser;
+import com.wxmp.wxcms.domain.SysUser;
 
 /** 
  * @title : 

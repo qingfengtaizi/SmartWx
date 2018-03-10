@@ -1,8 +1,8 @@
-package com.wxmp.backstage.sys.service.impl;
+package com.wxmp.wxcms.service.impl;
 
-import com.wxmp.backstage.sys.domain.SysUser;
-import com.wxmp.backstage.sys.mapper.SysUserDao;
-import com.wxmp.backstage.sys.service.ISysUserService;
+import com.wxmp.wxcms.domain.SysUser;
+import com.wxmp.wxcms.mapper.SysUserDao;
+import com.wxmp.wxcms.service.ISysUserService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

@@ -1,9 +1,9 @@
-package com.wxmp.backstage.img.service.impl;
+package com.wxmp.wxcms.service.impl;
 
-import com.wxmp.backstage.contents.ATTContents;
-import com.wxmp.backstage.img.domain.ImgResource;
-import com.wxmp.backstage.img.mapper.ImgResourceDao;
-import com.wxmp.backstage.img.service.ImgResourceService;
+import com.wxmp.backstage.common.ATTContents;
+import com.wxmp.wxcms.domain.ImgResource;
+import com.wxmp.wxcms.mapper.ImgResourceDao;
+import com.wxmp.wxcms.service.ImgResourceService;
 import com.wxmp.core.util.CommonUtil;
 import org.springframework.stereotype.Service;
 

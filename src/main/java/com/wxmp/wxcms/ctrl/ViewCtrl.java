@@ -1,4 +1,4 @@
-package com.wxmp.backstage.sys.ctrl;
+package com.wxmp.wxcms.ctrl;
 
 import javax.servlet.http.HttpSession;
 
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.wxmp.backstage.sys.service.ISysUserService;
+import com.wxmp.wxcms.service.ISysUserService;
 import com.wxmp.core.annotation.Auth;
 
 

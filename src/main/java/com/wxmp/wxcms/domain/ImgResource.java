@@ -1,4 +1,4 @@
-package com.wxmp.backstage.img.domain;
+package com.wxmp.wxcms.domain;
 
 /** 
  * @author : hermit

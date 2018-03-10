@@ -1,7 +1,6 @@
 package com.wxmp.wxapi.process;
 
 import java.io.Serializable;
-
 import com.wxmp.core.util.CalendarUtil;
 
 /**

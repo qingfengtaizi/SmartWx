@@ -1,42 +1,23 @@
 package com.wxmp.wxapi.service.impl;
 
+import com.wxmp.wxapi.process.*;
+import com.wxmp.wxapi.service.MyService;
+import com.wxmp.wxapi.vo.Matchrule;
+import com.wxmp.wxapi.vo.MsgRequest;
+import com.wxmp.wxcms.domain.*;
+import com.wxmp.wxcms.mapper.*;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.wxmp.wxapi.process.HttpMethod;
-import com.wxmp.wxapi.process.MpAccount;
-import com.wxmp.wxapi.process.MsgType;
-import com.wxmp.wxapi.process.MsgXmlUtil;
-import com.wxmp.wxapi.process.WxApi;
-import com.wxmp.wxapi.process.WxApiClient;
-import com.wxmp.wxapi.process.WxMemoryCacheClient;
-import com.wxmp.wxapi.process.WxMessageBuilder;
-import com.wxmp.wxapi.service.MyService;
-import com.wxmp.wxapi.vo.Matchrule;
-import com.wxmp.wxapi.vo.MsgRequest;
-import com.wxmp.wxcms.domain.AccountFans;
-import com.wxmp.wxcms.domain.AccountMenu;
-import com.wxmp.wxcms.domain.MsgBase;
-import com.wxmp.wxcms.domain.MsgNews;
-import com.wxmp.wxcms.domain.MsgText;
-import com.wxmp.wxcms.mapper.AccountFansDao;
-import com.wxmp.wxcms.mapper.AccountMenuDao;
-import com.wxmp.wxcms.mapper.AccountMenuGroupDao;
-import com.wxmp.wxcms.mapper.MsgBaseDao;
-import com.wxmp.wxcms.mapper.MsgNewsDao;
-
-import javax.annotation.Resource;
 
 /**
  * 业务消息处理

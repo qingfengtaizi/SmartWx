@@ -1,16 +1,18 @@
 package com.wxmp.wxapi.process;
 
 import com.wxmp.backstage.common.Identities;
+import com.wxmp.core.util.MyTrustManager;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
-import javax.net.ssl.*;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
@@ -391,7 +393,7 @@ public class WxApi {
 	public static JSONObject httpsRequest(String requestUrl, String requestMethod, String outputStr) {
 		JSONObject jsonObject = null;
 		try {
-			TrustManager[] tm = { new JEEWeiXinX509TrustManager() };
+			TrustManager[] tm = { new MyTrustManager() };
 			SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
 			sslContext.init(null, tm, new java.security.SecureRandom());
 			SSLSocketFactory ssf = sslContext.getSocketFactory();
@@ -433,7 +435,7 @@ public class WxApi {
 	public static String httpsRequestByXml(String requestUrl, String requestMethod, String outputStr) {
 		String retStrXml="";
 		try {
-			TrustManager[] tm = { new JEEWeiXinX509TrustManager() };
+			TrustManager[] tm = { new MyTrustManager() };
 			SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
 			sslContext.init(null, tm, new java.security.SecureRandom());
 			SSLSocketFactory ssf = sslContext.getSocketFactory();
@@ -462,7 +464,6 @@ public class WxApi {
 			bufferedReader.close();
 			inputStreamReader.close();
 			inputStream.close();
-			inputStream = null;
 			conn.disconnect();
 			retStrXml=buffer.toString();
 		} catch (Exception e) {
@@ -477,7 +478,7 @@ public class WxApi {
 
 	public static byte[] httpsRequestByte(String requestUrl, String requestMethod, String outputStr) {
 		try {
-			TrustManager[] tm = { new JEEWeiXinX509TrustManager() };
+			TrustManager[] tm = { new MyTrustManager() };
 			SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
 			sslContext.init(null, tm, new java.security.SecureRandom());
 			SSLSocketFactory ssf = sslContext.getSocketFactory();
@@ -884,14 +885,3 @@ public class WxApi {
 
 
 
-class JEEWeiXinX509TrustManager implements X509TrustManager {
-	public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-	}
-
-	public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-	}
-
-	public X509Certificate[] getAcceptedIssuers() {
-		return null;
-	}
-}

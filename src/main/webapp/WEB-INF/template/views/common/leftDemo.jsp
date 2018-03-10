@@ -45,7 +45,7 @@
 			<span class="downIcon"><img src="<%=path%>/res/images/down_icon_06.png"></span>
 		</a>
 	</dd>
-    	<dd>
+    	<%--<dd>
 		<a href="<%=path%>/wxapi/syncMaterials" class="firstLi">
 			<span class="navIcon"><img src="<%=path%>/res/images/materialMess_icon_22.png"></span>
 			<h6 class="fTitle">永久素材管理</h6>
@@ -69,8 +69,8 @@
 			<span class="downIcon"><img src="<%=path%>/res/images/down_icon_06.png"></span>
 		</a>
 	</dd>
-	
-	
+
+
     <dd>
 		<a href="<%=path%>/wxcms/sendMsg" class="firstLi">
 			<span class="navIcon"><img src="<%=path%>/res/images/sendMess_icon_31.png"></span>
@@ -114,7 +114,7 @@
 			<h6 class="fTitle">WeUI</h6>
 			<span class="downIcon"><img src="<%=path%>/res/images/down_icon_06.png"></span>
 		</a>
-	</dd>
+	</dd>--%>
 
 
 

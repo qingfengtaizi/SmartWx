@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * chenqiang
+ * hermit
  */
 public final class PropertiesUtil extends PropertyPlaceholderConfigurer {
     private static final byte[] KEY = {9, -1, 0, 5, 39, 8, 6, 19};

@@ -1,7 +1,7 @@
-package com.wxmp.backstage.img.ctrl;
+package com.wxmp.wxcms.ctrl;
 
-import com.wxmp.backstage.img.domain.ImgResource;
-import com.wxmp.backstage.img.service.ImgResourceService;
+import com.wxmp.wxcms.domain.ImgResource;
+import com.wxmp.wxcms.service.ImgResourceService;
 import com.wxmp.core.util.ImgTypeUtil;
 import com.wxmp.core.util.PropertiesConfigUtil;
 import com.wxmp.wxapi.process.MediaType;

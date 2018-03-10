@@ -1,4 +1,4 @@
-package com.wxmp.backstage.contents;
+package com.wxmp.backstage.common;
 
 import java.util.HashMap;
 import java.util.Map;
