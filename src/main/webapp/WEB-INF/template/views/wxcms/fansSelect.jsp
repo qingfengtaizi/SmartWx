@@ -38,6 +38,11 @@ $(document).ready(function(){
           }
       });
 });
+//翻页函数
+function doPageOver(pageNum,pageSize){
+	
+	$("#id_fans_frame", parent.document).attr("src",path+ "/accountfans/fansSelect?page="+pageNum+"&pageSize="+pageSize);
+}
 </script>	
 </head>
 	
@@ -65,7 +70,7 @@ $(document).ready(function(){
 							</tr>
 						</thead>
 						<tbody>
-						<c:forEach var="row" items="${pagination.items}" varStatus="status">
+						<%-- <c:forEach var="row" items="${pagination.items}" varStatus="status">
 						           <tr style="height:40px;background-color:#f9f9f9;">
 						           		<td><input type="checkbox" value="${row.openId}" name="checkname"/></td>
 										<td>${row.nicknameStr}</td>
@@ -83,7 +88,59 @@ $(document).ready(function(){
 											${row.province}-${row.city}
 									   </td>
 							      </tr>
-						</c:forEach>
+						</c:forEach> --%>
+						<c:forEach var="row" items="${pagination.list}" varStatus="status">
+                        		<tr style="height:40px;background-color:#f9f9f9;">
+						           		<td><input type="checkbox" value="${row.openId}" name="checkname"/></td>
+										<td>${row.nicknameStr}</td>
+										<td> 
+											<c:choose>
+											   <c:when test="${row.gender == 1}">
+											                 男
+											   </c:when>
+											   <c:otherwise>
+											                 女 
+											   </c:otherwise>
+										    </c:choose>
+									   </td>
+									   <td> 
+											${row.province}-${row.city}
+									   </td>
+							      </tr>
+                    	</c:forEach>
+						<tr>
+                            <td colspan="4">
+                            	<div class="page">
+                            	    <input type="button" value="首页" class="homePage"
+                            	       onclick="doPageOver('1','${page.pageSize}')">
+					                <c:choose>
+					                   <c:when test="${page.pageNum != 1}">
+					                      <input type="button" value="上一页" class="prePge"
+					                    onclick="doPageOver('${page.pageNum-1}','${page.pageSize}')">
+					                   </c:when>
+					                   <c:otherwise>
+					                       <input type="button" value="上一页" class="prePge"
+					                         onclick="doPageOver('${page.pageNum}','${page.pageSize}')">
+					                   </c:otherwise>
+					                </c:choose>
+	                                <label>第
+	                                   <span>
+	                                     <a href="javascript:void(0);" 
+	                                       onclick="doPageOver('${page.pageNum}','${page.pageSize}')">
+	                                    ${page.pageNum}</a>
+	                                   </span>/
+	                                   <span>${page.pages}</span>页
+	                                </label> 
+					                            
+					                <c:if test="${page.pageNum != page.pages}"> 
+					                    <input type="button" value="下一页" class="nextPage" 
+					                       onclick="doPageOver('${page.pageNum+1}','${page.pageSize}')"> 
+					                </c:if>  
+					                <input type="button" value="尾页" class="lastPage"
+					                    onclick="doPageOver('${page.pages}','${page.pageSize}')">                  
+                                </div>
+                            </td>
+                        </tr>	
 						</tbody>
 					</table>
 					</div>
