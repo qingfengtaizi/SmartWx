@@ -291,8 +291,8 @@ public class MsgNewsCtrl  extends BaseCtrl{
 			MediaFiles entity = new MediaFiles();
 			entity.setMediaId(newsMediaId);
 			entity.setMediaType("news");
-			entity.setCreatetime(COMMON_FULL.getTextDate(newsResult.getString("create_time")));
-			entity.setUpdateTime(COMMON_FULL.getTextDate(newsResult.getString("update_time")));
+			entity.setCreatetime(COMMON_FULL.getLongDate(Long.parseLong(newsResult.getString("create_time"))));
+			entity.setUpdateTime(COMMON_FULL.getLongDate(Long.parseLong(newsResult.getString("update_time"))));
 
 			int resultCount = this.entityService.addSingleNews(newsPo, entity);
 
@@ -350,8 +350,8 @@ public class MsgNewsCtrl  extends BaseCtrl{
 			MediaFiles entity = new MediaFiles();
 			entity.setMediaId(newsMediaId);
 			entity.setMediaType("news");
-			entity.setCreatetime(COMMON_FULL.getTextDate(newsResult.getString("create_time")));
-			entity.setUpdateTime(COMMON_FULL.getTextDate(newsResult.getString("update_time")));
+			entity.setCreatetime(COMMON_FULL.getLongDate(Long.parseLong(newsResult.getString("create_time"))));
+			entity.setUpdateTime(COMMON_FULL.getLongDate(Long.parseLong(newsResult.getString("update_time"))));
 
 			int resultCount = this.entityService.addSingleNews(newsPo, entity);
 
