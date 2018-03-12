@@ -55,6 +55,15 @@ public class DateUtilOld {
 	public Date getTextDate(String text) throws ParseException{
 		return getFormat().parse(text);
 	}
+	/**
+	 * 微信中long转日期
+	 * @param ld
+	 * @return
+	 */
+	public Date getLongDate(long ld){
+		
+		return new Date(ld*1000);
+	}
 	
 	/**
 	 * 日期获取字符串
