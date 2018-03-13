@@ -17,6 +17,7 @@ public class MediaFiles extends BaseEntity {
    	private String mediaId;
    	private String uploadUrl;
    	private String rmk;
+   	private Date createTime;
    	private Date updateTime;
 	/**
 	 * @return the mediaType
@@ -113,6 +114,12 @@ public class MediaFiles extends BaseEntity {
 	 */
 	public void setMediaId(String mediaId) {
 		this.mediaId = mediaId;
+	}
+	public Date getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 	
 	

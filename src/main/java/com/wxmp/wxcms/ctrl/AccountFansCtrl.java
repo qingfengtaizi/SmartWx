@@ -89,10 +89,19 @@ public class AccountFansCtrl extends BaseCtrl{
 	 * @return
 	 */
 	@RequestMapping(value = "/fansSelect")
-	public  ModelAndView fansSelect(AccountFans searchEntity, Pagination<AccountFans> pagination){
+	public  ModelAndView fansSelect(AccountFans searchEntity, 
+			@RequestParam(required=false,defaultValue="1") Integer page,
+            @RequestParam(required=false,defaultValue="10") Integer pageSize
+//			,Pagination<AccountFans> pagination
+			){
 		ModelAndView mv = new ModelAndView("wxcms/fansSelect");
-		pagination = entityService.paginationEntity(searchEntity,pagination);
+//		pagination = entityService.paginationEntity(searchEntity,pagination);
+		PageHelper.startPage(page, pageSize);
+		List<AccountFans> fansList = this.entityService.getAccountFansList(searchEntity);
+		PageInfo pagination=new PageInfo(fansList);
+		
 		mv.addObject("pagination",pagination);
+		mv.addObject("page", pagination);
 		mv.addObject("cur_nav","fans");
 		return mv;
 	}
