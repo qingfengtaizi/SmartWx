@@ -129,8 +129,8 @@ CREATE TABLE `t_wxcms_img_resource` (
   `url` varchar(200) NOT NULL,
   `httpUrl` varchar(200) DEFAULT NULL,
   `size` int(9) NOT NULL,
-  `createTime` mediumtext NOT NULL,
-  `updateTime` mediumtext NOT NULL,
+  `createTime` datetime NOT NULL,
+  `updateTime` datetime NOT NULL,
   `flag` int(1) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

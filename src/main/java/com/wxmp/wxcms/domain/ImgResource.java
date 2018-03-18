@@ -1,5 +1,7 @@
 package com.wxmp.wxcms.domain;
 
+import java.util.Date;
+
 /** 
  * @author : hermit
 */
@@ -44,12 +46,12 @@ public class ImgResource {
 	/**
 	 * 创建时间
 	 */
-	private Long  createTime;
+	private Date  createTime;
 	
 	/**
 	 * 修改时间
 	 */
-	private Long  updateTime;
+	private Date  updateTime;
 
 	/**
 	 * 图片状态字段：0.未引用 ，1.已被引用
@@ -171,28 +173,28 @@ public class ImgResource {
 	/**
 	 * @return the createTime
 	 */
-	public Long getCreateTime() {
+	public Date getCreateTime() {
 		return createTime;
 	}
 
 	/**
 	 * @param createTime the createTime to set
 	 */
-	public void setCreateTime(Long createTime) {
+	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
 
 	/**
 	 * @return the updateTime
 	 */
-	public Long getUpdateTime() {
+	public Date getUpdateTime() {
 		return updateTime;
 	}
 
 	/**
 	 * @param updateTime the updateTime to set
 	 */
-	public void setUpdateTime(Long updateTime) {
+	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
 

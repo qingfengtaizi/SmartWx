@@ -7,6 +7,8 @@ import com.wxmp.wxcms.service.ImgResourceService;
 import com.wxmp.core.util.CommonUtil;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 import javax.annotation.Resource;
 
 /** 
@@ -34,7 +36,7 @@ public class ImgResourceServiceImpl implements ImgResourceService {
 	@Override
 	public String addImg(ImgResource img) {
 		img.setFlag(ATTContents.IMG_FLAG0);
-		img.setCreateTime(System.currentTimeMillis());
+		img.setCreateTime(new Date(System.currentTimeMillis()));
 		img.setUpdateTime(img.getCreateTime());
 		//主键id
 		String id = CommonUtil.getUID();
