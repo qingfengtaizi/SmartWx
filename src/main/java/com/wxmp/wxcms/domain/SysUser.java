@@ -1,4 +1,4 @@
-package com.wxmp.backstage.sys.domain;
+package com.wxmp.wxcms.domain;
 
 /** 
  * @title : 系统管理用户

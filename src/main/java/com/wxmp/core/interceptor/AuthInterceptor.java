@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.wxmp.backstage.sys.domain.SysUser;
+import com.wxmp.wxcms.domain.SysUser;
 import com.wxmp.core.util.SessionUtil;
 
 

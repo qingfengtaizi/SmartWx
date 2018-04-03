@@ -1,6 +1,6 @@
 package com.wxmp.core.util;
 
-import com.wxmp.backstage.sys.domain.SysUser;
+import com.wxmp.wxcms.domain.SysUser;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.wxmp.backstage.sys.mapper.SysUserDao">
+<mapper namespace="com.wxmp.wxcms.mapper.SysUserDao">
     <!--根据用户名密码查询-->
-    <select id="getSysUser" parameterType="com.wxmp.backstage.sys.domain.SysUser"
-    	resultType="com.wxmp.backstage.sys.domain.SysUser">
+    <select id="getSysUser" parameterType="com.wxmp.wxcms.domain.SysUser"
+    	resultType="com.wxmp.wxcms.domain.SysUser">
 		SELECT * FROM t_wxcms_sys_user t
 		where t.account =  #{account}
 		and t.pwd = #{pwd}
@@ -12,14 +12,14 @@
 	
 	<!--根据主键id查询用户-->
     <select id="getSysUserById" parameterType="java.lang.String"
-    	resultType="com.wxmp.backstage.sys.domain.SysUser">
+    	resultType="com.wxmp.wxcms.domain.SysUser">
 		SELECT * FROM t_wxcms_sys_user t
 		where t.id =  #{userId}
 	</select>
 	
 	
     <!--修改登录密码-->
-	<update id="updateLoginPwd" parameterType="com.wxmp.backstage.sys.domain.SysUser" >
+	<update id="updateLoginPwd" parameterType="com.wxmp.wxcms.domain.SysUser" >
 		UPDATE t_wxcms_sys_user 
 		SET pwd = #{newpwd},
 		    updateTime = #{updateTime} 

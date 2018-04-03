@@ -129,8 +129,8 @@ CREATE TABLE `t_wxcms_img_resource` (
   `url` varchar(200) NOT NULL,
   `httpUrl` varchar(200) DEFAULT NULL,
   `size` int(9) NOT NULL,
-  `createTime` mediumtext NOT NULL,
-  `updateTime` mediumtext NOT NULL,
+  `createTime` datetime NOT NULL,
+  `updateTime` datetime NOT NULL,
   `flag` int(1) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -150,8 +150,8 @@ CREATE TABLE `t_wxcms_media_files` (
   `media_id` varchar(100) DEFAULT NULL COMMENT '返回的media_id',
   `uploadUrl` varchar(200) DEFAULT NULL COMMENT '返回的wx服务器url',
   `rmk` varchar(500) DEFAULT NULL COMMENT '备注_预留',
-  `createTime` bigint(20) DEFAULT NULL COMMENT '创建时间',
-  `updateTime` bigint(20) DEFAULT NULL COMMENT '更新时间',
+  `createTime` datetime DEFAULT NULL COMMENT '创建时间',
+  `updateTime` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 

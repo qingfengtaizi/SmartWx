@@ -1,8 +1,6 @@
-package com.wxmp.backstage.img.mapper;
+package com.wxmp.wxcms.mapper;
 
-import java.util.List;
-
-import com.wxmp.backstage.img.domain.ImgResource;
+import com.wxmp.wxcms.domain.ImgResource;
 
 /** 
  * @title : 

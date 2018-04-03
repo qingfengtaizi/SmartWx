@@ -1,4 +1,4 @@
-package com.wxmp.backstage.sys.ctrl;
+package com.wxmp.wxcms.ctrl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.wxmp.backstage.common.DataModel;
-import com.wxmp.backstage.sys.service.ISysUserService;
-import com.wxmp.backstage.sys.domain.SysUser;
+import com.wxmp.wxcms.service.ISysUserService;
+import com.wxmp.wxcms.domain.SysUser;
 import com.wxmp.core.util.ValidateUtil;
 import com.wxmp.core.util.SessionUtil;
 import com.wxmp.core.util.MD5Util;

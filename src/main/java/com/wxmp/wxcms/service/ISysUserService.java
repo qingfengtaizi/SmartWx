@@ -1,6 +1,6 @@
-package com.wxmp.backstage.sys.service;
+package com.wxmp.wxcms.service;
 
-import com.wxmp.backstage.sys.domain.SysUser;
+import com.wxmp.wxcms.domain.SysUser;
 
 
 /***

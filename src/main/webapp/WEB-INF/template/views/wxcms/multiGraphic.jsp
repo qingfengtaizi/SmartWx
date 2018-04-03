@@ -162,7 +162,7 @@
                 <li><h6>
                     <a href="<%=path%>/wxcms/main?userId=${sessionScope.sysUser.id}">首页</a></h6>
                     <h6>></h6>
-                    <h6>菜单管理</h6>
+                    <h6>图文素材管理</h6>
                </li>
             </ul>
         </div>
