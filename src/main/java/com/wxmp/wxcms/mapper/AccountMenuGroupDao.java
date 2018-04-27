@@ -34,7 +34,7 @@ public interface AccountMenuGroupDao {
 	 * 删除菜单组
 	 * @param id
 	 */
-	public void deleteGroupById(long id);
+	public void deleteGroupById(long  id);
 	/**
 	 * 删除菜单组下的菜单
 	 * @param id
