@@ -1,13 +1,26 @@
+/**
+ * Copyright &copy; 2017-2018 <a href="http://www.webcsn.com">webcsn</a> All rights reserved.
+ *
+ * @author hermit
+ * @date 2018-04-17 10:54:58
+ */
 package com.wxmp.wxcms.domain;
 
+import com.wxmp.core.page.Page;
+import lombok.Data;
+
+import java.io.Serializable;
 import java.util.Date;
 
-/** 
- * @author : hermit
-*/
-public class ImgResource {
+/**
+ *
+ * @author hermit
+ * @version 2.0
+ * @date 2018-04-17 10:54:58
+ */
+@Data
+public class ImgResource extends Page implements Serializable {
     private String  id;
-	
 	/**
 	 * 图片原名称
 	 */
@@ -58,158 +71,4 @@ public class ImgResource {
 	 */
 	private Integer flag;
 
-	/**
-	 * @return the id
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	/**
-	 * @return the trueName
-	 */
-	public String getTrueName() {
-		return trueName;
-	}
-
-	/**
-	 * @param trueName the trueName to set
-	 */
-	public void setTrueName(String trueName) {
-		this.trueName = trueName;
-	}
-
-	/**
-	 * @return the mediaId
-	 */
-	public String getMediaId() {
-		return mediaId;
-	}
-
-	/**
-	 * @param mediaId the mediaId to set
-	 */
-	public void setMediaId(String mediaId) {
-		this.mediaId = mediaId;
-	}
-
-	/**
-	 * @return the type
-	 */
-	public String getType() {
-		return type;
-	}
-
-	/**
-	 * @param type the type to set
-	 */
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/**
-	 * @return the url
-	 */
-	public String getUrl() {
-		return url;
-	}
-
-	/**
-	 * @param url the url to set
-	 */
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	/**
-	 * @return the httpUrl
-	 */
-	public String getHttpUrl() {
-		return httpUrl;
-	}
-
-	/**
-	 * @param httpUrl the httpUrl to set
-	 */
-	public void setHttpUrl(String httpUrl) {
-		this.httpUrl = httpUrl;
-	}
-
-	/**
-	 * @return the size
-	 */
-	public Integer getSize() {
-		return size;
-	}
-
-	/**
-	 * @param size the size to set
-	 */
-	public void setSize(Integer size) {
-		this.size = size;
-	}
-
-	/**
-	 * @return the createTime
-	 */
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-	/**
-	 * @param createTime the createTime to set
-	 */
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-
-	/**
-	 * @return the updateTime
-	 */
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-
-	/**
-	 * @param updateTime the updateTime to set
-	 */
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
-
-	/**
-	 * @return the flag
-	 */
-	public Integer getFlag() {
-		return flag;
-	}
-
-	/**
-	 * @param flag the flag to set
-	 */
-	public void setFlag(Integer flag) {
-		this.flag = flag;
-	}
-	
 }

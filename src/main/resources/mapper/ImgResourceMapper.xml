@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
-
+<!--  the code template created by wxmp-generator @author hermit @version 2.0 @date 2018-04-17 10:43:21 -->
 <mapper namespace="com.wxmp.wxcms.mapper.ImgResourceDao">
     
 	<select id="getImgById" parameterType="java.lang.String" 
 	resultType="com.wxmp.wxcms.domain.ImgResource">
-		SELECT * FROM t_wxcms_img_resource WHERE ID = #{id}
+		SELECT * FROM wxcms_img_resource WHERE ID = #{id}
 	</select>
     
 	<insert id="add" parameterType="com.wxmp.wxcms.domain.ImgResource">
-		INSERT INTO t_wxcms_img_resource 
+		INSERT INTO wxcms_img_resource
 		 (id,
-		  mediaId,
-		  trueName,
+		  media_id,
+		  true_name,
 		  type,
 		  name,
 		  url,
-		  httpUrl,
+		  http_url,
 		  size,
-		  createTime,
-		  updateTime,
+		  create_time,
+		  update_time,
 		  flag)
 		  VALUES(#{id},
 		          #{mediaId},
@@ -36,7 +36,7 @@
 
     <!-- 根据媒体资源 -->
 	<delete id="deleteByMediaId" parameterType="java.lang.String" >
-		DELETE FROM t_wxcms_img_resource t WHERE t.mediaId = #{mediaId}
+		DELETE FROM wxcms_img_resource t WHERE t.media_id = #{mediaId}
 	</delete>
 
 </mapper>

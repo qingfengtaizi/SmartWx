@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>SmartWx管理系统</title>
+    <meta name="keywords" content="菜单页,微信后台管理系统,smartwx"/>
+    <meta name="description" content="迄今为止,最好的JAVA微信后台管理系统！"/>
+    <meta name="author" content="hermit"/>
+    <link rel="stylesheet" href="/js/plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="/font/iconfont.css">
+    <link rel="stylesheet" href="/css/build/common.css">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <!--头部区域-->
+    <div class="layui-header">
+        <div class="layui-logo">SmartWx管理系统</div>
+        <div class="layui-nav correct" >
+            <p class="layui-nav-item ">当前公众号</p>
+            <div class="layui-nav-item" id="counnt_nav">
+                <a href="javascript:;">
+                    <span></span>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="/views/index.html#/index/addaccount/add"><i class="iconfont icon-add"></i>添加公众号</a></dd>
+                </dl>
+            </div>
+        </div>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <!--<img id="userPhoto" src="/images/common/default-portrait.jpg" class="layui-nav-img">-->
+                    <img id="userPhoto" src="/images/common/portrait.jpg" class="layui-nav-img">
+                    <span id="userName">管理员</span>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd id="changePassword"><a href="javascript:;">密码修改</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item" id="exit"><a href="/views/login.html" target="_self">退出</a></li>
+        </ul>
+    </div>
+
+    <!--左侧区域-->
+    <div id="index_menu" class="layui-side layui-bg-black fsh-menu"  layer-filter="menu">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <!--<a href="javascript:;" data-url="/index/index"><i class="iconfont icon-shouye"></i>首页</a>-->
+                    <a href="javascript:;" data-url="/index/index-x"><i class="iconfont icon-shouye"></i>首页</a>
+                </li>
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:;"><i class="iconfont icon-set"></i>系统设置</a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a href="javascript:;" data-url="/system/url/url">
+                                <i class="iconfont icon-link"></i>账号信息</a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;" data-url="/system/msg/msg">
+                                <i class="iconfont icon-comments"></i>文本消息</a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;" data-url="/system/document/document">
+                                <i class="iconfont icon-pic"></i>图文管理</a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;" data-url="/system/menu/menu">
+                                <i class="iconfont icon-viewlist"></i>菜单管理</a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;" data-url="/system/fans/fans">
+                                <i class="iconfont icon-yonghutouxiang"></i>粉丝管理</a>
+                        </dd>
+                        <!--<dd>-->
+                            <!--<a href="javascript:;" data-url="/system/demo2/demo">-->
+                                <!--<i class="iconfont icon-fangyuan"></i>demo</a>-->
+                        <!--</dd>-->
+                        <!--<dd>-->
+                            <!--<a href="javascript:;" data-url="/system/demo2/index2">-->
+                                <!--<i class="iconfont icon-fangyuan"></i>index2</a>-->
+                        <!--</dd>-->
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!--右侧区域-->
+    <div id="index_right" class="layui-body">
+    </div>
+
+    <div class="layui-footer">
+        <div class="layui-main">
+            <p>Copyright&nbsp;&nbsp;© 2012-2018&nbsp;&nbsp;<a href="http://www.webcsn.com">SmartWx.</a> &nbsp;All Rights Reserved </p>
+        </div>
+    </div>
+    <!--修改密码弹出层-->
+    <div class="fsh-edit-pwd" id="edit_pwd">
+        <div class="layui-form layui-form-pane" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">初始密码</label>
+                <div class="layui-input-block">
+                    <input type="password" id="nowpassword" name="nowpassword" lay-verify="required" autocomplete="off" placeholder="初始密码" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">新密码</label>
+                <div class="layui-input-block">
+                    <input type="password" id="password" name="password" lay-verify="required" autocomplete="off" placeholder="请输入新密码" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">确认新密码</label>
+                <div class="layui-input-block">
+                    <input type="password" id="repassword" name="repassword" lay-verify="required" autocomplete="off" placeholder="请确认新密码" class="layui-input">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--增加公众号弹出层-->
+    <div class="fsh-edit-pwd" id="add_count">
+        <div class="layui-form layui-form-pane" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" lay-verify="required" autocomplete="off" placeholder="请输入公众号名称" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">AppID</label>
+                <div class="layui-input-block">
+                    <input type="text" name="AppID" lay-verify="required" autocomplete="off" placeholder="请输入AppID" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">公众号ID</label>
+                <div class="layui-input-block">
+                    <input type="text" name="ID" lay-verify="required" autocomplete="off" placeholder="请输入公众号ID" class="layui-input">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/plugin/jquery-2.2.4.min.js"></script>
+<script src="/js/plugin/pagination/pagination.js"></script>
+<script src="/js/plugin/layui/src/layui.js"></script>
+<script src="/js/plugin/template-web.js"></script>
+<script src="/js/mylayui.js"></script>
+<script src="/js/src/index.js"></script>
+</body>
+</html>

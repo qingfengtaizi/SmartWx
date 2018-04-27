@@ -1,0 +1,85 @@
+<div class="fsh-rightPanel">
+    <div class="layui-anim layui-anim-upbit">
+        <div class="layui-form fsh-form-lg" action="">
+            <div id="url_form">
+                <h2>
+                    添加公众号
+                </h2>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><i>*</i>公众号名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" lay-verify="required" placeholder="公众号名称" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><i>*</i>公众号ID</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="account" lay-verify="required" placeholder="字母或者数字" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">URL</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" placeholder="无须输入，自动生成" class="layui-input"readonly>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">Token</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="email" placeholder="无须输入，自动生成" class="layui-input" readonly>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><i>*</i>AppID</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="appid" placeholder="AppID" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><i>*</i>AppSecret</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="appsecret" placeholder="AppSecret" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><i>*</i>消息条数</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="msgcount" value="5"  class="layui-input" readonly>
+                    </div>
+                    <span class="tips">(回复图文消息条数)</span>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" lay-submit lay-filter="add_account">立即提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form'], function () {
+        var form = layui.form;
+        var $=layui.$;
+
+        form.render();
+        //监听提交
+        form.on('submit(add_account)', function (data) {
+            $.ajax({
+                url: '/wxcms/getUrl',
+                data: data.field,
+                success: function (result) {
+                    if (result.success) {
+                        getCountStatus(result.data.id)
+                        jump("/system/url/url");
+                        layer.msg("保存成功");
+                    } else {
+                        layer.msg("保存失败");
+                    }
+                }
+            });
+            return false;
+        });
+    });
+</script>

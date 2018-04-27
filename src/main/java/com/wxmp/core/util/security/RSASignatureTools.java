@@ -21,7 +21,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
-import com.wxmp.backstage.exception.UnexpectedException;
+import com.wxmp.core.exception.UnexpectedException;
 import org.apache.commons.codec.binary.Base64;
 
 /**

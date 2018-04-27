@@ -1,0 +1,49 @@
+//页面布局
+.layui-layout-admin .layui-header{
+  background-color: #5eaee3;
+}
+.layui-nav{
+  background-color: #34495e;
+}
+.layui-layout-admin .layui-logo{
+  color: #fff;
+}
+.layui-nav .layui-nav-item a{
+  color: #fff;
+}
+.layui-header .layui-nav .layui-nav-child a{
+  color: #333;
+}
+
+.layui-header{
+  .correct{
+    margin-left: 200px;
+    float: left;
+  }
+}
+
+
+.layui-form{
+  .tips{
+    color: #FF5722;
+    line-height: 38px;
+    margin-left: 10px;
+  }
+  .tips-line{
+    line-height: 1.4;
+    padding-left: 10px;
+  }
+}
+
+.layui-tab-content{
+  padding: 0;
+}
+.layui-text{
+  ol{
+    padding: 5px 0 5px 15px;
+    li{
+      margin-top: 5px;
+      list-style-type: decimal;
+    }
+  }
+}

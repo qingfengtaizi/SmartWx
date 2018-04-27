@@ -1,18 +1,34 @@
+/**
+ * Copyright &copy; 2017-2018 <a href="http://www.webcsn.com">webcsn</a> All rights reserved.
+ *
+ * @author hermit
+ * @date 2018-04-17 10:54:58
+ */
 package com.wxmp.wxcms.domain;
 
-import com.wxmp.core.domain.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.wxmp.core.page.Page;
+import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 
 /**
- * 账号粉丝用户信息
- * @author : hermit
+ *
+ * @author hermit
+ * @version 2.0
+ * @date 2018-04-17 10:54:58
  */
-public class AccountFans extends BaseEntity{
-
+@Data
+public class AccountFans extends Page implements Serializable{
+	private Long id;
 	private String openId;//openId，每个用户都是唯一的
 	private Integer subscribeStatus;//订阅状态
-	private String subscribeTime;//订阅时间
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss",iso= DateTimeFormat.ISO.DATE_TIME)
+	private Date subscribeTime;//订阅时间
 	private byte[] nickname;//昵称,二进制保存emoji表情
 	private String nicknameStr;//昵称显示
 	private String wxid;//微信号
@@ -24,38 +40,10 @@ public class AccountFans extends BaseEntity{
 	private String headimgurl;//头像
 	private String remark;//备注
 	private Integer status;//用户状态 1-可用；0-不可用
-	
-	
-	public String getOpenId() {
-		return openId;
-	}
-	public void setOpenId(String openId) {
-		this.openId = openId;
-	}
-	public String getWxid() {
-		return wxid;
-	}
-	public void setWxid(String wxid) {
-		this.wxid = wxid;
-	}
-	public Integer getSubscribeStatus() {
-		return subscribeStatus;
-	}
-	public void setSubscribeStatus(Integer subscribeStatus) {
-		this.subscribeStatus = subscribeStatus;
-	}
-	public String getSubscribeTime() {
-		return subscribeTime;
-	}
-	public void setSubscribeTime(String subscribeTime) {
-		this.subscribeTime = subscribeTime;
-	}
-	public byte[] getNickname() {
-		return nickname;
-	}
-	public void setNickname(byte[] nickname) {
-		this.nickname = nickname;
-	}
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss",iso= DateTimeFormat.ISO.DATE_TIME)
+	private Date createTime;//创建时间
+
 	public String getNicknameStr() {
 		if(this.getNickname() != null){
 			try {
@@ -66,56 +54,4 @@ public class AccountFans extends BaseEntity{
 		}
 		return nicknameStr;
 	}
-	public void setNicknameStr(String nicknameStr) {
-		this.nicknameStr = nicknameStr;
-	}
-	public Integer getGender() {
-		return gender;
-	}
-	public void setGender(Integer gender) {
-		this.gender = gender;
-	}
-	public String getLanguage() {
-		return language;
-	}
-	public void setLanguage(String language) {
-		this.language = language;
-	}
-	public String getCountry() {
-		return country;
-	}
-	public void setCountry(String country) {
-		this.country = country;
-	}
-	public String getProvince() {
-		return province;
-	}
-	public void setProvince(String province) {
-		this.province = province;
-	}
-	public String getCity() {
-		return city;
-	}
-	public void setCity(String city) {
-		this.city = city;
-	}
-	public String getHeadimgurl() {
-		return headimgurl;
-	}
-	public void setHeadimgurl(String headimgurl) {
-		this.headimgurl = headimgurl;
-	}
-	public Integer getStatus() {
-		return status;
-	}
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
-	public String getRemark() {
-		return remark;
-	}
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-	
 }

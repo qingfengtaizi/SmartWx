@@ -1,0 +1,267 @@
+@import "variables.scss";
+
+//清楚标签默认样式;
+@mixin reset() {
+  body {
+    font-family: $font-family-default;
+    font-size: $font-size-default;
+    color: #333;
+    background-color: #fff;
+  }
+  a {
+    color: $primary-color;
+    text-decoration: none;
+    &:active {
+      color: darken($primary-color, 10%);
+    }
+  }
+  li {
+    list-style: none
+  }
+
+  img {
+    border: 0;
+    vertical-align: middle
+  }
+  p {
+    word-wrap: break-word
+  }
+  input[readonly] {
+    background: #f5f5f5;
+  }
+}
+
+@mixin base() {
+
+}
+
+//浮动;
+@mixin fl {
+  float: left;
+}
+
+@mixin fr {
+  float: right;
+}
+
+@mixin show() {
+  display: block;
+}
+
+@mixin hide() {
+  display: none;
+}
+
+@mixin clear() {
+  clear: both;
+}
+
+@mixin clear-before() {
+  &:before {
+    content: "";
+    display: table;
+  }
+}
+
+@mixin clear-after() {
+  &:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+}
+
+@mixin border() {
+  border: 1px solid $border-default;
+}
+
+//一行显示。。。。
+@mixin ellipsis() {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+/* 强制折行 */
+@mixin break-word() {
+  word-break: break-all; /*支持IE，chrome，FF不支持*/
+  word-wrap: break-word; /*支持IE，chrome，FF*/
+}
+
+//透明;
+@mixin opa($num:0.8) {
+  opacity: $num;
+  filter: alpha(opacity=$num*100);
+}
+
+//css3过渡;
+@mixin tran($name:all,$time:2s) {
+  -webkit-transition: $name $time; /* Safari 和 Chrome */
+  -moz-transition: $name $time; /* Firefox 4 */
+  -ms-transition: $name $time; /* IE */
+  -o-transition: $name $time; /* Opera */
+  transition: $name $time;
+}
+
+///////////////////////////////////////////////////////////////////////////
+// css3动画,只能写在调用页面,配合.css3( @style,@frames )使用;            //
+// 例子 :                                                                //
+//  @include keyframes(animation-name) {                                 //
+//      0% {                                                             //
+//         #{$browser}transform: translate3d(100%, 0, 0);                //
+//      }                                                                //
+//      100% {                                                           //
+//          #{$browser}transform: translate3d(0%, 0, 0);                 //
+//      }                                                                //
+//   }                                                                   //
+//   .className{ @include css3(animation,animation-name 5s infinite); }  //
+///////////////////////////////////////////////////////////////////////////
+$browser: null;
+@mixin keyframes($animationName) {
+  @-webkit-keyframes #{$animationName} {
+    $browser: '-webkit-' !global;
+    @content;
+  }
+  @-moz-keyframes #{$animationName} {
+    $browser: '-moz-' !global;
+    @content;
+  }
+  @-ms-keyframes #{$animationName} {
+    $browser: '-ms-' !global;
+    @content;
+  }
+  @-o-keyframes #{$animationName} {
+    $browser: '-o-' !global;
+    @content;
+  }
+  @keyframes #{$animationName} {
+    $browser: '' !global;
+    @content;
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////
+// css3 滚动条;                                                          //
+// 例子 :                                                                //
+//  @include scrollbar(scrollbar-track){                                 //
+//    #{$browser}box-shadow: inset 0 0 6px rgba(0,0,0,0.3);              //
+//    background-color: #F5F5F5;                                         //
+//  };                                                                   //
+//  @include scrollbar(scrollbar){                                       //
+//    width: 12px;                                                       //
+//  };                                                                   //
+//  @include scrollbar(scrollbar-thumb){                                 //
+//    #{$browser}border-radius: 10px;                                    //
+//    #{$browser}box-shadow: inset 0 0 6px rgba(0,0,0,.3);               //
+//    background-color: #fbd0c9;                                         //
+//  };                                                                   //
+///////////////////////////////////////////////////////////////////////////
+@mixin scrollbar($style) {
+  ::-webkit-#{$style} {
+    $browser: '-webkit-' !global;
+    @content;
+  }
+  ::-moz-#{$style} {
+    $browser: '-moz-' !global;
+    @content;
+  }
+  ::-ms-#{$style} {
+    $browser: '-ms-' !global;
+    @content;
+  }
+  ::-o-#{$style} {
+    $browser: '-o-' !global;
+    @content;
+  }
+  ::#{$style} {
+    $browser: '' !global;
+    @content;
+  }
+}
+
+//产出公共class
+@mixin baseClass() {
+  .clear {
+    @include clear()
+  }
+  .clear-before {
+    @include clear-before()
+  }
+  .clear-after {
+    @include clear-after()
+  }
+  .ellipsis {
+    @include ellipsis()
+  }
+  .break-word {
+    @include break-word()
+  }
+  .show {
+    @include show()
+  }
+  .hide {
+    @include hide()
+  }
+
+  .left {
+    @include fl()
+  }
+  .right {
+    @include fr()
+  }
+
+  .font-success {
+    color: $default-color;
+  }
+  .font-primary {
+    color: $primary-color;
+  }
+  .font-primary2 {
+    color: #73a7fd;
+  }
+  .font-danger {
+    color: $danger-color;
+  }
+  .font-disabled {
+    color: $gry;
+  }
+  .font-warm {
+    color: $warm-color;
+  }
+  .full {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .mb-20 {
+    margin-bottom: 20px;
+  }
+  .mt-20 {
+    margin-top: 20px;
+  }
+  .nothing{
+    font-size: 20px;
+    padding-top: 200px;
+    color: #999;
+    text-align: center;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+

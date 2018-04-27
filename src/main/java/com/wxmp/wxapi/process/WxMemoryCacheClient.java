@@ -1,3 +1,9 @@
+/**
+ * Copyright &copy; 2017-2018 <a href="http://www.webcsn.com">webcsn</a> All rights reserved.
+ *
+ * @author hermit
+ * @date 2018-04-17 10:54:58
+ */
 package com.wxmp.wxapi.process;
 
 import java.util.Map;
@@ -11,17 +17,17 @@ import com.wxmp.core.util.CacheUtils;
 /**
  * 缓存工具类；
  * 目前使用 服务器内存的方式；
- * 
+ *
  * 1、开发者可以根据自己的需求使用不同的缓存方式,比如memcached
  * 2、系统默认使用单个公众账号的缓存处理，如果有多个账号，请开发者自行处理
- * 
+ *
  */
 public class WxMemoryCacheClient {
-	
-	
+
+
 	private static Logger log = LogManager.getLogger(WxMemoryCacheClient.class);
-	
-	
+	public static final String SESSION_ACCOUNT= "session_account";
+
 	public static void addMpAccount(MpAccount account){
 		Map<String,MpAccount> mpAccountMap = (Map<String, MpAccount>) CacheUtils.get("mpAccountMap");
 		if(mpAccountMap==null){
@@ -30,28 +36,34 @@ public class WxMemoryCacheClient {
 		if(account != null){
 			mpAccountMap.put(account.getAccount(), account);
 			CacheUtils.put("mpAccountMap", mpAccountMap);
+			setAccount(account.getAccount());
 		}
 	}
-//	
-	public static MpAccount getMpAccount(String account){
+//
+	public static MpAccount getMpAccount(){
 		Map<String,MpAccount> mpAccountMap = (Map<String, MpAccount>) CacheUtils.get("mpAccountMap");
-		return mpAccountMap.get(account);
+		return mpAccountMap.get(getAccount());
 	}
-	
-	//获取唯一的公众号,如果需要多账号，请自行处理
-	public static MpAccount getSingleMpAccount(){
+
+	public static MpAccount getMpAccount(String accout){
 		Map<String,MpAccount> mpAccountMap = (Map<String, MpAccount>) CacheUtils.get("mpAccountMap");
-		if(mpAccountMap==null){
-			mpAccountMap=Maps.newHashMap();
-		}
-		MpAccount sigleAccount = null;
-		for(String key : mpAccountMap.keySet()){
-			sigleAccount = mpAccountMap.get(key);
-			break;
-		}
-		return sigleAccount;
+		return mpAccountMap.get(accout);
 	}
-	
+
+//	//获取唯一的公众号,如果需要多账号，请自行处理
+//	public static MpAccount getSingleMpAccount(){
+//		Map<String,MpAccount> mpAccountMap = (Map<String, MpAccount>) CacheUtils.get("mpAccountMap");
+//		if(mpAccountMap==null){
+//			mpAccountMap=Maps.newHashMap();
+//		}
+//		MpAccount sigleAccount = null;
+//		for(String key : mpAccountMap.keySet()){
+//			sigleAccount = mpAccountMap.get(key);
+//			break;
+//		}
+//		return sigleAccount;
+//	}
+
 	public static AccessToken addAccessToken(String account ,AccessToken token){
 		Map<String,AccessToken> accountAccessTokenMap = (Map<String, AccessToken>) CacheUtils.get("accountAccessTokenMap");
 		if(accountAccessTokenMap==null){
@@ -66,38 +78,37 @@ public class WxMemoryCacheClient {
 		CacheUtils.put("accountAccessTokenMap", accountAccessTokenMap);
 		return token;
 	}
-	
+
 	/**
 	 * accessToken的获取，绝对不要从缓存中直接获取，请从WxApiClient中获取；
-	 * @param account
 	 * @return
 	 */
-	public static AccessToken getAccessToken(String account){
+	public static AccessToken getAccessToken(){
 		Map<String,AccessToken> accountAccessTokenMap = (Map<String, AccessToken>) CacheUtils.get("accountAccessTokenMap");
 		if(accountAccessTokenMap==null){
 			accountAccessTokenMap=Maps.newHashMap();
 		}
-		return accountAccessTokenMap.get(account);
+		return accountAccessTokenMap.get(getAccount());
 	}
-	
-	/**
-	 * 获取唯一的公众号的accessToken,如果需要多账号，请自行处理
-	 * accessToken的获取，绝对不要从缓存中直接获取，请从WxApiClient中获取；
-	 * @return
-	 */
-	public static AccessToken getSingleAccessToken(){
-		Map<String,AccessToken> accountAccessTokenMap = (Map<String, AccessToken>) CacheUtils.get("accountAccessTokenMap");
-		if(accountAccessTokenMap==null){
-			accountAccessTokenMap=Maps.newHashMap();
-		}
-		AccessToken accessToken = null;
-		for(String key : accountAccessTokenMap.keySet()){
-			accessToken = accountAccessTokenMap.get(key);
-			break;
-		}
-		return accessToken;
-	}
-	
+
+//	/**
+//	 * 获取唯一的公众号的accessToken,如果需要多账号，请自行处理
+//	 * accessToken的获取，绝对不要从缓存中直接获取，请从WxApiClient中获取；
+//	 * @return
+//	 */
+//	public static AccessToken getSingleAccessToken(){
+//		Map<String,AccessToken> accountAccessTokenMap = (Map<String, AccessToken>) CacheUtils.get("accountAccessTokenMap");
+//		if(accountAccessTokenMap==null){
+//			accountAccessTokenMap=Maps.newHashMap();
+//		}
+//		AccessToken accessToken = null;
+//		for(String key : accountAccessTokenMap.keySet()){
+//			accessToken = accountAccessTokenMap.get(key);
+//			break;
+//		}
+//		return accessToken;
+//	}
+
 	/**
 	 * 添加JSTicket到缓存
 	 * @param account
@@ -115,39 +126,38 @@ public class WxMemoryCacheClient {
 		CacheUtils.put("accountJSTicketMap", accountJSTicketMap);
 		return jsTicket;
 	}
-	
+
 	/**
 	 * JSTicket的获取，绝对不要从缓存中直接获取，请从JSTicket中获取；
-	 * @param account
 	 * @return
 	 */
-	public static JSTicket getJSTicket(String account){
+	public static JSTicket getJSTicket(){
 		Map<String,JSTicket> accountJSTicketMap = (Map<String, JSTicket>) CacheUtils.get("accountJSTicketMap");
 		if(null==accountJSTicketMap){
 			accountJSTicketMap=Maps.newHashMap();
 		}
-		return accountJSTicketMap.get(account);
+		return accountJSTicketMap.get(getAccount());
 	}
-	
-	/**
-	 * 获取唯一的公众号的JSTicket,如果需要多账号，请自行处理
-	 * JSTicket的获取，绝对不要从缓存中直接获取，请从WxApiClient中获取；
-	 * @return
-	 */
-	public static JSTicket getSingleJSTicket(){
-		Map<String,JSTicket> accountJSTicketMap = (Map<String, JSTicket>) CacheUtils.get("accountJSTicketMap");
-		if(null==accountJSTicketMap){
-			accountJSTicketMap=Maps.newHashMap();
-		}
-		JSTicket jsTicket = null;
-		for(String key : accountJSTicketMap.keySet()){
-			jsTicket = accountJSTicketMap.get(key);
-			break;
-		}
-		return jsTicket;
-	}
-	
-	
+
+//	/**
+//	 * 获取唯一的公众号的JSTicket,如果需要多账号，请自行处理
+//	 * JSTicket的获取，绝对不要从缓存中直接获取，请从WxApiClient中获取；
+//	 * @return
+//	 */
+//	public static JSTicket getSingleJSTicket(){
+//		Map<String,JSTicket> accountJSTicketMap = (Map<String, JSTicket>) CacheUtils.get("accountJSTicketMap");
+//		if(null==accountJSTicketMap){
+//			accountJSTicketMap=Maps.newHashMap();
+//		}
+//		JSTicket jsTicket = null;
+//		for(String key : accountJSTicketMap.keySet()){
+//			jsTicket = accountJSTicketMap.get(key);
+//			break;
+//		}
+//		return jsTicket;
+//	}
+
+
 	//处理openid缓存
 	public static String getOpenid(String sessionid){
 		Map<String,String> sessionOpenIdMap = (Map<String,String>) CacheUtils.get("sessionOpenIdMap");
@@ -159,7 +169,7 @@ public class WxMemoryCacheClient {
 		}
 		return null;
 	}
-	
+
 	public static String setOpenid(String sessionid, String openid){
 		Map<String,String> sessionOpenIdMap = (Map<String,String>) CacheUtils.get("sessionOpenIdMap");
 		if(null==sessionOpenIdMap){
@@ -171,7 +181,7 @@ public class WxMemoryCacheClient {
 		CacheUtils.put("sessionOpenIdMap", sessionOpenIdMap);
 		return openid;
 	}
-	
+
 	//处理OAuth的Token
 	public static AccessToken addOAuthAccessToken(String account ,OAuthAccessToken token){
 		Map<String,OAuthAccessToken> accountOAuthTokenMap = (Map<String, OAuthAccessToken>) CacheUtils.get("accountOAuthTokenMap");
@@ -184,36 +194,50 @@ public class WxMemoryCacheClient {
 		CacheUtils.put("accountOAuthTokenMap", accountOAuthTokenMap);
 		return token;
 	}
-	
+
 	/**
 	 * OAuthAccessToken的获取，绝对不要从缓存中直接获取，请从WxApiClient中获取；
-	 * @param account
 	 * @return
 	 */
-	public static OAuthAccessToken getOAuthAccessToken(String account){
+	public static OAuthAccessToken getOAuthAccessToken(){
 		Map<String,OAuthAccessToken> accountOAuthTokenMap = (Map<String, OAuthAccessToken>) CacheUtils.get("accountOAuthTokenMap");
 		if(null==accountOAuthTokenMap){
 			accountOAuthTokenMap=Maps.newHashMap();
 		}
-		return accountOAuthTokenMap.get(account);
+		return accountOAuthTokenMap.get(getAccount());
 	}
-	
+
+//	/**
+//	 * 获取唯一的公众号的accessToken,如果需要多账号，请自行处理
+//	 * OAuthAccessToken的获取，绝对不要从缓存中直接获取，请从WxApiClient中获取；
+//	 * @return
+//	 */
+//	public static OAuthAccessToken getSingleOAuthAccessToken(){
+//		Map<String,OAuthAccessToken> accountOAuthTokenMap = (Map<String, OAuthAccessToken>) CacheUtils.get("accountOAuthTokenMap");
+//		if(null==accountOAuthTokenMap){
+//			accountOAuthTokenMap=Maps.newHashMap();
+//		}
+//		OAuthAccessToken token = null;
+//		for(String key : accountOAuthTokenMap.keySet()){
+//			token = accountOAuthTokenMap.get(key);
+//			break;
+//		}
+//		return token;
+//	}
+
 	/**
-	 * 获取唯一的公众号的accessToken,如果需要多账号，请自行处理
-	 * OAuthAccessToken的获取，绝对不要从缓存中直接获取，请从WxApiClient中获取；
-	 * @return
+	 * 设置公众号信息 缓存中
+	 * @param account
 	 */
-	public static OAuthAccessToken getSingleOAuthAccessToken(){
-		Map<String,OAuthAccessToken> accountOAuthTokenMap = (Map<String, OAuthAccessToken>) CacheUtils.get("accountOAuthTokenMap");
-		if(null==accountOAuthTokenMap){
-			accountOAuthTokenMap=Maps.newHashMap();
-		}
-		OAuthAccessToken token = null;
-		for(String key : accountOAuthTokenMap.keySet()){
-			token = accountOAuthTokenMap.get(key);
-			break;
-		}
-		return token;
+	public static void setAccount(String account) {
+		CacheUtils.put(SESSION_ACCOUNT, account);
+	}
+	/**
+	 * 从缓存中获取公众号
+	 * @return String
+	 */
+	public static String getAccount() {
+		return (String) CacheUtils.get(SESSION_ACCOUNT);
 	}
 }
 

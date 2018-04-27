@@ -1,0 +1,122 @@
+<div class="fsh-pop">
+    <div id="add_form" class="layui-form">
+        <input id="openId" type="hidden" value="<%=openId%>">
+        <blockquote class="site-text layui-elem-quote" id="msgType_select">
+            消息类型 ：
+            <button class="layui-btn btn-primary layui-btn-radius">文本消息</button>
+            <button class="layui-btn layui-btn-primary layui-btn-radius">图文消息</button>
+        </blockquote>
+        <div id="send_msg_content">
+            <table id="send_msg" class="layui-hide" lay-filter="send_msg"></table>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['layer', 'table'], function () {
+        var layer = layui.layer;
+        var table = layui.table;
+
+        var msgType =0;//1:文本，2图文
+
+        rendertextList();
+
+        $("#msgType_select").on("click",".layui-btn",function () {
+            var $this=$(this);
+            $("#send_msg_content").html(template.render('<table id="send_msg" class="layui-hide" lay-filter="send_msg"></table>', {}));
+            if($this.index()==0){
+                msgType=0;
+                rendertextList();
+            }else{
+                msgType=1;
+                renderdocList();
+            }
+            $this.addClass("btn-primary").removeClass("layui-btn-primary")
+                .siblings(".btn-primary").addClass("layui-btn-primary").removeClass("btn-primary");
+        });
+        
+//        form.on('select(msgType)', function (data) {
+//            console.log("change");
+//            $("#send_msg_content").html(template.render('<table id="send_msg" class="layui-hide" lay-filter="send_msg"></table>', {}));
+//            msgType = data.value;
+//            if (data.value == "1") {
+//                rendertextList();
+//            } else {
+//                renderdocList();
+//            }
+//        });
+
+        function rendertextList() {
+            table.render({
+                id: 'send_msg',
+                elem: '#send_msg',
+                url: '/msgtext/list',
+                align: "center",
+                cols: [[ //表头
+                    {type: 'numbers'},
+                    {field: 'content', title: '内容', align: 'center',},
+                    {
+                        field: 'msgtype', title: '类型', width: 200, align: 'center', templet: function (d) {
+                        return "文本消息";
+                    }
+                    },
+                    {
+                        field: 'lock', title: '类型', width: 200, align: 'center', templet: function (d) {
+                        return '<button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-danger" lay-event="send">发送消息</button>';
+                    }
+                    },
+                ]],
+            });
+        }
+
+        function renderdocList() {
+            table.render({
+                id: 'send_msg',
+                elem: '#send_msg',
+                url: '/msgnews/list',
+                align: "center",
+                cols: [[ //表头
+                    {type: 'numbers'},
+                    {field: 'title', title: '标题', align: 'center',},
+                    {
+                        field: 'msgtype', title: '类型', width: 200, align: 'center', templet: function (d) {
+                        return "图文消息";
+                    }
+                    },
+                    {
+                        field: 'lock', title: '类型', width: 200, align: 'center', templet: function (d) {
+                        return '<button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-danger" lay-event="send">发送消息</button>';
+                    }
+                    },
+                ]],
+            });
+        }
+
+        table.on('tool(send_msg)', function (obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值
+            if (layEvent == 'send') {
+                var url;
+                if (msgType == "0") {
+                    url = '/wxapi/sendTextMsgByOpenId';
+                } else {
+                    url = '/wxapi/sendNewsByOpenId';
+                }
+                $.ajax({
+                    url: url,
+                    data: {
+                        openid: $("#openId").val(),
+                        msgId: data.id
+                    },
+                    success: function (result) {
+                        if (result.success) {
+                            layer.closeAll();
+                            layer.msg("发送成功");
+                        } else {
+                            layer.msg("发送失败");
+                        }
+                    }
+                })
+            }
+        });
+    });
+</script>

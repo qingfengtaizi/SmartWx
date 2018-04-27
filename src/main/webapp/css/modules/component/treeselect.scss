@@ -1,0 +1,28 @@
+/**treeselect*/
+.layui-form-select .layui-tree {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 42px;
+  padding: 5px 0;
+  z-index: 999;
+  min-width: 100%;
+  border: 1px solid #d2d2d2;
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.12);
+  box-sizing: border-box;
+}
+.layui-form-selected .layui-tree {
+  display: block;
+}
+.layui-tree li a{
+  color: inherit;
+}
+.layui-tree-skin-treeselect{
+  &.layui-tree li a i{
+    display: none;
+  }
+}

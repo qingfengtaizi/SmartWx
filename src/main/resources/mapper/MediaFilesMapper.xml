@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
-
+<!--  the code template created by wxmp-generator @author hermit @version 2.0 @date 2018-04-17 10:43:21 -->
 <mapper namespace="com.wxmp.wxcms.mapper.MediaFilesDao">
     
 	<insert id="add" parameterType="com.wxmp.wxcms.domain.MediaFiles">
-		INSERT INTO t_wxcms_media_files 
-		 (mediaType,
+		INSERT INTO wxcms_media_files
+		 (media_type,
 		  media_id,
-		  createTime,
-		  updateTime)
+		  create_time,
+		  update_time)
 		  VALUES(#{mediaType},
 		          #{mediaId},
 		          #{createTime},
@@ -16,15 +16,15 @@
 	</insert>
     <!-- 查询主表的媒体信息  -->
 	<select id="getMediaFileList" resultType="com.wxmp.wxcms.domain.MediaFiles">
-		SELECT mediaType as mediaType,
+		SELECT media_type as mediaType,
 		       media_id as mediaId
-		 FROM t_wxcms_media_files t
-		  ORDER BY t.createTime desc 
+		 FROM wxcms_media_files t
+		  ORDER BY t.create_time desc 
 	</select>
 	
 	
     <!-- 删除临时订单 -->
     <delete id="deleteByMediaId" parameterType="java.lang.String" >
-		DELETE FROM t_wxcms_media_files WHERE media_id = #{mediaId}
+		DELETE FROM wxcms_media_files WHERE media_id = #{mediaId}
 	</delete>
 </mapper>

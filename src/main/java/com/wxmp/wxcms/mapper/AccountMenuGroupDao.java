@@ -1,11 +1,19 @@
+/**
+ * Copyright &copy; 2017-2018 <a href="http://www.webcsn.com">webcsn</a> All rights reserved.
+ *
+ * @author hermit
+ * @date 2018-04-17 10:54:58
+ */
 package com.wxmp.wxcms.mapper;
 
 import java.util.List;
-import com.wxmp.core.page.Pagination;
 import com.wxmp.wxcms.domain.AccountMenuGroup;
 
 /**
- * @author : hermit
+ *
+ * @author hermit
+ * @version 2.0
+ * @date 2018-04-17 10:54:58
  */
 
 public interface AccountMenuGroupDao {
@@ -16,7 +24,7 @@ public interface AccountMenuGroupDao {
 
 	public Integer getTotalItemsCount(AccountMenuGroup searchEntity);
 
-	public List<AccountMenuGroup> paginationEntity(AccountMenuGroup searchEntity , Pagination<AccountMenuGroup> pagination);
+	public List<AccountMenuGroup> getGroupListByPage(AccountMenuGroup searchEntity);
 
 	public void add(AccountMenuGroup entity);
 
@@ -34,7 +42,7 @@ public interface AccountMenuGroupDao {
 	 * 删除菜单组
 	 * @param id
 	 */
-	public void deleteGroupById(long  id);
+	public void deleteGroupById(long id);
 	/**
 	 * 删除菜单组下的菜单
 	 * @param id

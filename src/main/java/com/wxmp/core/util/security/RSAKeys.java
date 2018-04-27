@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import com.wxmp.backstage.exception.BusinessException;
+import com.wxmp.core.exception.BusinessException;
 import org.apache.log4j.Logger;
 import com.wxmp.core.util.security.RSASignatureTools.KeyStoreFileType;
 /**

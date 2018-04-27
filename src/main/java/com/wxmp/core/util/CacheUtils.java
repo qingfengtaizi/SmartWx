@@ -1,25 +1,20 @@
-/**
- * Copyright &copy; 2012-2014 <a href="http://www.xspace.com">xspace</a> All rights reserved.
- */
 package com.wxmp.core.util;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Element;
+import net.oschina.j2cache.CacheChannel;
+import net.oschina.j2cache.CacheObject;
 
 /**
  * Cache工具类
- * @author xspace
- * @version 2013-5-29
+ * @author hermit
  */
 public class CacheUtils {
-	
-	private static CacheManager cacheManager = ((CacheManager)SpringContextHolder.getBean("cacheManager"));
 
-	private static final String WX_CACHE = "wxCache";
-	
-	private static final byte[] _lock = new byte[0];
-	
+    private static final String WX_CACHE = "wxCache";
+    private static CacheChannel cache = null;
+
+    static {
+        cache = J2CacheUtil.getChannel();
+    }
 	/**
 	 * 获取WX_CACHE缓存
 	 * @param key
@@ -54,8 +49,8 @@ public class CacheUtils {
 	 * @return
 	 */
 	public static Object get(String cacheName, String key) {
-		Element element = getCache(cacheName).get(key);
-		return element==null?null:element.getObjectValue();
+		CacheObject object = cache.get(cacheName, key);
+		return object == null ? null : object.getValue();
 	}
 
 	/**
@@ -65,8 +60,7 @@ public class CacheUtils {
 	 * @param value
 	 */
 	public static void put(String cacheName, String key, Object value) {
-		Element element = new Element(key, value);
-		getCache(cacheName).put(element);
+		cache.set(cacheName,key,value);
 	}
 
 	/**
@@ -75,30 +69,7 @@ public class CacheUtils {
 	 * @param key
 	 */
 	public static void remove(String cacheName, String key) {
-		getCache(cacheName).remove(key);
-	}
-	
-	/**
-	 * 获得一个Cache，没有则创建一个。
-	 * @param cacheName
-	 * @return
-	 */
-	private static Cache getCache(String cacheName){
-		Cache cache = cacheManager.getCache(cacheName);
-		if (cache == null){
-			synchronized (_lock) {
-				if (cache == null){
-					cacheManager.addCache(cacheName);
-					cache = cacheManager.getCache(cacheName);
-					cache.getCacheConfiguration().setEternal(true);
-				}
-			}
-		}
-		return cache;
+		cache.evict(cacheName,key);
 	}
 
-	public static CacheManager getCacheManager() {
-		return cacheManager;
-	}
-	
 }

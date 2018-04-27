@@ -1,3 +1,9 @@
+/**
+ * Copyright &copy; 2017-2018 <a href="http://www.webcsn.com">webcsn</a> All rights reserved.
+ *
+ * @author hermit
+ * @date 2018-04-17 10:54:58
+ */
 package com.wxmp.wxapi.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -58,7 +64,7 @@ public class WxOAuth2Interceptor extends HandlerInterceptorAdapter {
 			if(!StringUtils.isBlank(code)){//如果request中包括code，则是微信回调
 				log.info("-------------------------------------preHandle-----<2-2>-------------------code:"+code);		
 				try {
-					openid = WxApiClient.getOAuthOpenId(WxMemoryCacheClient.getSingleMpAccount(), code);
+					openid = WxApiClient.getOAuthOpenId(WxMemoryCacheClient.getMpAccount(), code);
 					log.info("-------------------------------------preHandle-----<2-3>-------------------openid:"+openid);	
 					if(!StringUtils.isBlank(openid)){
 						WxMemoryCacheClient.setOpenid(sessionid, openid);//缓存openid
@@ -69,7 +75,7 @@ public class WxOAuth2Interceptor extends HandlerInterceptorAdapter {
 				}
 			}else{//oauth获取code
 
-				MpAccount mpAccount = WxMemoryCacheClient.getSingleMpAccount();//获取缓存中的唯一账号
+				MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 				log.info("-------------------------------------preHandle-----<3-1>-------------------mpAccount:"+mpAccount.getAccount());	
 				String redirectUrl = HttpUtil.getRequestFullUriNoContextPath(request);//请求code的回调url
 				if(!HttpUtil.existHttpPath(redirectUrl)){

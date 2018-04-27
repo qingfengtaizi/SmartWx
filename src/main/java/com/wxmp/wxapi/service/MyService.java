@@ -1,3 +1,9 @@
+/**
+ * Copyright &copy; 2017-2018 <a href="http://www.webcsn.com">webcsn</a> All rights reserved.
+ *
+ * @author hermit
+ * @date 2018-04-17 10:54:58
+ */
 package com.wxmp.wxapi.service;
 
 import net.sf.json.JSONObject;
@@ -17,7 +23,7 @@ public interface MyService {
 	public String processMsg(MsgRequest msgRequest,MpAccount mpAccount);
 
 	//发布菜单
-	public JSONObject publishMenu(String gid,MpAccount mpAccount);
+	public JSONObject publishMenu(MpAccount mpAccount);
 	
 	//删除菜单
 	public JSONObject deleteMenu(MpAccount mpAccount);

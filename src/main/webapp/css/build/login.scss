@@ -1,0 +1,65 @@
+.fsh-login {
+  background: url(/images/common/login-bg.jpg);
+  background-size: 100% 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  .content {
+    width: 395px;
+    height: 376px;
+    background: rgba(255, 255, 255, 0.3);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    padding: 0 20px;
+  }
+  .login-title {
+    height: 70px;
+    font-size: 20px;
+    color: #666;
+    line-height: 70px;
+    text-align: center;
+  }
+  .layui-form-pane .layui-form-label {
+    padding: 0;
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+    text-align: center;
+    background: #cdcdcd;
+    img {
+      width: 32px;
+      height: 32px
+    }
+  }
+
+  .layui-form-pane .layui-input-block {
+    margin-left: 45px
+  }
+
+  .layui-form-pane .layui-input {
+    height: 45px
+  }
+
+  .layui-form-pane .layui-form-checkbox {
+    margin-left: 0
+  }
+
+  .layui-form-checkbox span {
+    font-size: 12px;
+    color: #fff
+  }
+
+  .layui-form-checkbox[lay-skin=primary] i {
+    height: 12px;
+    width: 12px;
+    line-height: 12px;
+    margin-top: 2px;
+  }
+
+}

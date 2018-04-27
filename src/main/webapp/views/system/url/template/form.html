@@ -1,0 +1,59 @@
+<%if(data.successflag){%>
+<div class="layui-elem-quote">
+    <p>已成功获取URL 和 Token，请填写到微信平台中</p>
+</div>
+<%}%>
+<h2>
+    将URL和Token填写到公众平台开发者中心中，即可升级成为开发者账号
+</h2>
+<input name="id" type="hidden"  value="<%=data.account.id%>">
+<div class="layui-form-item">
+    <label class="layui-form-label"><i>*</i>公众号名称</label>
+    <div class="layui-input-block">
+        <input type="text" name="name" lay-verify="required" placeholder="公众号名称" class="layui-input" value="<%=data.account.name%>">
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label"><i>*</i>公众号ID</label>
+    <div class="layui-input-block">
+        <input type="text" name="account" lay-verify="required" placeholder="字母或者数字" class="layui-input" value="<%=data.account.account%>">
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label">URL</label>
+    <div class="layui-input-block">
+        <input type="text" name="url" readonly placeholder="请输入url" class="layui-input" value="<%=data.account.url%>">
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label">Token</label>
+    <div class="layui-input-block">
+        <input type="text" name="token" readonly placeholder="Token" class="layui-input" value="<%=data.account.token%>">
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label"><i>*</i>AppID</label>
+    <div class="layui-input-block">
+        <input type="text" name="appid" placeholder="Token" class="layui-input" value="<%=data.account.appid%>">
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label"><i>*</i>AppSecret</label>
+    <div class="layui-input-block">
+        <input type="text" name="appsecret" placeholder="AppSecret" class="layui-input" value="<%=data.account.appsecret%>">
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label"><i>*</i>消息条数</label>
+    <div class="layui-input-inline">
+        <select name="msgcount">
+            <%for(var i=0;i < data.msgCountList.length;i++){%>
+            <option value="<%=data.msgCountList[i]%>" <%=data.msgCountList[i]==data.account.msgcount?"selected":""%> ><%=data.msgCountList[i]%>条</option>
+            <%}%>
+        </select>
+    </div>
+    <span class="tips">(回复图文消息条数)</span>
+</div>
+<script>
+    layui.form.render();
+</script>

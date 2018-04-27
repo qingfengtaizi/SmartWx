@@ -1,0 +1,113 @@
+<div class="fsh-rightPanel">
+    <div class="layui-anim layui-anim-upbit">
+        <div class="layui-row layui-col-space10">
+            <div class="layui-col-md8">
+                <div class="layui-form fsh-form-lg" action="">
+                    <div id="url_form">
+                        <h2>
+                            将URL和Token填写到公众平台开发者中心中，即可升级成为开发者账号
+                        </h2>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><i>*</i>公众号名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="name" lay-verify="required" placeholder="公众号名称" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><i>*</i>公众号ID</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="account" lay-verify="required" placeholder="字母或者数字" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">URL</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title" readonly lay-verify="required" placeholder="请输入标题" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">Token</label>
+                            <div class="layui-input-block">
+                                <input type="email" name="email" placeholder="Token" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><i>*</i>AppID</label>
+                            <div class="layui-input-block">
+                                <input type="email" name="email" placeholder="Token" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><i>*</i>AppSecret</label>
+                            <div class="layui-input-block">
+                                <input type="email" name="appsecret" placeholder="AppSecret" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><i>*</i>消息条数</label>
+                            <div class="layui-input-inline">
+                                <select name="msgcount">
+                                    <option value="请选择"></option>
+                                </select>
+                            </div>
+                            <span class="tips">(回复图文消息条数)</span>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button type="button" class="layui-btn" lay-submit lay-filter="url_form">立即提交</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md4 text-center">
+                <img id="url_img" style="width: 100%;max-width:200px;margin-top: 50px;">
+                <p style="margin-top: 20px;">公众号二维码</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form'], function () {
+        var form = layui.form;
+        var $=layui.$;
+
+        $.ajax({
+            url: '/wxcms/urltoken',
+            type: 'POST',
+            async: false,
+            dataType: 'json',
+            success: function (result) {
+                if (result.success) {
+                    renderHtml({
+                        targetId:"url_form",
+                        template:"form",
+                        htmlData:result
+                    });
+                    $("#url_img").attr("src","http://open.weixin.qq.com/qr/code?username="+result.data.account.account);
+                }
+            }
+        });
+
+        form.render();
+        //监听提交
+        form.on('submit(url_form)', function (data) {
+            $.ajax({
+                url: '/wxcms/getUrl',
+                type: 'POST',
+                async: false,
+                dataType: 'json',
+                data: data.field,
+                success: function (result) {
+                    if (result.success) {
+                        layer.msg("保存成功");
+                    } else {
+                        layer.msg("保存失败");
+                    }
+                }
+            });
+            return false;
+        });
+    });
+</script>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+<!--  the code template created by wxmp-generator @author hermit @version 2.0 @date 2018-04-17 10:43:21 -->
+<mapper namespace="com.wxmp.wxcms.mapper.MsgArticleDao">
+	<resultMap type="com.wxmp.wxcms.domain.MsgArticle" id="msgArticleMap">
+	    <id property="arId" column="ar_id"/>
+	    <result property="title" column="title" />
+	    <result property="author" column="author" />
+	    <result property="content" column="content" />
+	    <result property="digest" column="digest" />
+	    <result property="showCoverPic" column="show_cover_pic" />
+	    <result property="picUrl" column="pic_url" />
+	    <result property="url" column="url" />
+	    <result property="thumbMediaId" column="thumb_media_id" />
+	    <result property="contentSourceUrl" column="content_source_url" />
+	    <result property="mediaId" column="media_id" />
+	    <result property="newsId" column="news_id" />
+	    <result property="newsIndex" column="news_index" />
+	</resultMap>
+	
+    <select id="getByNewsId" parameterType="int" resultType="com.wxmp.wxcms.domain.MsgArticle">
+		SELECT * FROM wxcms_article WHERE NEWS_ID = #{newsId}
+	</select>
+
+	<select id="getById" parameterType="int" resultType="com.wxmp.wxcms.domain.MsgArticle">
+		SELECT * FROM wxcms_article WHERE ID = #{id}
+	</select>
+	
+
+	<insert id="add" parameterType="com.wxmp.wxcms.domain.MsgArticle" flushCache="true" useGeneratedKeys="true" keyProperty="arId">
+		INSERT INTO wxcms_article (
+		TITLE,
+		AUTHOR,
+		CONTENT,
+		DIGEST,
+		SHOW_COVER_PIC,
+		URL,
+		PIC_URL,
+		THUMB_MEDIA_ID,
+		MEDIA_ID,
+		CONTENT_SOURCE_URL,
+		NEWS_ID,
+		NEWS_INDEX)
+		VALUES (
+		#{title},
+		#{author},
+		#{content},
+		#{digest},
+		#{showCoverPic},
+		#{url},
+		#{picUrl},
+		#{thumbMediaId},
+		#{mediaId},
+		#{contentSourceUrl},
+		#{newsId},
+		#{newsIndex})
+	</insert>
+    <insert id="insertByBatch" parameterType="java.util.List">
+       insert into wxcms_article
+       (TITLE,
+		AUTHOR,
+		CONTENT,
+		DIGEST,
+		SHOW_COVER_PIC,
+		URL,
+		PIC_URL,
+		THUMB_MEDIA_ID,
+		MEDIA_ID,
+		CONTENT_SOURCE_URL,
+		NEWS_ID,
+		NEWS_INDEX)
+       values
+       <foreach collection="list" item="item" index="index" separator=",">
+           (
+           #{item.title},
+			#{item.author},
+			#{item.content},
+			#{item.digest},
+			#{item.showCoverPic},
+			#{item.url},
+			#{item.picUrl},
+			#{item.thumbMediaId},
+			#{item.mediaId},
+			#{item.contentSourceUrl},
+			#{item.newsId},
+			#{item.newsIndex})
+       </foreach>
+    </insert>
+	<update id="update" parameterType="com.wxmp.wxcms.domain.MsgArticle" flushCache="true">
+		UPDATE wxcms_article SET
+		<if test="title != '' and title != null">
+			TITLE=#{title},
+		</if>
+		<if test="author != '' and author != null">
+			AUTHOR=#{author},
+		</if>
+		<if test="content != '' and content != null">
+			CONTENT=#{content},
+		</if>
+		<if test="showCoverPic != '' and showCoverPic != null">
+			SHOW_COVER_PIC=#{showCoverPic},
+		</if>
+			
+		
+		<if test="thumbMediaId != '' and thumbMediaId != null">
+			THUMB_MEDIA_ID=#{thumbMediaId},
+		</if>
+		
+		PIC_URL=#{picUrl},
+		DIGEST=#{digest},
+		CONTENT_SOURCE_URL=#{contentSourceUrl}
+		WHERE ar_id = #{arId} 
+	</update>
+
+	<delete id="delete" parameterType="int" >
+		DELETE FROM wxcms_article WHERE ID = #{id}
+	</delete>
+	<delete id="deleteByBatch" parameterType="int" >
+		DELETE FROM wxcms_article WHERE NEWS_ID = #{id}
+	</delete>
+    
+	
+</mapper>

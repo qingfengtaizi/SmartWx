@@ -1,3 +1,9 @@
+/**
+ * Copyright &copy; 2017-2018 <a href="http://www.webcsn.com">webcsn</a> All rights reserved.
+ *
+ * @author hermit
+ * @date 2018-04-17 10:54:58
+ */
 package com.wxmp.wxapi.process;
 
 import java.util.ArrayList;
@@ -13,6 +19,7 @@ import com.wxmp.wxapi.vo.Article;
 import com.wxmp.wxapi.vo.MsgRequest;
 import com.wxmp.wxapi.vo.MsgResponseNews;
 import com.wxmp.wxapi.vo.MsgResponseText;
+import com.wxmp.wxcms.domain.MsgArticle;
 import com.wxmp.wxcms.domain.MsgNews;
 import com.wxmp.wxcms.domain.MsgText;
 
@@ -80,18 +87,29 @@ public class WxMessageBuilder {
 	//客服图文消息
 	public static String prepareCustomNews(String openid,MsgNews msgNews){
 		JSONObject jsObj = new JSONObject();
+//		List<MsgArticle> arts = msgNews.getArticles();
+//		jsObj.put("touser", openid);
+//		jsObj.put("msgtype", MsgType.News.toString().toLowerCase());
+//		JSONObject articles = new JSONObject();
+//		JSONArray articleArray = new JSONArray();
+//		//支持多图文
+//		arts.forEach((a)->{
+//			JSONObject newsObj = new JSONObject();
+//			newsObj.put("title", a.getTitle());
+//			newsObj.put("description", a.getDigest());
+//			newsObj.put("url", a.getUrl());
+//			newsObj.put("picurl", a.getPicUrl());
+//			articleArray.add(newsObj);
+//		});
+//		articles.put("articles", articleArray);
+//		jsObj.put("news", articles);
+//		第二种方式
 		jsObj.put("touser", openid);
-		jsObj.put("msgtype", MsgType.News.toString().toLowerCase());
-		JSONObject newsObj = new JSONObject();
-		JSONObject articles = new JSONObject();
-		JSONArray articleArray = new JSONArray();
-		newsObj.put("title", msgNews.getTitle());
-		newsObj.put("description", msgNews.getDescription());
-		newsObj.put("url", msgNews.getUrl());
-		newsObj.put("picurl", msgNews.getPicpath());
-		articleArray.add(newsObj);
-		articles.put("articles", articleArray);
-		jsObj.put("news", articles);
+		jsObj.put("msgtype", MsgType.MPNEWS.toString().toLowerCase());
+		JSONObject media = new JSONObject();
+		media.put("media_id", msgNews.getMediaId());
+		jsObj.put("mpnews", media);
+		
 		return jsObj.toString();
 	}
 	public static void main(String[] args) {

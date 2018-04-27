@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wxmp.wxcms.mapper.SysConfigDao">
+
+  <select id="getConfigList" resultType="com.wxmp.wxcms.domain.SysConfig">
+    select * from sys_config
+  </select>
+  
+  <update id="update" parameterType="String">
+    update sys_config set jvalue=#{value} where jkey = #{key}
+  </update>
+
+  <select id="getValue" parameterType="String">
+    select jvalue from sys_config WHERE  jkey = #{key}
+  </select>
+
+  <!--查询数据库版本-->
+  <select id="getMysqlVsesion" resultType="String">
+    select version()
+  </select>
+</mapper>
