@@ -32,7 +32,7 @@ public interface AccountMenuGroupDao {
 
 	/**
 	 * 删除菜单组
-	 * @param entity
+	 * @param id
 	 */
 	public void deleteGroupById(long id);
 	/**
