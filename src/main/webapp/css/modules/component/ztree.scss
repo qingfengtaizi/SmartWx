@@ -1,0 +1,214 @@
+//ztree样式
+
+.fsh-operation ~ .ztree {
+  margin-top: 20px;
+}
+
+.ztree * {
+  font-size: 14px
+}
+
+.ztree li {
+  padding: 5px 0;
+}
+
+.ztree li span {
+  margin: 0 6px;
+}
+
+//与layui checkbox风格一致
+.ztree li span.button.chk {
+
+}
+
+//重置开启关闭
+.ztree li span.button {
+  &.root_close,
+  &.root_open,
+  &.roots_close,
+  &.roots_open,
+  &.center_close,
+  &.center_open,
+  &.bottom_close,
+  &.bottom_open {
+    font-family: layui-icon !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    background-image: none !important;
+    color: #333;
+  }
+
+  &.root_close:before,
+  &.roots_close:before,
+  &.center_close:before,
+  &.bottom_close:before {
+    content: "\e623";
+    vertical-align: middle;
+    line-height: 16px;
+  }
+
+  &.root_open:before,
+  &.roots_open:before,
+  &.center_open:before,
+  &.bottom_open:before {
+    content: "\e625";
+    vertical-align: middle;
+    line-height: 16px;
+  }
+}
+
+//隐藏连接线
+.ztree {
+  li span.button.center_docu,
+  li span.button.bottom_docu,
+  li ul.line {
+    background-image: none !important;
+  }
+}
+
+//皮肤
+//ztree-checkbox
+.ztree.ztree-skin-checkbox {
+  li span.button.chk {
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    text-align: center;
+    font-size: 12px;
+    border: 1px solid #d2d2d2;
+    border-radius: 2px;
+    background-image: none;
+    background-color: #fff;
+
+    color: #fff;
+
+    font-family: layui-icon !important;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-transition: .1s linear;
+    transition: .1s linear;
+    &:before {
+      content: "\e605";
+    }
+    &:hover {
+      border-color: #5FB878 !important;
+    }
+    //未选中
+    &.checkbox_false_full {
+
+    }
+
+    //选中
+    &.checkbox_true_full,
+    &.checkbox_true_full_focus,
+    &.checkbox_true_part,
+    &.checkbox_true_part_focus {
+      border-color: #5FB878 !important;
+      background-color: #5FB878 !important;
+    }
+
+    //&.checkbox_true_part {
+    //  opacity: .3;
+    //}
+
+  }
+}
+
+//ztree-radio
+.ztree.ztree-skin-radio {
+  li span.button.chk {
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    text-align: center;
+    font-size: 16px;
+    border: none;
+    background-image: none;
+    background-color: #fff;
+
+    color: #999;
+
+    font-family: layui-icon !important;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-transition: .1s linear;
+    transition: .1s linear;
+    &:before {
+      content: "\e63f";
+    }
+    &:hover {
+      color: #5FB878 !important;
+    }
+
+    &.radio_true_full,
+    &.radio_true_full_focus
+    {
+      &:before {
+        content: "\e643";
+      }
+      color: #5FB878 !important;
+    }
+  }
+}
+
+//此类下去选中样式
+.ztree.ztree-skin-checkbox,
+.ztree.ztree-skin-radio
+{
+  li a.curSelectedNode{
+    padding: 1px 3px 0 0;
+    background-color: transparent;
+    color: #333;
+    height: 17px;
+    border: none;
+    opacity: 1;
+  }
+}
+
+
+//定义图标
+.ztree li span.button {
+  //自定义图标 设置为ico结尾，产出三种状态class
+  &.ico_ico_open{
+    opacity: 0.9;
+  }
+  &.ico_ico_close{
+
+  }
+  &.ico_ico_ico_docu{
+
+  }
+
+  //iconfont字体图标
+  &.iconfont{
+    background: none !important;
+    line-height: 16px;
+    font-size: 18px;
+  }
+
+  //其他图片图标
+  &.ztree-icon-root{
+    background-image: url("/images/ztree/root.png");
+  }
+  &.ztree-icon-folder{
+    background-image: url("/images/ztree/folder.png");
+  }
+  &.ztree-icon-file{
+    background-image: url("/images/ztree/file.png");
+  }
+  &.ztree-icon-category{
+    background-image: url("/images/ztree/category.png");
+  }
+  &.ztree-icon-course{
+    background-image: url("/images/ztree/course.png");
+  }
+  &.ztree-icon-group{
+    background-image: url("/images/ztree/group.png");
+  }
+  &.ztree-icon-user{
+    background-image: url("/images/ztree/user.png");
+  }
+}

@@ -1,11 +1,20 @@
+/**
+ * Copyright &copy; 2017-2018 <a href="http://www.webcsn.com">webcsn</a> All rights reserved.
+ *
+ * @author hermit
+ * @date 2018-04-17 10:54:58
+ */
 package com.wxmp.wxcms.mapper;
 
-import java.util.List;
-import com.wxmp.core.page.Pagination;
 import com.wxmp.wxcms.domain.AccountFans;
 
+import java.util.List;
+
 /**
- * @author : hermit
+ *
+ * @author hermit
+ * @version 2.0
+ * @date 2018-04-17 10:54:58
  */
 public interface AccountFansDao {
 
@@ -17,7 +26,7 @@ public interface AccountFansDao {
 
 	public Integer getTotalItemsCount(AccountFans searchEntity);
 	
-	public List<AccountFans> paginationEntity(AccountFans searchEntity ,Pagination<AccountFans> pagination);
+	public List<AccountFans> getFansListByPage(AccountFans searchEntity);
 
 	public AccountFans getLastOpenId();
 	

@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+	<!-- 加载配置文件 开始-->
+	<bean class="com.wxmp.core.util.PropertiesUtil">
+		<property name="order" value="1"/>
+		<property name="ignoreUnresolvablePlaceholders" value="true"/>
+		<property name="locations">
+			<list>
+				<!--classpath* 会扫描jar包下配置文件-->
+				<value>classpath*:property/*.properties</value>
+			</list>
+		</property>
+		<property name="fileEncoding">
+			<value>utf-8</value>
+		</property>
+	</bean>
+	<!-- 加载配置文件 结束-->
+
+	<!-- 引入SPRING配置文件 -->
+	<import resource="classpath*:spring/spring-*.xml"/>
+	<bean class="com.wxmp.core.spring.SpringContextHolder" lazy-init="false"/>
+	<!--&lt;!&ndash; 服务器启动时自动加载，目前主要提取加载需要缓存的公众号信息 &ndash;&gt;-->
+	<!--<bean id="appServiceImpl" class="com.wxmp.core.common.AppDefineInitService"></bean>-->
+	<!--<bean id="beanDefineConfigue" class="com.wxmp.core.spring.SpringBeanDefineConfigue">-->
+		<!--<property name="appService" ref="appServiceImpl"></property>-->
+	<!--</bean>-->
+</beans>

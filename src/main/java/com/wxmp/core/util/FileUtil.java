@@ -25,7 +25,7 @@ import java.util.regex.Matcher;
 
 import org.apache.commons.io.FileUtils;
 
-import com.wxmp.backstage.common.Identities;
+import com.wxmp.core.common.Identities;
 
 /**
  * 功能：文件操作工具类
@@ -155,35 +155,27 @@ public class FileUtil {
      * @param destFile
      * @throws IOException
      */
-    public static void copyFile(File sourceFile, File destFile){
-    	try{
-    		if (sourceFile.equals(destFile)) {
-        		return;
-        	}
-        	if (!destFile.getParentFile().exists() &&
-        			!destFile.getParentFile().mkdirs()) {
-        		throw new IOException("Cannot create directory " + destFile.getParent());
-        	}
-        	final int BUFFER = 2048;
-        	BufferedInputStream source = new BufferedInputStream(new FileInputStream(
-        			sourceFile), BUFFER);
-    	    try {
-    	    	BufferedOutputStream dest = new BufferedOutputStream(new FileOutputStream(destFile), BUFFER);
-    	    	try {
-    	    		int count;
-    	    		byte data[] = new byte[BUFFER];
-    	    		while ( (count = source.read(data, 0, BUFFER)) != -1) {
-    	    			dest.write(data, 0, count);
-    	    		}
-    	    	}finally {
-    	    		FileUtil.close(dest);
-    	    	}
-    	    }finally {
-    	    	FileUtil.close(source);
-    	    }
-    	}catch(Exception e){
-    		e.printStackTrace();
-    	}
+    public static void copyFile(File sourceFile, File destFile) {
+        try {
+            if (sourceFile.equals(destFile)) {
+                return;
+            }
+            if (!destFile.getParentFile().exists() && !destFile.getParentFile().mkdirs()) {
+                throw new IOException("Cannot create directory " + destFile.getParent());
+            }
+            final int BUFFER = 2048;
+            try (BufferedInputStream source = new BufferedInputStream(new FileInputStream(sourceFile), BUFFER)) {
+                try (BufferedOutputStream dest = new BufferedOutputStream(new FileOutputStream(destFile), BUFFER)) {
+                    int count;
+                    byte data[] = new byte[BUFFER];
+                    while ((count = source.read(data, 0, BUFFER)) != -1) {
+                        dest.write(data, 0, count);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     /**
      * 删除子目录和子文件
@@ -301,7 +293,7 @@ public class FileUtil {
      * @param file
      * @return
      */
-    public static byte[] readFileStream(File file){
+    public static byte[] readFileStream(File file)throws Exception{
     	return readFileStream(file.getAbsolutePath());
     }
     
@@ -310,18 +302,14 @@ public class FileUtil {
      * @param path
      * @return
      */
-    public static byte[] readFileStream(String path){
-    	FileInputStream fis = null;
-    	byte[] bytes = null;
-    	try{
-    		fis = new FileInputStream(path);
-    		bytes = new byte[fis.available()];
-    		fis.read(bytes);
-    	}catch(Exception e){    		
-    	}finally{
-    		FileUtil.close(fis);
-    	}
-    	return bytes;
+    public static byte[] readFileStream(String path)
+        throws Exception {
+        byte[] bytes = null;
+        try (FileInputStream fis = new FileInputStream(path)) {
+            bytes = new byte[fis.available()];
+            fis.read(bytes);
+        }
+        return bytes;
     }
     
     /**
@@ -382,22 +370,19 @@ public class FileUtil {
      * @param output
      * @throws IOException
      */
-    public static void readFile(File file, OutputStream output) throws IOException {
-        FileInputStream input = null;
+    public static void readFile(File file, OutputStream output)
+        throws IOException {
         FileChannel fc = null;
-        try {
-            input = new FileInputStream(file);
+        try (FileInputStream input = new FileInputStream(file)) {
             fc = input.getChannel();
             ByteBuffer buffer = ByteBuffer.allocate(4096);
-            for(;;) {
+            for (;;) {
                 buffer.clear();
                 int n = fc.read(buffer);
-                if(n==(-1))break;
+                if (n == (-1))
+                    break;
                 output.write(buffer.array(), 0, buffer.position());
             }
-        }finally {
-        	FileUtil.close(fc);
-        	FileUtil.close(input);
         }
     }
     

@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
-
+<!--  the code template created by wxmp-generator @author hermit @version 2.0 @date 2018-04-17 10:43:21 -->
 <mapper namespace="com.wxmp.wxcms.mapper.AccountDao">
 
 
 	<select id="listForPage" parameterType="com.wxmp.wxcms.domain.Account" resultType="com.wxmp.wxcms.domain.Account">
-		SELECT * FROM t_wxcms_account ORDER BY ID DESC
+		SELECT * FROM wxcms_account ORDER BY ID DESC
 	</select>
 
-	<select id="getById" parameterType="java.lang.String" resultType="com.wxmp.wxcms.domain.Account">
-		SELECT * FROM t_wxcms_account WHERE ID = #{id}
+	<select id="getById" parameterType="java.lang.Long" resultType="com.wxmp.wxcms.domain.Account">
+		SELECT * FROM wxcms_account WHERE ID = #{id}
 	</select>
 	
 	<select id="getByAccount" parameterType="java.lang.String" resultType="com.wxmp.wxcms.domain.Account">
-		SELECT * FROM t_wxcms_account WHERE account = #{account} ORDER BY ID DESC limit 1
+		SELECT * FROM wxcms_account WHERE account = #{account} ORDER BY ID DESC limit 1
 	</select>
 	
 	<select id="getSingleAccount" resultType="com.wxmp.wxcms.domain.Account">
-		SELECT * FROM t_wxcms_account ORDER BY ID DESC limit 1
+		SELECT * FROM wxcms_account ORDER BY ID DESC limit 1
 	</select>
 
 	<insert id="add" parameterType="com.wxmp.wxcms.domain.Account" flushCache="true">
-		INSERT INTO t_wxcms_account ( NAME,ACCOUNT,APPID,APPSECRET,URL,TOKEN,MSGCOUNT,ID,CREATETIME )  VALUES ( #{name},#{account},#{appid},#{appsecret},#{url},#{token},#{msgcount},#{id},#{createtime} ) 
+		INSERT INTO wxcms_account ( NAME,ACCOUNT,APPID,APPSECRET,URL,TOKEN,MSG_COUNT,ID,CREATE_TIME )  VALUES ( #{name},#{account},#{appid},#{appsecret},#{url},#{token},#{msgcount},#{id},#{createtime} )
 	</insert>
 
 	<update id="update" parameterType="com.wxmp.wxcms.domain.Account" flushCache="true">
-		UPDATE t_wxcms_account SET NAME = #{name},ACCOUNT = #{account},APPID = #{appid},APPSECRET = #{appsecret},URL = #{url},TOKEN = #{token},MSGCOUNT = #{msgcount},CREATETIME = #{createtime} WHERE ID = #{id} 
+		UPDATE wxcms_account SET NAME = #{name},ACCOUNT = #{account},APPID = #{appid},APPSECRET = #{appsecret},URL = #{url},TOKEN = #{token},MSG_COUNT = #{msgcount},CREATE_TIME = #{createtime} WHERE ID = #{id}
 	</update>
 
 	<delete id="delete" parameterType="com.wxmp.wxcms.domain.Account" >
-		DELETE FROM t_wxcms_account WHERE ID = #{id}
+		DELETE FROM wxcms_account WHERE ID = #{id}
 	</delete>
 
 </mapper>

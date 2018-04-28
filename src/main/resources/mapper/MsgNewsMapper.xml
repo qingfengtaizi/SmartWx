@@ -1,91 +1,151 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
-
+<!--  the code template created by wxmp-generator @author hermit @version 2.0 @date 2018-04-17 10:43:21 -->
 <mapper namespace="com.wxmp.wxcms.mapper.MsgNewsDao">
-
-
-	<select id="listForPage" parameterType="com.wxmp.wxcms.domain.MsgNews" resultType="com.wxmp.wxcms.domain.MsgNews">
-		SELECT * FROM t_wxcms_msg_news t , t_wxcms_msg_base b WHERE t.base_id = b.id ORDER BY t.ID
-	</select>
 	
-	<select id="pageWebNewsList" resultType="com.wxmp.wxcms.domain.MsgNews">
-		SELECT t.* , date_format(b.createTime,'%Y-%m-%d') as createTimeStr FROM t_wxcms_msg_news t , t_wxcms_msg_base b 
-		WHERE t.base_id = b.id 
-		ORDER BY b.createTime desc
-		LIMIT #{param2.start} , #{param2.pageSize} 
+	<resultMap type="com.wxmp.wxcms.domain.MsgNews" id="msgNewsMap">
+	    <id property="id" column="id"/>
+        <result property="multType" column="mult_type"/>
+        <result property="title" column="title"/>
+        <result property="author" column="author"/>
+        <result property="description" column="description"/>
+        <result property="brief" column="brief"/>
+        <result property="picpath" column="pic_path"/>
+        <result property="showpic" column="show_pic"/>
+        <result property="url" column="url"/>
+        <result property="fromurl" column="from_url"/>
+        <result property="baseId" column="base_id"/>
+        <result property="mediaId" column="media_id"/>
+        <result property="thumbMediaId" column="thumb_media_id"/>
+        <result property="newsIndex" column="news_index"/>
+        <result property="createTime" column="create_time"/>
+	    <!-- 配置一对多关联映射 -->
+	    <collection property="articles" column="id" fetchType="lazy"
+	    	ofType="com.wxmp.wxcms.domain.MsgArticle"  
+	    	javaType="ArrayList"
+	    	select="com.wxmp.wxcms.mapper.MsgArticleDao.getByNewsId">
+	    	
+	        <id property="arId" column="ar_id"/>
+		    <result property="title" column="title" />
+		    <result property="author" column="author" />
+		    <result property="content" column="content" />
+		    <result property="digest" column="digest" />
+		    <result property="showCoverPic" column="show_cover_pic" />
+		    <result property="url" column="url" />
+		    <result property="picUrl" column="pic_url" />
+		    <result property="thumbMediaId" column="thumb_media_id" />
+		    <result property="contentSourceUrl" column="content_source_url" />
+		    <result property="mediaId" column="media_id" />
+		    <result property="newsId" column="news_id" />
+		    <result property="newsIndex" column="news_index" />
+	    </collection>
+	</resultMap>
+	
+	<select id="listForPage" parameterType="com.wxmp.wxcms.domain.MsgNews" resultType="com.wxmp.wxcms.domain.MsgNews">
+		SELECT * FROM wxcms_msg_news t , wxcms_msg_base b WHERE t.base_id = b.id
+		ORDER BY t.ID 
 	</select>
 
-	<select id="getById" parameterType="java.lang.String" resultType="com.wxmp.wxcms.domain.MsgNews">
-		SELECT * FROM t_wxcms_msg_news WHERE ID = #{id}
+	<select id="getWebNewsListByPage" parameterType="com.wxmp.wxcms.domain.MsgNews" resultMap="msgNewsMap">
+		SELECT  t.* FROM wxcms_msg_news t
+		<where>
+			
+			<if test="multType!=null and multType!='' ">
+				mult_type = #{multType}
+			</if>
+			<if test="title!=null and title!='' ">
+				and title like concat('%',#{title},'%')
+			</if>
+			<if test="start!=null and start!='' and end!=null and end!=''">
+				and (create_time
+				between  
+				str_to_date(#{start}, '%Y-%m-%d')
+				and 
+				str_to_date(#{end}, '%Y-%m-%d'))
+			</if>
+			<if test="account != null">
+				and account = #{account}
+			</if>
+		</where>
+		ORDER BY t.ID desc
+	</select>
+
+	<select id="getById" parameterType="java.lang.String" resultMap="msgNewsMap">
+		SELECT * FROM wxcms_msg_news WHERE id = #{id}
 	</select>
 	
 	<select id="getRandomMsgByContent" resultType="com.wxmp.wxcms.domain.MsgNews">
-		SELECT t.* from t_wxcms_msg_news t , t_wxcms_msg_base b
-		WHERE b.inputCode like CONCAT('%','${param1}','%' ) and t.base_id = b.id 
+		SELECT t.* from wxcms_msg_news t , wxcms_msg_base b
+		WHERE b.input_code like CONCAT('%','${param1}','%' ) and t.base_id = b.id 
 		ORDER BY RAND() LIMIT #{param2}
 	</select>
 	
 	<select id="getRandomMsg" parameterType="java.lang.Integer" resultType="com.wxmp.wxcms.domain.MsgNews">
-		SELECT t.* from t_wxcms_msg_news t , t_wxcms_msg_base b
+		SELECT t.* from wxcms_msg_news t , wxcms_msg_base b
 		WHERE t.base_id = b.id 
 		ORDER BY RAND() LIMIT #{num}
 	</select>
 	
 	<select id="getMsgNewsByIds" resultType="com.wxmp.wxcms.domain.MsgNews" >
-    	SELECT * FROM t_wxcms_msg_news WHERE ID IN
+    	SELECT * FROM wxcms_msg_news WHERE id IN
 		<foreach collection="array" index="index" item="item" open="(" separator="," close=")">  
 		 #{item}  
 		</foreach>  
 	</select>
 
 	<insert id="add" parameterType="com.wxmp.wxcms.domain.MsgNews" flushCache="true" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO t_wxcms_msg_news (TITLE,AUTHOR,BRIEF,
-		DESCRIPTION,PICPATH,
-		SHOWPIC,URL,FROMURL,media_id )  
+		INSERT INTO wxcms_msg_news (title,AUTHOR,brief,
+		description,pic_path,
+		show_pic,url,from_url,media_id,account,create_time,base_id)
 		VALUES (#{title},#{author},#{brief},#{description},#{picpath},
-		#{showpic},#{url},#{fromurl},#{mediaId}) 
+		#{showpic},#{url},#{fromurl},#{mediaId},#{account},#{createTime},#{baseId})
 	</insert>
 
 	<update id="updateUrl" parameterType="com.wxmp.wxcms.domain.MsgNews" flushCache="true">
-		UPDATE t_wxcms_msg_news SET URL = #{url} WHERE ID = #{id} 
+		UPDATE wxcms_msg_news SET URL = #{url} WHERE id = #{id}
 	</update>
 	
 	<update id="update" parameterType="com.wxmp.wxcms.domain.MsgNews" flushCache="true">
-		UPDATE t_wxcms_msg_news SET TITLE = #{title},AUTHOR = #{author},BRIEF = #{brief},DESCRIPTION = #{description},PICPATH = #{picpath},URL = #{url},FROMURL = #{fromurl},SHOWPIC = #{showpic} WHERE ID = #{id} 
+		UPDATE wxcms_msg_news SET title = #{title},author = #{author},brief = #{brief},description = #{description},pic_path = #{picpath},url = #{url},from_url = #{fromurl},show_pic = #{showpic} WHERE id = #{id}
 	</update>
 
 	<delete id="delete" parameterType="com.wxmp.wxcms.domain.MsgNews" >
-		DELETE FROM t_wxcms_msg_news WHERE ID = #{id}
+		DELETE FROM wxcms_msg_news WHERE id = #{id}
 	</delete>
     
     <select id="getByBaseId" parameterType="java.lang.String" resultType="com.wxmp.wxcms.domain.MsgNews">
-		SELECT * FROM t_wxcms_msg_news WHERE base_id = #{baseid}
+		SELECT * FROM wxcms_msg_news WHERE base_id = #{baseid}
 	</select>
 	
 	<update id="updateMediaId" parameterType="com.wxmp.wxcms.domain.MsgNews" flushCache="true">
-		UPDATE t_wxcms_msg_news 
+		UPDATE wxcms_msg_news
 		SET
 		   media_id = #{mediaId} 
-		WHERE ID = #{id} 
+		WHERE id = #{id}
 	</update>
    
     <!-- 添加图文信息 -->
-    <insert id="addNews" parameterType="com.wxmp.wxcms.domain.MsgNews">
-		INSERT INTO t_wxcms_msg_news 
+    <insert id="addNews" parameterType="com.wxmp.wxcms.domain.MsgNews" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO wxcms_msg_news
 		       (TITLE,
 		         AUTHOR,
 		         BRIEF,
+		         MULT_TYPE,
 		         DESCRIPTION,
-		         PICPATH,
-		         SHOWPIC,
+		         PIC_PATH,
+		         SHOW_PIC,
 		         URL,
-		         FROMURL,
+		         FROM_URL,
 		         media_id,
-		         thumbMediaId,
-		         news_index)  
+		         thumb_media_id,
+		         news_index,
+				 account,
+		         create_time,
+		         BASE_ID)
 		VALUES ( #{title},
 		         #{author},
 		         #{brief},
+		         #{multType},
 		         #{description},
 		         #{picpath},
 		         #{showpic},
@@ -93,42 +153,48 @@
 		         #{fromurl},
 		         #{mediaId},
 		         #{thumbMediaId},
-		         #{newsIndex}) 
+		         #{newsIndex},
+		         #{account},
+		         #{createTime},
+		         #{baseId})
 	</insert>
 	
 	<!-- 查询图文信息  -->
 	<select id="getMsgNewsList"  resultType="com.wxmp.wxcms.domain.MsgNews">
 		SELECT   id,
-		         TITLE,
-		         AUTHOR,
-		         BRIEF,
-		         DESCRIPTION,
-		         PICPATH,
-		         SHOWPIC,
-		         URL,
-		         FROMURL,
+		         title,
+		         author,
+		         brief,
+		         MULT_TYPE as msgtype,
+		         description,
+		         PIC_PATH as picpath,
+		         SHOW_PIC as showpic,
+		         url,
+		         FROM_URL as fromurl,
 		         media_id as mediaId,
-		         thumbMediaId,
-		         news_index as newsIndex
-	  FROM t_wxcms_msg_news t  ORDER BY t.ID
+		         thumb_media_id as thumbMediaId,
+		         news_index as newsIndex,
+		         create_time as createTime,
+		         BASE_ID as baseId
+	  FROM wxcms_msg_news t  ORDER BY t.ID
 	</select>
 	
 	<!-- 删除临时订单 -->
     <delete id="deleteByMediaId" parameterType="java.lang.String" >
-		DELETE FROM t_wxcms_msg_news WHERE media_id = #{mediaId}
+		DELETE FROM wxcms_msg_news WHERE media_id = #{mediaId}
 	</delete>
 	
 	<!-- 更新媒体素材信息 -->
 	<update id="updateNews" parameterType="com.wxmp.wxcms.domain.MsgNews" flushCache="true">
-		UPDATE t_wxcms_msg_news 
+		UPDATE wxcms_msg_news
 		SET TITLE = #{title},
 		    AUTHOR = #{author},
 		    BRIEF = #{brief},
 		    DESCRIPTION = #{description},
-		    PICPATH = #{picpath},
-		    SHOWPIC = #{showpic},
-		    URL = #{url},
-		    thumbMediaId = #{thumbMediaId}
+		    PIC_PATH = #{picpath},
+		    SHOW_PIC = #{showpic},
+		    from_url = #{fromurl},
+		    THUMB_MEDIA_ID = #{thumbMediaId}
 		WHERE ID = #{id}
 		AND  media_id = #{mediaId}
 	</update>
@@ -136,20 +202,9 @@
 	
 	<!-- 查询图文信息  -->
 	<select id="getByMediaId"  parameterType="java.lang.String"
-	resultType="com.wxmp.wxcms.domain.MsgNews">
-		SELECT   ID,
-		         TITLE,
-		         AUTHOR,
-		         BRIEF,
-		         DESCRIPTION,
-		         PICPATH,
-		         SHOWPIC,
-		         URL,
-		         FROMURL,
-		         media_id as mediaId,
-		         thumbMediaId,
-		         news_index as newsIndex
-	  FROM t_wxcms_msg_news t
+	resultMap="msgNewsMap">
+		SELECT   t.*
+	  FROM wxcms_msg_news t
 	  where t.media_id = #{mediaId}
 	</select>
 </mapper>

@@ -1,13 +1,21 @@
+/**
+ * Copyright &copy; 2017-2018 <a href="http://www.webcsn.com">webcsn</a> All rights reserved.
+ *
+ * @author hermit
+ * @date 2018-04-17 10:54:58
+ */
 package com.wxmp.wxcms.mapper;
 
-import java.util.List;
-import com.wxmp.core.page.Pagination;
 import com.wxmp.wxcms.domain.MsgNews;
 
-/**
- * @author : hermit
- */
+import java.util.List;
 
+/**
+ *
+ * @author hermit
+ * @version 2.0
+ * @date 2018-04-17 10:54:58
+ */
 public interface MsgNewsDao {
 
 	public MsgNews getById(String id);
@@ -16,7 +24,7 @@ public interface MsgNewsDao {
 	
 	public List<MsgNews> getByMediaId(String mediaId);
 	
-	public List<MsgNews> pageWebNewsList(MsgNews searchEntity,Pagination<MsgNews> page);
+	public List<MsgNews> getWebNewsListByPage(MsgNews searchEntity);
 
 	public void add(MsgNews entity);
 
@@ -44,7 +52,7 @@ public interface MsgNewsDao {
 	 * 保存图文消息
 	 * @param entity
 	 */
-	public void addNews(MsgNews entity);
+	public Integer addNews(MsgNews entity);
 	
 	/**
 	 * 查询图文列表

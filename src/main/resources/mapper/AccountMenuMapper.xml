@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
-
+<!--  the code template created by wxmp-generator @author hermit @version 2.0 @date 2018-04-17 10:43:21 -->
 <mapper namespace="com.wxmp.wxcms.mapper.AccountMenuDao">
 
 
 	<select id="listForPage" parameterType="com.wxmp.wxcms.domain.AccountMenu" resultType="com.wxmp.wxcms.domain.AccountMenu">
 		SELECT m.* ,m2.name as parentName
-		from t_wxcms_account_menu m LEFT JOIN t_wxcms_account_menu m2
-		on m.parentId = m2.id
-		WHERE m.gid = #{gid}
+		from wxcms_account_menu m LEFT JOIN wxcms_account_menu m2
+		on m.parent_id = m2.id
+		WHERE m.gid = #{gid} AND m.account=#{account}
 	</select>
 	
-	<select id="listParentMenu" resultType="com.wxmp.wxcms.domain.AccountMenu">
-		SELECT * FROM t_wxcms_account_menu where parentId = 0 ORDER BY sort
+	<select id="listParentMenu" parameterType="com.wxmp.wxcms.domain.AccountMenu" resultType="com.wxmp.wxcms.domain.AccountMenu">
+		SELECT * FROM wxcms_account_menu where parent_id = 0 AND account=#{account} ORDER BY sort
 	</select>
 
-	<select id="listWxMenus"  parameterType="java.lang.String" resultType="com.wxmp.wxcms.domain.AccountMenu">
-		SELECT * FROM t_wxcms_account_menu 
-		where gid = #{gid}
-		ORDER BY parentId, sort
+	<select id="listWxMenus"  parameterType="com.wxmp.wxcms.domain.AccountMenu" resultType="com.wxmp.wxcms.domain.AccountMenu">
+		SELECT * FROM wxcms_account_menu
+		WHERE account=#{account}
+		ORDER BY parent_id, sort
 	</select>
 
 	<select id="getById" parameterType="java.lang.String" resultType="com.wxmp.wxcms.domain.AccountMenu">
-		SELECT * FROM t_wxcms_account_menu WHERE ID = #{id}
+		SELECT * FROM wxcms_account_menu WHERE ID = #{id}
 	</select>
 
-	<insert id="add" parameterType="com.wxmp.wxcms.domain.AccountMenu" flushCache="true">
-		INSERT INTO t_wxcms_account_menu ( MTYPE,EVENTTYPE,NAME,INPUTCODE,URL,SORT,MSGID,PARENTID,GID,CREATETIME )  VALUES ( #{mtype},#{eventType},#{name},#{inputcode},#{url},#{sort},#{msgId},#{parentid},#{gid},#{createtime} ) 
+	<insert id="add" parameterType="com.wxmp.wxcms.domain.AccountMenu" flushCache="true" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO wxcms_account_menu (MTYPE,EVENT_TYPE,NAME,INPUT_CODE,URL,SORT,MSG_TYPE,MSG_ID,PARENT_ID,GID,ACCOUNT,CREATE_TIME )  VALUES (#{mtype},#{eventType},#{name},#{inputCode},#{url},#{sort},#{msgType},#{msgId},#{parentId},#{gid},#{account},#{createTime} )
 	</insert>
 
 	<update id="update" parameterType="com.wxmp.wxcms.domain.AccountMenu" flushCache="true">
-		UPDATE t_wxcms_account_menu SET MTYPE = #{mtype},NAME = #{name},INPUTCODE = #{inputcode},URL = #{url},SORT = #{sort},PARENTID = #{parentid},CREATETIME = #{createtime} WHERE ID = #{id} 
+		UPDATE wxcms_account_menu SET MTYPE = #{mtype},NAME = #{name},INPUT_CODE = #{inputCode},URL = #{url},SORT = #{sort},PARENT_ID = #{parentId},CREATE_TIME = #{createTime} WHERE ID = #{id}
 	</update>
 
 	<delete id="delete" parameterType="com.wxmp.wxcms.domain.AccountMenu" >
-		DELETE FROM t_wxcms_account_menu WHERE ID = #{id}
+		DELETE FROM wxcms_account_menu
 	</delete>
 
 </mapper>

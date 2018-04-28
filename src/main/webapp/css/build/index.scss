@@ -1,0 +1,45 @@
+@import "../modules/base";
+.back-header{
+  width: 100%;
+  height:500px;
+  //background: darken(#5eaee3,30%);
+  background-image: url(/images/index-header.jpg);
+  background-size: 100% 100%;
+  text-align: center;
+  color: #fff;
+  position: relative;
+  @include clear-before();
+  box-sizing: border-box;
+  .header-bg{
+    z-index: 0;
+    background: rgba(0,0,0,.3);
+    padding: 200px 0 50px 0;
+  }
+  .header-content{
+    z-index: 10;
+  }
+  h1{
+    font-size: 30px;
+  }
+  p{
+    margin-top: 30px;
+    font-size: 20px;
+  }
+  .header-link{
+    margin-top: 20px;
+    a{
+      display: inline-block;
+      border: 1px solid #fff;
+      color: #fff;
+      padding: 5px 13px;
+      border-radius: 5px;
+      &:first-child{
+        margin-right: 10px;
+      }
+      &:hover{
+        text-decoration: underline;
+        background: $primary-color;
+      }
+    }
+  }
+}

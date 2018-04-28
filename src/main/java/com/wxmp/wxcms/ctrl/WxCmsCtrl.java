@@ -1,14 +1,21 @@
+/**
+ * Copyright &copy; 2017-2018 <a href="http://www.webcsn.com">webcsn</a> All rights reserved.
+ *
+ * @author hermit
+ * @date 2018-04-17 10:54:58
+ */
 package com.wxmp.wxcms.ctrl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.wxmp.core.common.BaseCtrl;
+import com.wxmp.core.exception.BusinessException;
+import com.wxmp.core.util.AjaxResult;
 import com.wxmp.wxcms.domain.ImgResource;
 import com.wxmp.wxcms.domain.SysUser;
-import com.wxmp.wxcms.service.ISysUserService;
-import com.wxmp.core.page.Pagination;
+import com.wxmp.wxcms.service.SysUserService;
 import com.wxmp.core.spring.SpringFreemarkerContextPathUtil;
 import com.wxmp.core.util.PropertiesConfigUtil;
-import com.wxmp.core.util.SessionUtil;
 import com.wxmp.core.util.UploadUtil;
 import com.wxmp.wxapi.process.MediaType;
 import com.wxmp.wxapi.process.MpAccount;
@@ -28,7 +35,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -44,52 +50,51 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * @author : hermit
+ *
+ * @author hermit
+ * @version 2.0
+ * @date 2018-04-17 10:54:58
  */
-
 @Controller
 @RequestMapping("/wxcms")
-public class WxCmsCtrl extends BaseCtrl{
+public class WxCmsCtrl extends BaseCtrl {
 
 	@Resource
 	AccountDao accountDao;
 	
 	@Autowired
-	private ISysUserService sysUserService;
+	private SysUserService sysUserService;
 
 	@Autowired
 	private MsgNewsService msgNewsService;
-	
+
 	@RequestMapping(value = "/urltoken")
-	public ModelAndView urltoken(String save){
-		ModelAndView mv = new ModelAndView("wxcms/urltoken");
+	@ResponseBody
+	public AjaxResult urltoken() {
 		List<Account> accounts = accountDao.listForPage(null);
-		if(!CollectionUtils.isEmpty(accounts)){
-			mv.addObject("account",accounts.get(0));
-		}else{
-			mv.addObject("account",new Account());
+		Account account = new Account();
+		if (!CollectionUtils.isEmpty(accounts)) {
+			for (Account acc : accounts) {
+				if (acc.getAccount().equals(WxMemoryCacheClient.getAccount())) {
+					account = acc;
+					break;
+				}
+			}
 		}
 		List<String> msgCountList = new ArrayList<String>();
-		for(int i=1;i<8;i++){
+		for (int i = 1; i < 8; i++) {
 			msgCountList.add(String.valueOf(i));
 		}
-		mv.addObject("cur_nav", "urltoken");
-		if(save != null){
-			mv.addObject("successflag",true);
-		}else{
-			mv.addObject("successflag",false);
-		}
-		mv.addObject("msgCountList", msgCountList);
-		
-		SysUser sysUser =  SessionUtil.getUser();
-		request.getSession().setAttribute("sysUser", sysUser);
-		return mv;
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("account", account);
+		data.put("msgCountList", msgCountList);
+		return AjaxResult.success(data);
 	}
-	
+
 	@RequestMapping(value = "/getUrl")
-	public ModelAndView getUrl(HttpServletRequest request ,@ModelAttribute Account account){
-		String path = SpringFreemarkerContextPathUtil.getBasePath(request);
-		String url = request.getScheme() + "://" + request.getServerName() + path + "/wxapi/" + account.getAccount()+"/message.html";
+	@ResponseBody
+	public AjaxResult getUrl(Account account){
+		String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/wxapi/" + account.getAccount() + "/message.html";
 		
 		if(account.getId() == null){//新增
 			account.setUrl(url);
@@ -97,16 +102,17 @@ public class WxCmsCtrl extends BaseCtrl{
 			account.setCreatetime(new Date());
 			accountDao.add(account);
 		}else{//更新
-			Account tmpAccount = accountDao.getById(account.getId().toString());
+			Account tmpAccount = accountDao.getById(account.getId());
 			tmpAccount.setUrl(url);
 			tmpAccount.setAccount(account.getAccount());
 			tmpAccount.setAppid(account.getAppid());
 			tmpAccount.setAppsecret(account.getAppsecret());
 			tmpAccount.setMsgcount(account.getMsgcount());
+			tmpAccount.setName(account.getName());
 			accountDao.update(tmpAccount);
 		}
 		WxMemoryCacheClient.addMpAccount(account);
-		return new ModelAndView("redirect:/wxcms/urltoken?save=true");
+		return AjaxResult.success(account);
 	}
 	
 	@RequestMapping(value = "/ckeditorImage")
@@ -224,15 +230,12 @@ public class WxCmsCtrl extends BaseCtrl{
 	
 	//获取永久素材
 	@RequestMapping(value = "/getMaterials")
-	public  ModelAndView syncMaterials(Pagination<MaterialArticle> pagination){
-		MpAccount mpAccount = WxMemoryCacheClient.getSingleMpAccount();//获取缓存中的唯一账号
-		
-		ModelAndView mv = new ModelAndView("wxcms/materialList");
-		Integer offset = pagination.getStart();
-		Integer count = pagination.getPageSize();
-		Material material = WxApiClient.syncBatchMaterial(MediaType.News, offset, count,mpAccount);
+	public AjaxResult syncMaterials(MaterialArticle materialArticle) throws BusinessException{
+		List<MaterialArticle> materialList = new ArrayList<MaterialArticle>();
+		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
+		Material material = WxApiClient.syncBatchMaterial(MediaType.News, materialArticle.getPage(), materialArticle.getPageSize(),mpAccount);
 		if(material != null){
-			List<MaterialArticle> materialList = new ArrayList<MaterialArticle>();
+
 			List<MaterialItem> itemList = material.getItems();
 			if(itemList != null){
 				for(MaterialItem item : itemList){
@@ -246,47 +249,8 @@ public class WxCmsCtrl extends BaseCtrl{
 					materialList.add(m);
 				}
 			}
-			pagination.setTotalItemsCount(material.getTotalCount());
-			pagination.setItems(materialList);
 		}
-		mv.addObject("page",pagination);
-		mv.addObject("cur_nav", "material");
-		return mv;
-	}
-	
-	/**
-	 * 添加单图文
-	 * @param entity
-	 * @return
-	 */
-	@RequestMapping(value = "/toSingleNews")
-	public ModelAndView toMerge(MsgText entity){
-		ModelAndView mv = new ModelAndView("wxcms/singleNews");
-        
-		return mv;
-	}
-	
-	/**
-	 * 添加多图文
-	 * @param entity
-	 * @return
-	 */
-	@RequestMapping(value = "/toMoreNews")
-	public ModelAndView addMore(MsgText entity){
-		ModelAndView mv = new ModelAndView("wxcms/moreNews");
-
-		return mv;
-	}
-	
-    /*
-     * 
-     * 测试图片上传
-     */
-	@RequestMapping(value = "/test")
-	public ModelAndView testImg(HttpServletRequest request){
-		ModelAndView mv = new ModelAndView("wxcms/test");
-        
-		return mv;
+		return getResult(materialArticle,materialList);
 	}
 	
 	@RequestMapping(value="/saveFile")
@@ -306,7 +270,7 @@ public class WxCmsCtrl extends BaseCtrl{
 		 file.transferTo(saveFile);
 		 
 		 
-		 MpAccount mpAccount = WxMemoryCacheClient.getSingleMpAccount();//获取缓存中的唯一账号
+		 MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		 //添加永久图片
 		 String materialType = MediaType.Image.toString();
 	    

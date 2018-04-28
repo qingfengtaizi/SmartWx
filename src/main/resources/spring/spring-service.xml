@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:mvc="http://www.springframework.org/schema/mvc"
+    	xsi:schemaLocation="http://www.springframework.org/schema/beans        
+    						http://www.springframework.org/schema/beans/spring-beans-2.5.xsd        
+   							http://www.springframework.org/schema/mvc
+						    http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd"> 
+        <!-- 微信OAuth2的拦截器,开发者可以自行配置参数
+        	此处拦截只为展示OAuth2接口获取openid
+        -->
+        <mvc:interceptors>
+			<mvc:interceptor>
+	        	<mvc:mapping path="/**/*.html"/>
+	        	<bean class="com.wxmp.wxapi.interceptor.WxOAuth2Interceptor">
+	        		<property name="includes">
+	        			<list> 
+							<value>/wxweb/sendmsg.html</value>
+							<value>/wxapi/oauthOpenid.html</value>
+						</list>
+	        		</property>
+	        	</bean>
+	        </mvc:interceptor>
+		</mvc:interceptors>
+</beans>

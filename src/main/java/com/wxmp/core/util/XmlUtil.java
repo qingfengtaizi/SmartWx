@@ -16,7 +16,7 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
-import com.wxmp.backstage.common.XMLDocException;
+import com.wxmp.core.common.XMLDocException;
 
 /**
  * 功能：处理XML文档

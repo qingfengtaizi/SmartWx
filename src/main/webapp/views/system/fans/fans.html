@@ -1,0 +1,132 @@
+<style>
+    img.fans-portrait{
+        width:50px;
+        height:50px;
+    }
+    .fsh-rightPanel .layui-table-body .layui-table-cell {
+        height: 50px;
+        line-height: 50px;
+    }
+</style>
+<div class="fsh-rightPanel">
+    <div class="layui-anim layui-anim-upbit">
+        <div class="layui-form-item wx-search" id="list_form">
+            <div class="layui-inline">
+                <input type="text" name="nicknameStr" placeholder="请输入昵称" autocomplete="off" class="layui-input">
+            </div>
+            <button class="layui-btn btn-primary" id="search">搜索</button>
+            <div class="layui-inline right">
+                <button class="layui-btn btn-danger" id="fans_sync">批量同步粉丝</button>
+            </div>
+        </div>
+        <table id="list_table" class="layui-hide" lay-filter="mainList"></table>
+    </div>
+</div>
+
+<script>
+    layui.use(['layer', 'table'], function () {
+        var layer = layui.layer;
+        var table = layui.table;
+
+
+        var tableObj = table.render({
+            id: 'list_table',
+            elem: '#list_table',
+            url: '/accountfans/list',
+            align: "center",
+            cols: [[ //表头
+                {type: 'checkbox'},
+                {type: 'numbers', title: '序号',width:50},
+                {field: 'nicknameStr', title: '昵称', width: 150, align: 'center'},
+                {field: 'headimgurl', title: '头像', width: 80, align: 'center',templet:function (d) {
+                        return "<img class='fans-portrait' src=" + d.headimgurl + " />"
+                    }},
+                {field: 'gender', title: '性别',  width: 70, align: 'center',templet:function (d) {
+                        return d.gender == 1 ? '男' : '女';
+                 }},
+                {field: 'city', title: '省/市', width: 150,align: 'center',templet:function (d) {
+                        return (d.province + '-' + d.city);
+                }},
+                {field: 'subscribeTime', title: '关注时间', width: 180, align: 'center'},
+                {
+                    field: 'lock', title: '操作', width: 300, align: 'center', templet: function (d) {
+                        return '<a href="javascript:;" class="font-primary" lay-event="sync">同步粉丝消息</a>' + '<a href="javascript:;" class="font-primary" lay-event="mass">发送消息</a>';
+                    }, unresize: true, align: 'center'
+                }
+            ]],
+        });
+
+        // 检索
+        $("#search").click(function () {
+            reloadTable(tableObj);
+        });
+
+        // 批量同步粉丝
+        $("#fans_sync").click(function () {
+            layer.confirm('确认同步粉丝？', {
+                icon: 7,
+                title: "提示",
+                btn: ['确认', '取消'] //按钮
+            }, function () {
+                $.ajax({
+                    url: '/wxapi/syncAccountFansList',
+                    success: function (result) {
+                        if (result.success) {
+                            layer.msg("同步成功");
+                            reloadTable(tableObj);
+                        }
+                    },
+                    error: function () {
+                        layer.msg("同步异常");
+                    }
+                })
+            }, function () {
+                layer.closeAll();
+            });
+        });
+
+        //表格内部操作按钮监听
+        table.on('tool(mainList)', function (obj) { //注：tool是工具条事件名，mainList是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值
+
+            if (layEvent === 'mass') {
+                showDialog({
+                    title: '发送消息',
+                    template: 'msglist',
+                    height:600,
+                    tableObj: tableObj,
+                    htmlData: data,
+                    btn:0
+                })
+            }
+            // 同步粉丝
+            if (layEvent === 'sync') {
+                $.ajax({
+                    url: '/wxapi/syncAccountFans',
+                    data:{openId:data.openId},
+                    success: function (result) {
+                        if (result.success) {
+                            showDialog({
+                                title: '粉丝详细信息'
+                                , template: 'fansInfo'
+                                , saveUrl: ''
+                                , width: 400
+                                , height: 500
+                                , htmlData: result.data
+                                , btn: ["关闭"]
+                                , yes: function (index, layero) {
+                                    close(index);
+                                }
+                            })
+                        }
+                    },
+                    error: function () {
+                        layer.msg("同步异常");
+                    }
+                })
+            }
+        });
+
+    });
+</script>

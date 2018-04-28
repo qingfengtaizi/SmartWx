@@ -1,0 +1,25 @@
+<div class="fsh-pop">
+    <div id="add_form" class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label"><i>*</i>关键字</label>
+            <div class="layui-input-block">
+                <input type="text" name="inputcode" lay-verify="required" placeholder="请输入关键字" class="layui-input">
+                <p class="layui-bg-red tips-line">
+                    如果 关键字 为 subscribe ，那么此消息为订阅消息
+                </p>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label"><i>*</i>标题</label>
+            <div class="layui-input-block">
+                <input name="title" maxlength="20" lay-verify="required" placeholder="请输入内容" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label"><i>*</i>内容</label>
+            <div class="layui-input-block">
+                <textarea name="content" maxlength="200" lay-verify="required" placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+    </div>
+</div>

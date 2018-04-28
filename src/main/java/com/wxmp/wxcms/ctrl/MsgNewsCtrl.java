@@ -1,8 +1,16 @@
+/**
+ * Copyright &copy; 2017-2018 <a href="http://www.webcsn.com">webcsn</a> All rights reserved.
+ *
+ * @author hermit
+ * @date 2018-04-17 10:54:58
+ */
 package com.wxmp.wxcms.ctrl;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.wxmp.core.common.BaseCtrl;
 import com.wxmp.core.spring.SpringFreemarkerContextPathUtil;
+import com.wxmp.core.util.AjaxResult;
 import com.wxmp.core.util.PropertiesConfigUtil;
 import com.wxmp.core.util.UploadUtil;
 import com.wxmp.wxapi.process.MediaType;
@@ -10,8 +18,10 @@ import com.wxmp.wxapi.process.MpAccount;
 import com.wxmp.wxapi.process.WxApiClient;
 import com.wxmp.wxapi.process.WxMemoryCacheClient;
 import com.wxmp.wxcms.domain.MediaFiles;
+import com.wxmp.wxcms.domain.MsgArticle;
 import com.wxmp.wxcms.domain.MsgBase;
 import com.wxmp.wxcms.domain.MsgNews;
+import com.wxmp.wxcms.service.MsgArticleService;
 import com.wxmp.wxcms.service.MsgBaseService;
 import com.wxmp.wxcms.service.MsgNewsService;
 import net.sf.json.JSONArray;
@@ -27,7 +37,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,116 +44,32 @@ import java.util.regex.Pattern;
 import static com.wxmp.core.util.DateUtilOld.COMMON_FULL;
 
 /**
- * @author : hermit
+ *
+ * @author hermit
+ * @version 2.0
+ * @date 2018-04-17 10:54:58
  */
-
 @Controller
 @RequestMapping("/msgnews")
-public class MsgNewsCtrl  extends BaseCtrl{
+public class MsgNewsCtrl  extends BaseCtrl {
 
 	@Autowired
 	private MsgNewsService entityService;
 
 	@Autowired
-	private MsgBaseService baseService;
+	private MsgArticleService articleService;
 
-	@RequestMapping(value = "/getById")
-	public ModelAndView getById(String id) {
-		entityService.getById(id);
-		return new ModelAndView();
+	@RequestMapping(value = "/detail")
+	@ResponseBody
+	public AjaxResult getById(String id) {
+		return AjaxResult.success(entityService.getById(id));
 	}
 
 	@RequestMapping(value = "/list")
-	public ModelAndView list(@ModelAttribute MsgNews searchEntity) {
-		ModelAndView modelAndView = new ModelAndView("wxcms/msgnewsList");
-		List<MsgNews> pageList = entityService.listForPage(searchEntity);
-		modelAndView.addObject("pageList", pageList);
-		modelAndView.addObject("cur_nav", "news");
-		return modelAndView;
-	}
-
-	@RequestMapping(value = "/toMerge")
-	public ModelAndView toMerge(MsgNews entity) {
-		ModelAndView mv = new ModelAndView("wxcms/msgnewsMerge");
-		mv.addObject("cur_nav", "news");
-
-		if (entity.getId() != null) {
-			MsgNews news = entityService.getById(entity.getId().toString());
-			mv.addObject("entity", news);
-			mv.addObject("baseEntity", baseService.getById(news.getBaseId().toString()));
-		} else {
-			mv.addObject("entity", new MsgNews());
-			mv.addObject("baseEntity", new MsgBase());
-		}
-		return mv;
-	}
-
-	@RequestMapping(value = "/doMerge")
-	public ModelAndView doMerge(HttpServletRequest request, MsgNews entity,
-			@RequestParam(value = "imageFile", required = false) MultipartFile file) {
-		String contextPath = request.getContextPath();
-		String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-				+ contextPath;
-		String realPath = request.getSession().getServletContext().getRealPath("/");
-
-		// 读取配置文上传件的路径
-		if (PropertiesConfigUtil.getProperty("property/upload.properties", "upload.path") != null) {
-			realPath = PropertiesConfigUtil.getProperty("property/upload.properties", "upload.path").toString();
-		}
-
-		if (file != null && file.getSize() > 0) {
-			String tmpPath = UploadUtil.doUpload(realPath, file);// 上传文件，上传文件到
-																	// /res/upload/
-																	// 下
-			entity.setPicpath(url + tmpPath);
-		} else {
-			if (entity.getId() != null) {// 更新
-				entity.setPicpath(entityService.getById(entity.getId().toString()).getPicpath());
-			}
-		}
-
-		if (!StringUtils.isEmpty(entity.getFromurl())) {
-			String fromUrl = entity.getFromurl();
-			if (!fromUrl.startsWith("http://")) {
-				entity.setFromurl("http://" + fromUrl);
-			}
-		} else {
-			entity.setUrl(url + "/wxweb/msg/newsread");// 设置微信访问的url
-		}
-
-		if (entity.getId() != null) {// 跟新
-			entityService.update(entity);
-		} else {
-			entityService.add(entity);
-		}
-		return new ModelAndView("redirect:/msgnews/list");
-	}
-
-	@RequestMapping(value = "/delete")
-	public ModelAndView delete(MsgNews entity) {
-		entityService.delete(entity);
-		return new ModelAndView("redirect:/msgnews/list");
-	}
-
-	@RequestMapping(value = "/textUploadImg")
-	public ModelAndView textUploadImg() {
-		ModelAndView mv = new ModelAndView("wxcms/msgnewsList");
-		String filePath = "D:/img/Tulips.jpg";
-		File file = new File(filePath);
-		if (!file.exists() || !file.isFile()) {
-			try {
-				throw new IOException("文件不存在");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		MpAccount mpAccount = WxMemoryCacheClient.getSingleMpAccount();// 获取缓存中的唯一账号
-		// 添加永久图片
-		String materialType = MediaType.Image.toString();
-		JSONObject result = WxApiClient.addMaterial(filePath, materialType, mpAccount);
-
-		return mv;
+	@ResponseBody
+	public AjaxResult list(MsgNews searchEntity){
+		List<MsgNews> pageList = entityService.getWebNewsListByPage(searchEntity);
+		return getResult(searchEntity,pageList);
 	}
 
 	/**
@@ -160,7 +85,7 @@ public class MsgNewsCtrl  extends BaseCtrl{
 		MsgNews msgNews = entityService.getById(newsId);
 		List<MsgNews> msgNewsList = new ArrayList<MsgNews>();
 		msgNewsList.add(msgNews);
-		MpAccount mpAccount = WxMemoryCacheClient.getSingleMpAccount();// 获取缓存中的唯一账号
+		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();// 获取缓存中的唯一账号
 		// 添加永久图片
 		String materialType = MediaType.Image.toString();
 		String imgPath = msgNews.getPicpath();
@@ -203,11 +128,13 @@ public class MsgNewsCtrl  extends BaseCtrl{
 	 */
 	@RequestMapping(value = "/addSingleNews", method = RequestMethod.POST)
 	@ResponseBody
-	public String addSingleNews(MsgNews msgNews, HttpServletRequest request) throws Exception{
+	public AjaxResult addSingleNews(MsgNews msgNews, HttpServletRequest request) throws Exception{
 
 		String filePath = request.getSession().getServletContext().getRealPath("/");
 
 		String description = msgNews.getDescription();
+		String description2 = msgNews.getDescription();
+		
 		description = description.replaceAll("'","\"");
 		//去多个img的src值
 		String subFilePath = "";
@@ -221,46 +148,50 @@ public class MsgNewsCtrl  extends BaseCtrl{
 				System.out.println(m.group(1));
 				String imgSrc = m.group(1);
 				subOldFilePath +=  imgSrc + ",";
-				String subImgSrc = imgSrc.substring(imgSrc.indexOf('/', 2)+1, imgSrc.length());
+				String[] split = imgSrc.split("/");
+				int k=imgSrc.indexOf(split[split.length-2]);
+				String subImgSrc = imgSrc.substring(k, imgSrc.length());
 				subFilePath += filePath + subImgSrc + ",";
 			}
 		}
-		subFilePath = subFilePath.substring(0, subFilePath.length() -1);
-		subOldFilePath = subOldFilePath.substring(0, subOldFilePath.length() -1);
-		
-		MpAccount mpAccount = WxMemoryCacheClient.getSingleMpAccount();// 获取缓存中的唯一账号
-        //本地图片地址
-		String[] imgPathArry = subFilePath.split(",");
-		String[] imgOldPathArry = subOldFilePath.split(",");
-		
-	    String[] newPathArry = new String[imgPathArry.length];
-        for(int i=0;i<imgPathArry.length;i++){
-    	    String newFilePath = imgPathArry[i];
-	    	// 添加永久图片
-	   		String materialType = MediaType.Image.toString();
-	   		// 将图片同步到微信，返回mediaId
-	   		JSONObject imgResultObj = WxApiClient.addMaterial(newFilePath, materialType, mpAccount);
-	
-	   		// 上传图片的id
-	   		String contentImgMediaId = "";
-	   		String contentContentUrl = "";
-	   		if (imgResultObj != null && imgResultObj.containsKey("media_id")) {
-	   			// 微信返回来的媒体素材id
-	   			contentImgMediaId = imgResultObj.getString("media_id");
-	   			// 图片url
-	   			contentContentUrl = imgResultObj.getString("url");
-	   		} 
-    	    newPathArry[i] = contentContentUrl;
-        }
-        
-	    for(int i=0;i<imgPathArry.length;i++){
-	    	description =  description.replace(imgOldPathArry[i], newPathArry[i]);
-	    }
+		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();// 获取缓存中的唯一账号
+		if(StringUtils.isNotBlank(subFilePath)){
+			
+			subFilePath = subFilePath.substring(0, subFilePath.length() -1);
+			subOldFilePath = subOldFilePath.substring(0, subOldFilePath.length() -1);
+			
+			//本地图片地址
+			String[] imgPathArry = subFilePath.split(",");
+			String[] imgOldPathArry = subOldFilePath.split(",");
+			
+			String[] newPathArry = new String[imgPathArry.length];
+			for(int i=0;i<imgPathArry.length;i++){
+				String newFilePath = imgPathArry[i];
+				// 添加永久图片
+				String materialType = MediaType.Image.toString();
+				// 将图片上传到微信，返回url
+				JSONObject imgResultObj = WxApiClient.uploadMaterialImg(newFilePath, mpAccount);
+				
+				// 上传图片的id
+//	   		String contentImgMediaId = "";
+				String contentContentUrl = "";
+				if (imgResultObj != null && imgResultObj.containsKey("url")) {
+					// 微信返回来的媒体素材id
+//	   			contentImgMediaId = imgResultObj.getString("media_id");
+					// 图片url
+					contentContentUrl = imgResultObj.getString("url");
+				} 
+				newPathArry[i] = contentContentUrl;
+			}
+			
+			for(int i=0;i<imgPathArry.length;i++){
+				description =  description.replace(imgOldPathArry[i], newPathArry[i]);
+			}
+		}
 		
 		//内容保存
 		msgNews.setDescription(description);
  
-		String code = "";
 		List<MsgNews> msgNewsList = new ArrayList<MsgNews>();
 		msgNewsList.add(msgNews);
 		// 封面图片媒体id
@@ -275,13 +206,13 @@ public class MsgNewsCtrl  extends BaseCtrl{
 			JSONArray articles = newsResult.getJSONArray("news_item");
 			JSONObject article = (JSONObject) articles.get(0);
 			MsgNews newsPo = new MsgNews();
-
+			newsPo.setMultType(1);//指定为1，代表单图文
 			newsPo.setTitle(article.getString("title"));
 			newsPo.setAuthor(article.getString("author"));
 			newsPo.setBrief(article.getString("digest"));
-			newsPo.setDescription(article.getString("content"));
-			newsPo.setFromurl(article.getString("url"));
-			newsPo.setUrl(article.getString("content_source_url"));
+			newsPo.setDescription(description2);
+			newsPo.setFromurl(article.getString("content_source_url"));
+			newsPo.setUrl(article.getString("url"));
 			newsPo.setShowpic(article.getInt("show_cover_pic"));
 			newsPo.setPicpath(msgNews.getPicpath());
 			newsPo.setMediaId(newsMediaId);
@@ -291,81 +222,21 @@ public class MsgNewsCtrl  extends BaseCtrl{
 			MediaFiles entity = new MediaFiles();
 			entity.setMediaId(newsMediaId);
 			entity.setMediaType("news");
-			entity.setCreatetime(COMMON_FULL.getLongDate(Long.parseLong(newsResult.getString("create_time"))));
+			entity.setCreateTime(COMMON_FULL.getLongDate(Long.parseLong(newsResult.getString("create_time"))));
 			entity.setUpdateTime(COMMON_FULL.getLongDate(Long.parseLong(newsResult.getString("update_time"))));
 
 			int resultCount = this.entityService.addSingleNews(newsPo, entity);
 
 			if (resultCount > 0) {
-				code = "1";
+				return AjaxResult.success();
 			} else {
-				code = "-1";
+				return AjaxResult.failure();
 			}
-
-		} else {
-			code = "-1";
 		}
-		return code;
+		return AjaxResult.failure();
+
 	}
 
-	/**
-	 * 添加单图文
-	 * 
-	 * @param msgNews
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping(value = "/addSingleNews_old", method = RequestMethod.POST)
-	@ResponseBody
-	public String addSingleNews_old(MsgNews msgNews, HttpServletRequest request) throws Exception{
-		String code = "";
-		List<MsgNews> msgNewsList = new ArrayList<MsgNews>();
-		msgNewsList.add(msgNews);
-		// 封面图片媒体id
-		String imgMediaId = msgNews.getThumbMediaId();
-
-		MpAccount mpAccount = WxMemoryCacheClient.getSingleMpAccount();// 获取缓存中的唯一账号
-		JSONObject resultObj = WxApiClient.addNewsMaterial(msgNewsList, imgMediaId, mpAccount);
-
-		if (resultObj != null && resultObj.containsKey("media_id")) {
-			String newsMediaId = resultObj.getString("media_id");
-			JSONObject newsResult = WxApiClient.getMaterial(newsMediaId, mpAccount);
-
-			JSONArray articles = newsResult.getJSONArray("news_item");
-			JSONObject article = (JSONObject) articles.get(0);
-			MsgNews newsPo = new MsgNews();
-
-			newsPo.setTitle(article.getString("title"));
-			newsPo.setAuthor(article.getString("author"));
-			newsPo.setBrief(article.getString("digest"));
-			newsPo.setDescription(article.getString("content"));
-			newsPo.setFromurl(article.getString("url"));
-			newsPo.setUrl(article.getString("content_source_url"));
-			newsPo.setShowpic(article.getInt("show_cover_pic"));
-			newsPo.setPicpath(msgNews.getPicpath());
-			newsPo.setMediaId(newsMediaId);
-			newsPo.setThumbMediaId(imgMediaId);
-			newsPo.setNewsIndex(0);
-
-			MediaFiles entity = new MediaFiles();
-			entity.setMediaId(newsMediaId);
-			entity.setMediaType("news");
-			entity.setCreatetime(COMMON_FULL.getLongDate(Long.parseLong(newsResult.getString("create_time"))));
-			entity.setUpdateTime(COMMON_FULL.getLongDate(Long.parseLong(newsResult.getString("update_time"))));
-
-			int resultCount = this.entityService.addSingleNews(newsPo, entity);
-
-			if (resultCount > 0) {
-				code = "1";
-			} else {
-				code = "-1";
-			}
-
-		} else {
-			code = "-1";
-		}
-		return code;
-	}
 
 	/**
 	 * 添加多图文
@@ -373,114 +244,182 @@ public class MsgNewsCtrl  extends BaseCtrl{
 	 * @param rows
 	 * @param request
 	 * @return
+	 * @throws IOException 
+	 * @throws JsonMappingException 
+	 * @throws JsonParseException 
 	 */
 	@RequestMapping(value = "/addMoreNews", method = RequestMethod.POST)
 	@ResponseBody
-	public String addMoreNews(String rows, HttpServletRequest request) {
-		String code = "1";
+	public AjaxResult addMoreNews(String rows, HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
+		
+		String filePath = request.getSession().getServletContext().getRealPath("/");
+		
+		List<MsgArticle> listArts= new ArrayList<MsgArticle>();//数据库所有图文集合
+		JSONArray arrays=JSONArray.fromObject(rows);
+		JSONArray arryarticles=new JSONArray();//微信所用json集合
+		MsgNews msgNew=new MsgNews();
+		for (int i = 0; i < arrays.size(); i++) {
+			JSONObject obj = arrays.getJSONObject(i);
+			JSONObject json=new JSONObject();
+			json.put("title", obj.getString("title"));
+			json.put("author", obj.getString("author"));
+			json.put("thumb_media_id", obj.optString("thumbMediaId"));
+			json.put("digest", obj.optString("brief"));
+			json.put("show_cover_pic", obj.optInt("showpic"));
+			json.put("content_source_url", obj.optString("fromurl"));
+			MsgArticle art=new MsgArticle();
+			art.setNewsIndex(i);
+			art.setTitle(obj.getString("title"));
+			art.setAuthor(obj.optString("author"));
+			art.setContentSourceUrl(obj.optString("fromurl"));
+			art.setDigest(obj.optString("brief"));
+			art.setPicUrl(obj.optString("picpath"));
+			art.setShowCoverPic(obj.optInt("showpic"));
+			art.setThumbMediaId(obj.optString("thumbMediaId"));
+			art.setContent(obj.optString("description"));
+			if(i==0){
+				msgNew.setAuthor(art.getAuthor());
+				msgNew.setBrief(art.getDigest());
+				msgNew.setDescription(art.getContent());
+				msgNew.setFromurl(art.getContentSourceUrl());
+				msgNew.setMultType(2);
+				msgNew.setPicpath(art.getPicUrl());
+				msgNew.setShowpic(art.getShowCoverPic());
+				msgNew.setTitle(art.getTitle());
+				msgNew.setThumbMediaId(art.getThumbMediaId());
+			}
+			//注意这是图文正文部分
+			String description = obj.optString("description");
+			description = description.replaceAll("'","\"");
+			//去多个img的src值
+			String subFilePath = "";
+			String subOldFilePath = "";
+			if (description.contains("img")) {
+				Pattern p = Pattern.compile("<img[^>]+src\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>");
+				Matcher m = p.matcher(description);
 
-		Gson gson = new Gson();
-		List<MsgNews> msgNewsList = gson.fromJson(rows, new TypeToken<List<MsgNews>>() {
-		}.getType());
-
-		MpAccount mpAccount = WxMemoryCacheClient.getSingleMpAccount();// 获取缓存中的唯一账号
+				while (m.find()) {
+					// System.out.println(m.group()+"-------------↓↓↓↓↓↓");
+					System.out.println(m.group(1));
+					String imgSrc = m.group(1);
+					subOldFilePath +=  imgSrc + ",";
+					String[] split = imgSrc.split("/");
+					int k=imgSrc.indexOf(split[split.length-2]);
+					String subImgSrc = imgSrc.substring(k, imgSrc.length());
+					subFilePath += filePath + subImgSrc + ",";
+				}
+			}
+			if(StringUtils.isNotBlank(subFilePath)){
+				
+				subFilePath = subFilePath.substring(0, subFilePath.length() -1);
+				subOldFilePath = subOldFilePath.substring(0, subOldFilePath.length() -1);
+				
+				MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();// 获取缓存中的唯一账号
+				//本地图片地址
+				String[] imgPathArry = subFilePath.split(",");
+				String[] imgOldPathArry = subOldFilePath.split(",");
+				
+				String[] newPathArry = new String[imgPathArry.length];
+				for(int j=0;j<imgPathArry.length;j++){
+					String newFilePath = imgPathArry[j];
+					// 添加永久图片
+					String materialType = MediaType.Image.toString();
+					// 将图片上传到微信，返回url
+					JSONObject imgResultObj = WxApiClient.uploadMaterialImg(newFilePath, mpAccount);
+					
+					// 上传图片的id
+//		   		String contentImgMediaId = "";
+					String contentContentUrl = "";
+					if (imgResultObj != null && imgResultObj.containsKey("url")) {
+						// 微信返回来的媒体素材id
+//		   			contentImgMediaId = imgResultObj.getString("media_id");
+						// 图片url
+						contentContentUrl = imgResultObj.getString("url");
+					} 
+					newPathArry[j] = contentContentUrl;
+				}
+				
+				for(int j=0;j<imgPathArry.length;j++){
+					description =  description.replace(imgOldPathArry[j], newPathArry[j]);
+				}
+			}
+		    json.put("content", description);
+		    arryarticles.add(json);
+		    listArts.add(art);
+		}
+		
+		
+		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();// 获取缓存中的唯一账号
 		// 添加多图文永久素材
-		JSONObject resultObj = WxApiClient.addMoreNewsMaterial(msgNewsList, mpAccount);
-
+		JSONObject resultObj = WxApiClient.addMoreNewsMaterial2(arryarticles, mpAccount);
+		//数据库存储使用
+		List<MsgArticle> listArticles= new ArrayList<MsgArticle>();//数据库所有图文集合
+		
 		if (resultObj != null && resultObj.containsKey("media_id")) {
 			String newsMediaId = resultObj.getString("media_id");
+			msgNew.setMediaId(newsMediaId);
 			JSONObject newsResult = WxApiClient.getMaterial(newsMediaId, mpAccount);
-
+			
 			JSONArray articles = newsResult.getJSONArray("news_item");
-
+			
 			for (int i = 0; i < articles.size(); i++) {
 				JSONObject article = (JSONObject) articles.get(i);
-
-				MsgNews msgNewPo = msgNewsList.get(i);
-
-				MsgNews newsPo = new MsgNews();
-
-				newsPo.setTitle(article.getString("title"));
-				newsPo.setAuthor(article.getString("author"));
-				newsPo.setBrief(article.getString("digest"));
-				newsPo.setDescription(article.getString("content"));
-				newsPo.setFromurl(article.getString("url"));
-				newsPo.setUrl(article.getString("content_source_url"));
-				newsPo.setShowpic(article.getInt("show_cover_pic"));
-				newsPo.setMediaId(newsMediaId);
-				newsPo.setPicpath(msgNewPo.getPicpath());
-				newsPo.setThumbMediaId(article.getString("thumb_media_id"));
-				newsPo.setNewsIndex(i);
-
-				int newsCount = this.entityService.addMoreNews(newsPo);
+				if(i==0){
+					msgNew.setUrl(article.getString("url"));
+				}
+				MsgArticle msgart = listArts.get(i);
+				msgart.setUrl(article.getString("url"));
+				msgart.setMediaId(newsMediaId);
+				listArticles.add(msgart);
 			}
-
-			MediaFiles entity = new MediaFiles();
-			entity.setMediaId(newsMediaId);
-			entity.setMediaType("more");
-			entity.setCreatetime(new Date());
-			entity.setUpdateTime(new Date());
-
-			int fileCount = this.entityService.addMediaFiles(entity);
-
-			if (fileCount > 0) {
-				code = "1";
-			} else {
-				code = "-1";
+			msgNew.setArticles(listArticles);
+			
+			int bl = this.entityService.addMoreNews(msgNew);
+			if(bl == 1){
+				return AjaxResult.success();
 			}
-
-		} else {
-			code = "-1";
 		}
-		return code;
+		return AjaxResult.failure();
 	}
 
 	/**
 	 * 删除永久图文素材
 	 * 
-	 * @param mediaId
-	 * @param request
+	 * @param id
 	 * @return
 	 */
 	@RequestMapping(value = "/deleteMaterial", method = RequestMethod.POST)
 	@ResponseBody
-	public String deleteMaterial(String mediaId, HttpServletRequest request) {
-		String code = "0";
-		MpAccount mpAccount = WxMemoryCacheClient.getSingleMpAccount();// 获取缓存中的唯一账号
+	public AjaxResult deleteMaterial(String id) {
+		MsgNews news = entityService.getById(id);
+		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();// 获取缓存中的唯一账号
 		// 添加多图文永久素材
-		JSONObject jsonObject = WxApiClient.deleteMaterial(mediaId, mpAccount);
+		JSONObject jsonObject = WxApiClient.deleteMaterial(news.getMediaId(), mpAccount);
 
 		if (null != jsonObject && jsonObject.containsKey("errcode") && jsonObject.getInt("errcode") == 0) {
 
 			try {
-				this.entityService.deleteNews(mediaId);
-				code = "1";
+				this.entityService.delete(news);
+				return AjaxResult.deleteSuccess();
 			} catch (Exception e) {
-				code = "-1";
 				e.printStackTrace();
 			}
-
-		} else {
-			// 删除微信图文信息失败
-			code = "-1";
 		}
-		return code;
+		return AjaxResult.failure();
 	}
 
 	/**
 	 * 跳转到更新页面
 	 * 
-	 * @param mediaId
+	 * @param id
 	 * @return
 	 */
-	@RequestMapping(value = "/toUpdateSingleNews")
-	public ModelAndView toUpdateSingleNews(String mediaId) {
-		ModelAndView mv = new ModelAndView("wxcms/editsinglenews");
-		List<MsgNews> newsList = entityService.getByMediaId(mediaId);
+	@RequestMapping(value = "/toUpdateSingleNews", method = RequestMethod.POST)
+	@ResponseBody
+	public AjaxResult toUpdateSingleNews(String id) {
+		MsgNews newsObj = entityService.getById(id);
 
-		MsgNews newsObj = (MsgNews) newsList.get(0);
-		mv.addObject("newsObj", newsObj);
-		return mv;
+		return AjaxResult.success(newsObj);
 	}
 
 	/**
@@ -492,53 +431,97 @@ public class MsgNewsCtrl  extends BaseCtrl{
 	 */
 	@RequestMapping(value = "/updateSingleNews", method = RequestMethod.POST)
 	@ResponseBody
-	public String updateSingleNews(MsgNews msgNews, HttpServletRequest request) {
-		String code = "";
+	public AjaxResult updateSingleNews(MsgNews msgNews, HttpServletRequest request) {
+		String filePath = request.getSession().getServletContext().getRealPath("/");
+
+		String description = msgNews.getDescription();
+		String description2 = msgNews.getDescription();
+		description = description.replaceAll("'","\"");
+		//去多个img的src值
+		String subFilePath = "";
+		String subOldFilePath = "";
+		if (description.contains("img")) {
+			Pattern p = Pattern.compile("<img[^>]+src\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>");
+			Matcher m = p.matcher(description);
+
+			while (m.find()) {
+				String imgSrc = m.group(1);
+				subOldFilePath +=  imgSrc + ",";
+				String[] split = imgSrc.split("/");
+				int k=imgSrc.indexOf(split[split.length-2]);
+				String subImgSrc = imgSrc.substring(k, imgSrc.length());
+				subFilePath += filePath + subImgSrc + ",";
+			}
+		}
+		if(StringUtils.isNotBlank(subFilePath)){
+			subFilePath = subFilePath.substring(0, subFilePath.length() -1);
+			subOldFilePath = subOldFilePath.substring(0, subOldFilePath.length() -1);
+			//本地图片地址
+			String[] imgPathArry = subFilePath.split(",");
+			String[] imgOldPathArry = subOldFilePath.split(",");
+			
+			String[] newPathArry = new String[imgPathArry.length];
+			for(int i=0;i<imgPathArry.length;i++){
+				String newFilePath = imgPathArry[i];
+				// 添加永久图片
+				String materialType = MediaType.Image.toString();
+				// 将图片上传到微信，返回url
+				JSONObject imgResultObj = WxApiClient.uploadMaterialImg(newFilePath, WxMemoryCacheClient.getMpAccount());
+				
+				// 上传图片的id
+//	   		String contentImgMediaId = "";
+				String contentContentUrl = "";
+				if (imgResultObj != null && imgResultObj.containsKey("url")) {
+					// 微信返回来的媒体素材id
+//	   			contentImgMediaId = imgResultObj.getString("media_id");
+					// 图片url
+					contentContentUrl = imgResultObj.getString("url");
+				} 
+				newPathArry[i] = contentContentUrl;
+			}
+			
+			for(int i=0;i<imgPathArry.length;i++){
+				description =  description.replace(imgOldPathArry[i], newPathArry[i]);
+			}
+		}
+		
+		//内容保存
+		msgNews.setDescription(description);
 		List<MsgNews> msgNewsList = new ArrayList<MsgNews>();
 
 		msgNewsList.add(msgNews);
 
 		String mediaId = msgNews.getMediaId();
 
-		System.out.println("媒体id：================" + mediaId);
-
-		MpAccount mpAccount = WxMemoryCacheClient.getSingleMpAccount();// 获取缓存中的唯一账号
+		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();// 获取缓存中的唯一账号
 
 		JSONObject resultObj = WxApiClient.updateNewsMaterial(msgNewsList, 0, mediaId, mpAccount);
 
 		if (null != resultObj && resultObj.containsKey("errcode") && resultObj.getInt("errcode") == 0) {
-
+			msgNews.setDescription(description2);
 			try {
 				// 更新成功
 				this.entityService.updateSingleNews(msgNews);
-				code = "1";
+				return AjaxResult.updateSuccess();
 			} catch (Exception e) {
-				code = "-1";
 				e.printStackTrace();
 			}
 
-		} else {
-			// 更新图文消息失败
-			code = "-1";
 		}
-		return code;
+		return AjaxResult.failure();
 	}
 
 	/**
 	 * 跳转到更新页面
 	 * 
-	 * @param mediaId
+	 * @param id
 	 * @return
 	 */
 	@RequestMapping(value = "/toUpdateMoreNews")
-	public ModelAndView toUpdateMoreNews(String mediaId) {
-		ModelAndView mv = new ModelAndView("wxcms/editmorenews");
-		List<MsgNews> newsList = entityService.getByMediaId(mediaId);
-
-		MsgNews newsObj = (MsgNews) newsList.get(0);
-		mv.addObject("newsList", newsList);
-		mv.addObject("newsObj", newsObj);
-		return mv;
+	@ResponseBody
+	public AjaxResult toUpdateMoreNews(String id) {
+		MsgNews newsObj = entityService.getById(id);
+		return AjaxResult.success(newsObj.getArticles());
 	}
 
 	/**
@@ -548,29 +531,112 @@ public class MsgNewsCtrl  extends BaseCtrl{
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/updateMoreNews", method = RequestMethod.POST)
+	@RequestMapping(value = "/updateSubMoreNews", method = RequestMethod.POST)
 	@ResponseBody
-	public String updateMoreNews(String rows, HttpServletRequest request) {
-		String code = "0";
-		Gson gson = new Gson();
-		List<MsgNews> msgNewsList = gson.fromJson(rows, new TypeToken<List<MsgNews>>() {
-		}.getType());
+	public AjaxResult updateMoreNews(String  rows, HttpServletRequest request) {
+		String filePath = request.getSession().getServletContext().getRealPath("/");
+		JSONObject obj = JSONObject.fromObject(rows);
+		MsgArticle article = (MsgArticle)JSONObject.toBean(obj, MsgArticle.class);
+		String description = article.getContent();
+		String description2 = article.getContent();
+		description = description.replaceAll("'","\"");
+		//去多个img的src值
+		String subFilePath = "";
+		String subOldFilePath = "";
+		if (description.contains("img")) {
+			Pattern p = Pattern.compile("<img[^>]+src\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>");
+			Matcher m = p.matcher(description);
 
-		MpAccount mpAccount = WxMemoryCacheClient.getSingleMpAccount();// 获取缓存中的唯一账号
-
-		for (int i = 0; i < msgNewsList.size(); i++) {
-			MsgNews news = msgNewsList.get(i);
-			JSONObject resultObj = WxApiClient.updateNewsMaterial(msgNewsList, i, news.getMediaId(), mpAccount);
-			if (null != resultObj && resultObj.containsKey("errcode") && resultObj.getInt("errcode") == 0) {
-				// 更新成功
-				this.entityService.updateSingleNews(news);
-				code = "1";
-			} else {
-				code = "-1";
+			while (m.find()) {
+				// System.out.println(m.group()+"-------------↓↓↓↓↓↓");
+				System.out.println(m.group(1));
+				String imgSrc = m.group(1);
+				subOldFilePath +=  imgSrc + ",";
+				String[] split = imgSrc.split("/");
+				int k=imgSrc.indexOf(split[split.length-2]);
+				String subImgSrc = imgSrc.substring(k, imgSrc.length());
+				subFilePath += filePath + subImgSrc + ",";
 			}
 		}
+		if(StringUtils.isNotBlank(subFilePath)){
+			
+			subFilePath = subFilePath.substring(0, subFilePath.length() -1);
+			subOldFilePath = subOldFilePath.substring(0, subOldFilePath.length() -1);
+			
+			//本地图片地址
+			String[] imgPathArry = subFilePath.split(",");
+			String[] imgOldPathArry = subOldFilePath.split(",");
+			
+			String[] newPathArry = new String[imgPathArry.length];
+			for(int i=0;i<imgPathArry.length;i++){
+				String newFilePath = imgPathArry[i];
+				// 添加永久图片
+				String materialType = MediaType.Image.toString();
+				// 将图片上传到微信，返回url
+				JSONObject imgResultObj = WxApiClient.uploadMaterialImg(newFilePath, WxMemoryCacheClient.getMpAccount());
+				
+				// 上传图片的id
+//	   		String contentImgMediaId = "";
+				String contentContentUrl = "";
+				if (imgResultObj != null && imgResultObj.containsKey("url")) {
+					// 微信返回来的媒体素材id
+//	   			contentImgMediaId = imgResultObj.getString("media_id");
+					// 图片url
+					contentContentUrl = imgResultObj.getString("url");
+				} 
+				newPathArry[i] = contentContentUrl;
+			}
+			
+			for(int i=0;i<imgPathArry.length;i++){
+				description =  description.replace(imgOldPathArry[i], newPathArry[i]);
+			}
+		}
+		
+		//内容保存
+		article.setContent(description);
+		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();// 获取缓存中的唯一账号
 
-		return code;
+		JSONObject jsonObj = new JSONObject();
+		//上传图片素材
+		jsonObj.put("thumb_media_id", article.getThumbMediaId());
+		if(article.getAuthor() != null){
+			jsonObj.put("author", article.getAuthor());
+		}else{
+			jsonObj.put("author", "");
+		}
+		if(article.getTitle() != null){
+			jsonObj.put("title", article.getTitle());
+		}else{
+			jsonObj.put("title", "");
+		}
+		if(article.getContentSourceUrl() != null){
+			jsonObj.put("content_source_url",article.getContentSourceUrl());
+		}else{
+			jsonObj.put("content_source_url", "");
+		}
+		if(article.getDigest() != null){
+			jsonObj.put("digest", article.getDigest());
+		}else{
+			jsonObj.put("digest", "");
+		}
+		if(article.getShowCoverPic() != null){
+			jsonObj.put("show_cover_pic", article.getShowCoverPic());
+		}else{
+			jsonObj.put("show_cover_pic", 1);
+		}
+		jsonObj.put("content", article.getContent());
+		
+		JSONObject resultObj = WxApiClient.updateNewsMaterial2(jsonObj, article.getNewsIndex(), article.getMediaId(), mpAccount);
+	   
+		if (null != resultObj && resultObj.containsKey("errcode") && resultObj.getInt("errcode") == 0) {
+			article.setContent(description2);
+			// 更新成功
+			this.articleService.update(article);
+			return AjaxResult.updateSuccess();
+		} else {
+			return AjaxResult.failure();
+		}
+
 	}
 
 }

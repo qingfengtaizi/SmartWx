@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans     
+           http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+           http://www.springframework.org/schema/context     
+           http://www.springframework.org/schema/context/spring-context-4.2.xsd
+           http://www.springframework.org/schema/aop
+    	   http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+           http://www.springframework.org/schema/mvc     
+           http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd">
+
+    <!-- 只扫面controller包下的注解，不使用默认扫描方式(默认方式会扫描类上的所有注解) add by hermit -->
+    <context:component-scan base-package="com.wxmp" use-default-filters="false">
+        <!--只扫描@Controller注解 -->
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:include-filter type="annotation"
+                                expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+    </context:component-scan>
+
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <!-- 将StringHttpMessageConverter的默认编码设为UTF-8 -->
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8"/>
+            </bean>
+            <!-- 将Jackson2HttpMessageConverter的默认格式化输出为false -->
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json;charset=UTF-8</value>
+                    </list>
+                </property>
+                <!--<property name="prettyPrint" value="false"/>-->
+                <!--<property name="objectMapper">-->
+                    <!--<bean class="com.fsh.common.mapper.JsonMapper"></bean>-->
+                <!--</property>-->
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- 对静态资源文件的访问， 将无法mapping到Controller的path交给default servlet handler处理 -->
+    <mvc:default-servlet-handler/>
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="60485760"/>
+    </bean>
+
+    <!-- 开启aop支持，动态代理支持-->
+    <aop:aspectj-autoproxy expose-proxy="true" proxy-target-class="true"/>
+    <!-- 拦截器-->
+    <mvc:interceptors>
+        <bean class="com.wxmp.core.interceptor.AuthInterceptor">
+            <property name="allowUrls">
+                <list>
+                    <value>/</value>
+                    <value>/wxcms/main</value>
+                    <value>/user/logout</value>
+                    <value>/user/login</value>
+                    <value>/wxweb/sendmsg</value>
+                    <value>/wxapi/oauthOpenid</value>
+                </list>
+            </property>
+        </bean>
+    </mvc:interceptors>
+</beans>

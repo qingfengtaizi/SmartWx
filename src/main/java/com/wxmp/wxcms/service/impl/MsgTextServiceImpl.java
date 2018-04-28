@@ -1,3 +1,9 @@
+/**
+ * Copyright &copy; 2017-2018 <a href="http://www.webcsn.com">webcsn</a> All rights reserved.
+ *
+ * @author hermit
+ * @date 2018-04-17 10:54:58
+ */
 package com.wxmp.wxcms.service.impl;
 
 import com.wxmp.wxapi.process.MsgType;
@@ -13,7 +19,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author : hermit
+ *
+ * @author hermit
+ * @version 2.0
+ * @date 2018-04-17 10:54:58
  */
 @Service
 public class MsgTextServiceImpl implements MsgTextService{
@@ -28,15 +37,15 @@ public class MsgTextServiceImpl implements MsgTextService{
 		return entityDao.getById(id);
 	}
 
-	public List<MsgText> listForPage(MsgText searchEntity){
-		return entityDao.listForPage(searchEntity);
+	public List<MsgText> getMsgTextByPage(MsgText searchEntity){
+		return entityDao.getMsgTextByPage(searchEntity);
 	}
 
 	public void add(MsgText entity){
 		
 		MsgBase base = new MsgBase();
 		base.setInputcode(entity.getInputcode());
-		base.setCreatetime(new Date());
+		base.setCreateTime(new Date());
 		base.setMsgtype(MsgType.Text.toString());
 		baseDao.add(base);
 		
@@ -55,7 +64,7 @@ public class MsgTextServiceImpl implements MsgTextService{
 		MsgBase base = new MsgBase();
 		base.setId(entity.getBaseId());
 		entityDao.delete(entity);
-		baseDao.delete(entity);
+		baseDao.delete(base);
 	}
 
 	//根据用户发送的文本消息，随机获取一条文本消息

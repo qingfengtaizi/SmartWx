@@ -1,66 +1,71 @@
+/**
+ * Copyright &copy; 2017-2018 <a href="http://www.webcsn.com">webcsn</a> All rights reserved.
+ *
+ * @author hermit
+ * @date 2018-04-17 10:54:58
+ */
 package com.wxmp.wxcms.ctrl;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import com.wxmp.core.common.BaseCtrl;
+import com.wxmp.core.util.AjaxResult;
+import com.wxmp.core.util.MD5Util;
+import com.wxmp.core.util.SessionUtil;
+import com.wxmp.wxcms.domain.SysUser;
+import com.wxmp.wxcms.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.wxmp.wxcms.domain.SysUser;
-import com.wxmp.wxcms.service.ISysUserService;
-
+import javax.servlet.http.HttpServletRequest;
 
 /**
- * 
- * @title : 
- * @description : 不返回json格式数据 | 只用于页面跳转分发 
- * @projectname : wxmp
- * @classname : ViewAction
- * @version 1.0
- * @author : hermit
- * @createtime : 2017年4月2日 下午12:00:39
+ *
+ * @author hermit
+ * @version 2.0
+ * @date 2018-04-17 10:54:58
  */
 @Controller
-@RequestMapping("sysuser")
-public class SysUserCtrl {
-	private static Logger log = LogManager.getLogger(SysUserCtrl.class);
-	
+@RequestMapping("user")
+public class SysUserCtrl extends BaseCtrl {
+
 	@Autowired
-	private ISysUserService sysUserService;
-	
-	/**
-	 * 个人基本信息
-	 * @return
-	 */
-    @RequestMapping(value = "/mybaseinfo")
-	public ModelAndView mybaseinfo(@RequestParam(required=false) String userId) {
-    	ModelAndView mv = new ModelAndView("sysuser/mybaseinfo");
-    	SysUser sysUser = sysUserService.getSysUserById(userId);
-    	mv.addObject("sysUser", sysUser);
-		return mv;
+	private SysUserService sysUserService;
+
+	@ResponseBody
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public AjaxResult login(SysUser user) {
+		user.setPwd(MD5Util.getMD5Code(user.getPwd()));
+		SysUser sysUser = this.sysUserService.getSysUser(user);
+		if (sysUser == null) {
+			return AjaxResult.failure("用户名或者密码错误");
+		}
+		SessionUtil.setUser(sysUser);
+		return AjaxResult.success(sysUser.getTrueName());
 	}
-    
-	/**
-	 * 
-	 * @return
-	 */
-    @RequestMapping(value = "/loginpwd")
-	public ModelAndView login(@RequestParam(required=false) String userId) {
-    	ModelAndView mv = new ModelAndView("sysuser/loginpwd");
-    	SysUser sysUser = sysUserService.getSysUserById(userId);
-    	mv.addObject("sysUser", sysUser);
-		return mv;
+
+	@ResponseBody
+	@RequestMapping(value = "/updatepwd", method = RequestMethod.POST)
+	public AjaxResult updatepwd(SysUser user) {
+		if (!SessionUtil.getUser().getPwd().equals(MD5Util.getMD5Code(user.getPwd()))) {
+			return AjaxResult.failure("用户名或密码错误");
+		}
+		user.setNewpwd(MD5Util.getMD5Code(user.getNewpwd()));
+		this.sysUserService.updateLoginPwd(user);
+		//注销用户
+		request.getSession().invalidate();
+		return AjaxResult.success();
 	}
-    
+
 	/**
-	 * 
+	 * ： 用户退出
 	 * @return
 	 */
-    @RequestMapping(value = "/updatepwdTip")
-	public ModelAndView updatepwdok(@RequestParam(required=false) String userId) {
-    	ModelAndView mv = new ModelAndView("sysuser/updatepwdTip");
-		return mv;
+	@ResponseBody
+	@RequestMapping("logout")
+	public AjaxResult logout(HttpServletRequest request) {
+		request.getSession().invalidate();
+		return AjaxResult.success();
 	}
 }

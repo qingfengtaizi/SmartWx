@@ -10,7 +10,7 @@ import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 
-import com.wxmp.backstage.common.Configuration;
+import com.wxmp.core.common.Configuration;
 
 /**
  * 功能：转换编码

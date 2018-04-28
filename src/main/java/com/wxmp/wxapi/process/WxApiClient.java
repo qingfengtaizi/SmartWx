@@ -1,11 +1,19 @@
+/**
+ * Copyright &copy; 2017-2018 <a href="http://www.webcsn.com">webcsn</a> All rights reserved.
+ *
+ * @author hermit
+ * @date 2018-04-17 10:54:58
+ */
 package com.wxmp.wxapi.process;
 
-import com.wxmp.backstage.common.Identities;
+import com.wxmp.core.common.Identities;
+import com.wxmp.core.util.DateUtil;
 import com.wxmp.wxapi.vo.Material;
 import com.wxmp.wxapi.vo.MaterialArticle;
 import com.wxmp.wxapi.vo.MaterialItem;
 import com.wxmp.wxapi.vo.TemplateMessage;
 import com.wxmp.wxcms.domain.AccountFans;
+import com.wxmp.wxcms.domain.MsgArticle;
 import com.wxmp.wxcms.domain.MsgNews;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -27,7 +35,7 @@ public class WxApiClient {
 	//获取accessToken
 	public static String getAccessToken(MpAccount mpAccount){
 		//获取唯一的accessToken，如果是多账号，请自行处理
-		AccessToken token = WxMemoryCacheClient.getSingleAccessToken();
+		AccessToken token = WxMemoryCacheClient.getAccessToken();
 		if(token != null && !token.isExpires()&& WxApi.getCallbackIp(token.getAccessToken())){//不为空，并且没有过期
 			logger.info("服务器缓存 accessToken == " + token.toString());
 			return token.getAccessToken();
@@ -49,7 +57,7 @@ public class WxApiClient {
 	//获取jsTicket
 	public static String getJSTicket(MpAccount mpAccount){
 		//获取唯一的JSTicket，如果是多账号，请自行处理
-		JSTicket jsTicket = WxMemoryCacheClient.getSingleJSTicket();
+		JSTicket jsTicket = WxMemoryCacheClient.getJSTicket();
 		if(jsTicket != null && !jsTicket.isExpires()){//不为空，并且没有过期
 			return jsTicket.getTicket();
 		}else{
@@ -70,7 +78,7 @@ public class WxApiClient {
 	//获取OAuthAccessToken
 	public static OAuthAccessToken getOAuthAccessToken(MpAccount mpAccount,String code){
 		//获取唯一的accessToken，如果是多账号，请自行处理
-		OAuthAccessToken token = WxMemoryCacheClient.getSingleOAuthAccessToken();
+		OAuthAccessToken token = WxMemoryCacheClient.getOAuthAccessToken();
 		if(token != null && !token.isExpires()){//不为空，并且没有过期
 			return token;
 		}else{
@@ -140,7 +148,7 @@ public class WxApiClient {
 				fans.setOpenId(jsonObj.getString("openid"));// 用户的标识
 				fans.setSubscribeStatus(new Integer(jsonObj.getInt("subscribe")));// 关注状态（1是关注，0是未关注），未关注时获取不到其余信息
 				if(jsonObj.containsKey("subscribe_time")){
-					fans.setSubscribeTime(jsonObj.getString("subscribe_time"));// 用户关注时间
+					fans.setSubscribeTime(DateUtil.timestampToDate(jsonObj.getString("subscribe_time")));// 用户关注时间
 				}
 				if(jsonObj.containsKey("nickname")){// 昵称
 					try {
@@ -172,7 +180,7 @@ public class WxApiClient {
 					fans.setRemark(jsonObj.getString("remark"));
 				}
 				fans.setStatus(1);
-				fans.setCreatetime(new Date());
+				fans.setCreateTime(new Date());
 				return fans;
 			}
 		}
@@ -219,7 +227,7 @@ public class WxApiClient {
 								MaterialArticle ma = new MaterialArticle();
 								ma.setTitle(article.getString("title"));
 								ma.setThumb_media_id(article.getString("thumb_media_id"));
-								ma.setShow_cover_pic(article.getString("show_cover_pic"));
+								ma.setShow_cover_pic(article.getInt("show_cover_pic"));
 								ma.setAuthor(article.getString("author"));
 								ma.setContent_source_url(article.getString("content_source_url"));
 								ma.setContent(article.getString("content"));
@@ -277,7 +285,7 @@ public class WxApiClient {
 				if(news.getShowpic() != null){
 					jsonObj.put("show_cover_pic", news.getShowpic());
 				}else{
-					jsonObj.put("show_cover_pic", "1");
+					jsonObj.put("show_cover_pic", 1);
 				}
 				jsonObj.put("content", news.getDescription());
 				jsonArr.add(jsonObj);
@@ -446,13 +454,13 @@ public class WxApiClient {
 	}
 		
 	//上传永久图片
-	public static JSONObject uploadMaterialImg(File file,MpAccount mpAccount){
+	public static JSONObject uploadMaterialImg(String filePath,MpAccount mpAccount){
 		JSONObject rstObj = new JSONObject();
 		String accessToken = getAccessToken(mpAccount);
 		try{
-			JSONObject postObj = new JSONObject();
+//			JSONObject postObj = new JSONObject();
 			//postObj.put("media", file);
-			String filePath = "D:/img/Tulips.jpg";
+//			String filePath = file.getAbsolutePath();
 			//上传永久图片素材
 			rstObj = WxApi.addMaterial(WxApi.getMaterialImgUrl(accessToken), filePath);
 		}catch(Exception e){
@@ -501,13 +509,12 @@ public class WxApiClient {
 	 * @param mpAccount
 	 * @return
 	 */
-	public static JSONObject deleteMaterial(String media_id, MpAccount mpAccount){
-			JSONObject postObj = new JSONObject();
-			postObj.put("media_id", media_id);
-			String accessToken = getAccessToken(mpAccount);
-			return WxApi.httpsRequest(WxApi.getDelMaterialURL(accessToken),
-					HttpMethod.POST, postObj.toString());
-	}
+    public static JSONObject deleteMaterial(String media_id, MpAccount mpAccount) {
+        JSONObject postObj = new JSONObject();
+        postObj.put("media_id", media_id);
+        String accessToken = getAccessToken(mpAccount);
+        return WxApi.httpsRequest(WxApi.getDelMaterialURL(accessToken), HttpMethod.POST, postObj.toString());
+    }
 	
 	//新增永久图文素材
 	public static JSONObject addNewsMaterial(List<MsgNews> msgNewsList,String mediaId,MpAccount mpAccount){
@@ -542,7 +549,7 @@ public class WxApiClient {
 				if(news.getShowpic() != null){
 					jsonObj.put("show_cover_pic", news.getShowpic());
 				}else{
-					jsonObj.put("show_cover_pic", "1");
+					jsonObj.put("show_cover_pic", 1);
 				}
 				jsonObj.put("content", news.getDescription());
 				jsonArr.add(jsonObj);
@@ -563,12 +570,9 @@ public class WxApiClient {
 			JSONObject rstObj = new JSONObject();
 			String accessToken = getAccessToken(mpAccount);
 			try{
-				//JSONArray jsonArr = new JSONArray();
-				JSONObject newJsonObj = new JSONObject();
-				MsgNews news = (MsgNews)msgNewsList.get(0);
+				MsgNews news =msgNewsList.get(0);
 				JSONObject jsonObj = new JSONObject();
 				
-					
 					//上传图片素材
 					jsonObj.put("thumb_media_id", news.getThumbMediaId());
 					if(news.getAuthor() != null){
@@ -594,11 +598,9 @@ public class WxApiClient {
 					if(news.getShowpic() != null){
 						jsonObj.put("show_cover_pic", news.getShowpic());
 					}else{
-						jsonObj.put("show_cover_pic", "1");
+						jsonObj.put("show_cover_pic", 1);
 					}
 					jsonObj.put("content", news.getDescription());
-					//jsonArr.add(jsonObj);
-			
 			
 				JSONObject postObj = new JSONObject();
 				postObj.put("media_id", mediaId);
@@ -612,7 +614,23 @@ public class WxApiClient {
 			}
 			return rstObj;
 	}
-	
+	public static JSONObject updateNewsMaterial2(JSONObject jsonObj,int index,
+			String mediaId,MpAccount mpAccount){
+			JSONObject rstObj = new JSONObject();
+			String accessToken = getAccessToken(mpAccount);
+			try{
+				JSONObject postObj = new JSONObject();
+				postObj.put("media_id", mediaId);
+				postObj.put("index", index);
+				postObj.put("articles", jsonObj);
+				rstObj = WxApi.httpsRequest(WxApi.getUpdateNewsMaterialUrl(accessToken),
+						
+						HttpMethod.POST, postObj.toString());
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			return rstObj;
+	}
 	
 	
 	//新增多图文永久素材
@@ -648,13 +666,26 @@ public class WxApiClient {
 				if(news.getShowpic() != null){
 					jsonObj.put("show_cover_pic", news.getShowpic());
 				}else{
-					jsonObj.put("show_cover_pic", "1");
+					jsonObj.put("show_cover_pic", 1);
 				}
 				jsonObj.put("content", news.getDescription());
 				jsonArr.add(jsonObj);
 			}
 			JSONObject postObj = new JSONObject();
 			postObj.put("articles", jsonArr);
+			rstObj = WxApi.httpsRequest(WxApi.getNewsMaterialUrl(accessToken), HttpMethod.POST, postObj.toString());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return rstObj;
+	}
+	//新增多图文永久素材
+	public static JSONObject addMoreNewsMaterial2(JSONArray arryarticles,MpAccount mpAccount){
+		JSONObject rstObj = new JSONObject();
+		String accessToken = getAccessToken(mpAccount);
+		try{
+			JSONObject postObj = new JSONObject();
+			postObj.put("articles", arryarticles);
 			rstObj = WxApi.httpsRequest(WxApi.getNewsMaterialUrl(accessToken), HttpMethod.POST, postObj.toString());
 		}catch(Exception e){
 			e.printStackTrace();

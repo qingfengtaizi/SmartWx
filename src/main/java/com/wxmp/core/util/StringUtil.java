@@ -15,17 +15,18 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
 /**
  * 功能：字符串工具类
- * @author xiongliang
+ * @author hermit
  *
  * mobile enterprise application platform
  * Version 0.1
  */
-public class StringUtil {
+public class StringUtil extends StringUtils{
 	
 	public static String _HREF_URL_REGEX = "(http:|https:)//[^[A-Za-z0-9\\._\\?%&+\\-=/#!]]*";
 	public static final String EMPTY_STRING = "";

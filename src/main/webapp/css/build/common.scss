@@ -1,0 +1,641 @@
+//基础
+@import "../modules/base";
+//组件
+@import "../modules/component/buttons";
+@import "../modules/component/treeselect";
+@import "../modules/component/ztree";
+@import "../modules/component/fsh-form";
+@import "../modules/component/pagination";
+//布局
+@import "../modules/layout/wxmp";
+
+@include reset();
+@include baseClass();
+
+
+.layui-tab-title .layui-this:after {
+  display: none;
+}
+
+//菜单
+.fsh-menu {
+  .layui-nav-tree .layui-nav-item a {
+    height: 60px;
+    line-height: 60px;
+  }
+  .layui-nav * {
+    font-size: 16px;
+  }
+  .layui-nav-item {
+    .iconfont {
+      font-size: 16px;
+      margin-right: 10px;
+    }
+  }
+  .layui-nav-child dd {
+    padding-left: 16px
+  }
+}
+
+//layui按钮与iconfont结合
+.layui-btn .iconfont {
+  margin-right: 3px;
+  font-size: 18px;
+  vertical-align: bottom
+}
+
+//右侧面板
+.fsh-rightPanel {
+  height: 100%;
+  padding: 15px 20px;
+  background: #e9edf6;
+  box-sizing: border-box;
+  overflow: auto;
+  .layui-tab {
+    margin: 0;
+  }
+  .fsh-rightPanel-left {
+    float: left;
+    width: 320px;
+    height: 100%;
+    border: 1px solid #ccc;
+    overflow: auto;
+    margin-right: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+  .fsh-rightPanel-right {
+    overflow: auto;
+    border: 1px solid #ccc;
+    height: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+}
+
+//右侧操作台表单
+.fsh-operation {
+  .layui-form-item {
+    margin-bottom: 0
+  }
+  .layui-form-item .layui-input-inline {
+    width: 150px;
+    margin-right: 0
+  }
+  .layui-form-label {
+    width: auto
+  }
+}
+
+//弹出层
+.fsh-pop {
+  margin: 20px
+}
+
+//头像上传模块
+.fsh-upload-Portrait {
+  display: none;
+  padding: 10px;
+  .content {
+    width: 575px;
+    height: 365px;
+    border: 3px dashed #e6e6e6;
+    margin: 0 auto;
+    text-align: center;
+    img {
+      width: 120px;
+      height: 120px;
+      border: 1px solid #ddd;
+      margin-top: 60px;
+    }
+    button {
+      margin-top: 20px;
+    }
+    p {
+      color: #666;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+  }
+}
+
+//修改密码弹窗
+.fsh-edit-pwd {
+  display: none;
+  padding: 10px
+}
+
+//通用关闭---与layui风格一致
+.close {
+  &.icon-error {
+    display: block;
+    position: absolute;
+    right: -3px;
+    top: -12px;
+    width: 18px;
+    height: 18px;
+    background-color: #666;
+    border-radius: 100%;
+    color: #fff;
+    padding: 3px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 22px;
+    cursor: pointer;
+    &:hover {
+      background-color: #999;
+    }
+  }
+}
+
+.fsh-media {
+  img.main {
+    width: 300px;
+    height: 300px;
+    float: left;
+    margin-right: 20px;
+  }
+  .content {
+    overflow: hidden;
+  }
+}
+
+//其他layui样式重置
+.layui-form-checkbox span {
+  padding: 0 2px
+}
+
+.layui-form-pane .layui-form-checkbox {
+  margin: 0
+}
+
+//.layui-layout-admin .layui-body {
+//  bottom: 0
+//}
+
+.layui-nav .layui-nav-more {
+  right: 4px
+}
+
+.layui-table {
+  color: #333
+}
+
+.layui-table-page {
+  background-color: #f2f2f2
+}
+
+//.layui-table-header .layui-table-cell {
+//  height: 100px;
+//  line-height: 100px;
+//}
+
+.layui-table-body .layui-table-cell {
+  height: 40px;
+  line-height: 40px;
+}
+
+//TODO:布局
+.layui-tab-title {
+  border-bottom: 1px solid #5eaee3;
+  height: 43px;
+}
+
+.layui-tab-title li {
+  width: 120px;
+  //height:58px;
+  //line-height: 58px;
+  background: #fff;
+  border: 1px solid #fff;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+.layui-tab-title li.layui-this {
+  border: 1px solid #5eaee3;
+  color: #5eaee3;
+  border-bottom: 0;
+  background: #fff;
+}
+
+.wx-search {
+  margin: 20px 0;
+  max-width: 1100px;
+  .layui-input {
+    border-radius: 19px;
+    padding-left: 20px;
+  }
+  .icon-rili {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    color: #5eaee3;
+    padding-left: 5px;
+    border-left: 1px solid #5eaee3;
+  }
+  .layui-btn {
+    border-radius: 19px;
+    min-width: 110px;
+  }
+
+}
+
+.btn-primary {
+  background: #5eaee3;
+}
+
+.btn-primary-reversal {
+  color: #5eaee3;
+  background: #fff;
+  &:hover {
+    //color: lighten(#5eaee3,10%);
+    color: #5eaee3;
+  }
+}
+
+.btn-danger {
+  background: #ff8a8a;
+}
+
+.btn-danger-reversal {
+  color: #ff8a8a;
+  background: #fff;
+  &:hover {
+    color: #ff8a8a;
+  }
+}
+
+.layui-table tbody tr:hover, .layui-table thead tr, .layui-table-click, .layui-table-header, .layui-table-hover, .layui-table-mend, .layui-table-patch, .layui-table-tool, .layui-table[lay-even] tr:nth-child(even),
+.layui-table-page,
+.layui-table-box {
+  background: #fff;
+}
+
+.layui-form-checkbox[lay-skin=primary]:hover i {
+  border-color: #5eaee3;
+}
+
+.layui-form-checked[lay-skin=primary] i {
+  border-color: #5eaee3;
+  background-color: #5eaee3;
+  color: #fff;
+
+}
+
+.layui-table-cell {
+  a[lay-event]:not(:first-child) {
+    margin-left: 20px;
+  }
+}
+
+.wxmp-list-justify {
+  @include clear-after();
+  .item {
+    display: inline-block;
+    margin-bottom: 10px;
+    margin-right: 15px;
+    width: 250px;
+    height: 300px;
+    background: #fff;
+    font-size: 14px;
+    float: left;
+    &:nth-child(4n){
+      margin-right: 0;
+    }
+    &:nth-child(4n+1){
+      clear:left;
+    }
+    img.main {
+      display: block;
+      width: 100%;
+      height: 160px;
+    }
+  }
+}
+
+
+.media-list {
+  .item {
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    .content {
+      position: relative;
+      top: -40px;
+    }
+    h3, p {
+      padding: 0 8px;
+    }
+    h3 {
+      font-size: 16px;
+      line-height: 40px;
+      background: rgba(0, 0, 0, .3);
+      color: #fff;
+      //margin-top: -40px;
+      z-index: 10;
+    }
+
+    p.time {
+      font-size: 12px;
+      color: #999;
+      line-height: 30px;
+      line-height: 30px;
+      height: 30px;
+    }
+    p.abstract {
+      font-size: 14px;
+      color: #999;
+      line-height: 25px;
+      height: 50px;
+      overflow: hidden;
+    }
+    .btn-group {
+      @include clear-after();
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      border-top: 1px solid #dedede;
+      margin-top: 12px;
+      padding: 5px 0;
+      .layui-btn {
+        float: left;
+        width: 33.3%;
+        box-sizing: border-box;
+        &:not(:last-child) {
+          border-right: 1px solid #dedede;
+        }
+        margin: 0;
+      }
+    }
+    .doc{
+      padding: 8px;
+      border-bottom: 1px solid #dedede;
+      img{
+        float: right;
+        margin-right: 10px;
+        margin-left: 10px;
+        width: 40px;
+        height:40px;
+      }
+      p{
+        overflow: hidden;
+        line-height: 40px;
+        padding: 0;
+        a{
+          color: inherit;
+        }
+      }
+    }
+    p.more{
+      text-align: center;
+      line-height: 30px;
+      font-size: 12px;
+      color: #666;
+      .iconfont{
+        margin-right: 10px;
+      }
+    }
+  }
+}
+.chart-content{
+  background: rgb(255, 255, 255);
+  padding: 16px 16px 0px;
+  margin-bottom: 32px;
+}
+
+.chart{
+  height: 350px;
+  width: 100%;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  position: relative;
+  background: transparent;
+  background: #fff;
+}
+.wxmp-card-wrap {
+  margin-left: -20px;
+  margin-right: -20px;
+  > div {
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-bottom: 32px;
+  }
+}
+
+.wxmp-card {
+  height: 108px;
+  cursor: pointer;
+  font-size: 12px;
+  position: relative;
+  overflow: hidden;
+  color: #666;
+  background: #fff;
+  -webkit-box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.05);
+  box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.05);
+  .card-panel-description {
+    float: right;
+    font-weight: bold;
+    margin: 26px;
+    margin-left: 0px;
+    .card-panel-text {
+      line-height: 18px;
+      color: rgba(0, 0, 0, 0.45);
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+    .card-panel-num {
+      font-size: 20px;
+    }
+  }
+  &:hover {
+    .iconfont {
+      color: #fff !important;
+      &.icon-pic {
+        background: #40c9c6;
+      }
+      &.icon-tongji {
+        background: #36a3f7;
+      }
+      &.icon-daohang-gongzhonghaotixing {
+        background: #f4516c;
+      }
+      &.icon-yonghutouxiang {
+        background: #34bfa3;
+      }
+    }
+  }
+
+  .iconfont {
+    font-size: 48px;
+    float: left;
+    margin: 14px 0 0 14px;
+    padding: 16px;
+    -webkit-transition: all 0.38s ease-out;
+    transition: all 0.38s ease-out;
+    border-radius: 6px;
+    &.icon-pic {
+      color: #40c9c6;
+    }
+    &.icon-tongji {
+      color: #36a3f7;
+    }
+    &.icon-daohang-gongzhonghaotixing {
+      color: #f4516c;
+    }
+    &.icon-yonghutouxiang {
+      color: #34bfa3;
+    }
+  }
+}
+
+.layui-layedit {
+  background: #fff;
+}
+
+.wxmp-doclist {
+  float: left;
+  width: 320px;
+  background: #f8f8f8;
+  border: 1px solid #ccc;
+  .content {
+    > div {
+      @include clear-after();
+      border-bottom: 1px solid #ccc;
+      width: 100%;
+      p {
+        box-sizing: border-box;
+        padding: 0 10px;
+      }
+      &.main,&.item{
+        &.active{
+          border: 1px solid red;
+        }
+      }
+      &.main {
+        position: relative;
+        height: 180px;
+        img {
+          //980*554-320*180
+
+          //145*145
+          width: 100%;
+          height: 100%;
+        }
+        p {
+          position: absolute;
+          left: 0;
+          bottom: 10px;
+          width: 100%;
+          font-size: 14px;
+          line-height: 25px;
+          height: 25px;
+          color: #333;
+          overflow: hidden;
+        }
+      }
+      &.item {
+        position: relative;
+        height: 70px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        img {
+          width: 50px;
+          height: 50px;
+          float: right;
+          margin-right: 10px;
+        }
+        p {
+          overflow: hidden;
+          font-size: 14px;
+          line-height: 50px;
+          height: 50px;
+          color: #333;
+        }
+        &:hover {
+          button {
+            display: block;
+          }
+        }
+        button {
+          display: none;
+          position: absolute;
+          top: 20px;
+          right: 10px;
+        }
+
+        //.mask{
+        //  display: none;
+        //  position: absolute;
+        //  top:0;
+        //  left:0;
+        //  bottom: 0;
+        //  right: 0;
+        //  background: rgba(0,0,0,.3);
+        //  text-align: center;
+        //  line-height: 70px;
+        //  button{
+        //    //margin-top: 10px;
+        //    //margin-left: 30px;
+        //  }
+        //}
+      }
+    }
+  }
+  > .add {
+    text-align: center;
+    line-height: 100px;
+    height: 100px;
+    border: 0;
+    .iconfont {
+      font-size: 30px;
+      cursor: pointer;
+    }
+  }
+}
+#doclist_add{
+  cursor: pointer;
+}
+.layui-nav-img{
+  width: 40px;
+  height:40px;
+}
+
+
+.panel{
+  margin-bottom: 20px;
+  background-color: #fff;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+  box-shadow: 0 1px 1px rgba(0,0,0,.05);
+  &.panel-default {
+    border-color: #ddd;
+    .panel-heading {
+      color: #333;
+      background-color: #f5f5f5;
+      border-color: #ddd;
+    }
+  }
+  .panel-heading {
+    padding: 10px 15px;
+    border-bottom: 1px solid transparent;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+  .panel-body {
+    padding: 15px;
+  }
+  .panel-footer {
+    padding: 10px 15px;
+    background-color: #f5f5f5;
+    border-top: 1px solid #ddd;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+  }
+}

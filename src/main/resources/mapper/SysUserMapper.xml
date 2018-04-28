@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
-
+<!--  the code template created by wxmp-generator @author hermit @version 2.0 @date 2018-04-17 10:43:21 -->
 <mapper namespace="com.wxmp.wxcms.mapper.SysUserDao">
     <!--根据用户名密码查询-->
     <select id="getSysUser" parameterType="com.wxmp.wxcms.domain.SysUser"
     	resultType="com.wxmp.wxcms.domain.SysUser">
-		SELECT * FROM t_wxcms_sys_user t
+		SELECT * FROM sys_user t
 		where t.account =  #{account}
 		and t.pwd = #{pwd}
 	</select>
@@ -13,16 +13,16 @@
 	<!--根据主键id查询用户-->
     <select id="getSysUserById" parameterType="java.lang.String"
     	resultType="com.wxmp.wxcms.domain.SysUser">
-		SELECT * FROM t_wxcms_sys_user t
+		SELECT * FROM sys_user t
 		where t.id =  #{userId}
 	</select>
 	
 	
     <!--修改登录密码-->
 	<update id="updateLoginPwd" parameterType="com.wxmp.wxcms.domain.SysUser" >
-		UPDATE t_wxcms_sys_user 
+		UPDATE sys_user
 		SET pwd = #{newpwd},
-		    updateTime = #{updateTime} 
+		    update_time = #{updateTime} 
 		WHERE id = #{id} 
 		AND pwd = pwd
 	</update>

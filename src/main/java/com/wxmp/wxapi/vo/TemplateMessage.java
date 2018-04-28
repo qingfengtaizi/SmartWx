@@ -2,11 +2,13 @@ package com.wxmp.wxapi.vo;
 
 import java.util.Map;
 
+import lombok.Data;
 import net.sf.json.JSONObject;
 
 /**
  * 发送的模板消息对象
  */
+@Data
 public class TemplateMessage {
 
 	private String openid;//粉丝id
@@ -14,48 +16,6 @@ public class TemplateMessage {
 	private String url;//链接
 	private String color = "#173177";//颜色
 	private Map<String,String> dataMap;//参数数据
-	
-	
-	public String getOpenid() {
-		return openid;
-	}
-
-	public void setOpenid(String openid) {
-		this.openid = openid;
-	}
-
-	public String getTemplateId() {
-		return templateId;
-	}
-
-	public void setTemplateId(String templateId) {
-		this.templateId = templateId;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	public Map<String, String> getDataMap() {
-		return dataMap;
-	}
-
-	public void setDataMap(Map<String, String> dataMap) {
-		this.dataMap = dataMap;
-	}
-
-	public String getColor() {
-		return color;
-	}
-
-	public void setColor(String color) {
-		this.color = color;
-	}
-	
 	@Override
 	public String toString(){
 		JSONObject jsObj = new JSONObject();

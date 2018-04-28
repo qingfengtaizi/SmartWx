@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.Validate;
 import org.springframework.util.Assert;
 
-import com.wxmp.backstage.common.Configuration;
+import com.wxmp.core.common.Configuration;
 
 /**
  * 功能：Web工具类

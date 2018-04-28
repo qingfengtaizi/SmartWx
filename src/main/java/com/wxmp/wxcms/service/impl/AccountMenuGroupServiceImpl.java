@@ -1,18 +1,25 @@
+/**
+ * Copyright &copy; 2017-2018 <a href="http://www.webcsn.com">webcsn</a> All rights reserved.
+ *
+ * @author hermit
+ * @date 2018-04-17 10:54:58
+ */
 package com.wxmp.wxcms.service.impl;
 
-import com.wxmp.core.page.Pagination;
 import com.wxmp.wxcms.domain.AccountMenu;
 import com.wxmp.wxcms.domain.AccountMenuGroup;
 import com.wxmp.wxcms.mapper.AccountMenuDao;
 import com.wxmp.wxcms.mapper.AccountMenuGroupDao;
 import com.wxmp.wxcms.service.AccountMenuGroupService;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * @author : hermit
+ *
+ * @author hermit
+ * @version 2.0
+ * @date 2018-04-17 10:54:58
  */
 @Service
 public class AccountMenuGroupServiceImpl implements AccountMenuGroupService{
@@ -31,12 +38,8 @@ public class AccountMenuGroupServiceImpl implements AccountMenuGroupService{
 		return entityDao.list(searchEntity);
 	}
 
-	public Pagination<AccountMenuGroup> paginationEntity(AccountMenuGroup searchEntity ,Pagination<AccountMenuGroup> pagination){
-		Integer totalItemsCount = entityDao.getTotalItemsCount(searchEntity);
-		List<AccountMenuGroup> items = entityDao.paginationEntity(searchEntity,pagination);
-		pagination.setTotalItemsCount(totalItemsCount);
-		pagination.setItems(items);
-		return pagination;
+	public List<AccountMenuGroup> getGroupListByPage(AccountMenuGroup searchEntity){
+		return entityDao.getGroupListByPage(searchEntity);
 	}
 
 	public void add(AccountMenuGroup entity){

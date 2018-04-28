@@ -1,0 +1,19 @@
+.layui-btn{
+  background-color: $default-color;
+}
+.layui-btn-primary{
+  background-color: #FFF;
+}
+.layui-btn-normal{
+  background-color: $primary-color;
+}
+.layui-btn-danger{
+  background-color: $danger-color;
+}
+.layui-btn-warm{
+  background-color: darken($warm-color,2%);
+}
+.layui-btn-disabled{
+  background-color: $disabled-color;
+}
+

@@ -1,15 +1,24 @@
+/**
+ * Copyright &copy; 2017-2018 <a href="http://www.webcsn.com">webcsn</a> All rights reserved.
+ *
+ * @author hermit
+ * @date 2018-04-17 10:54:58
+ */
 package com.wxmp.wxcms.service.impl;
 
-import com.wxmp.core.page.Pagination;
 import com.wxmp.wxcms.domain.AccountFans;
 import com.wxmp.wxcms.mapper.AccountFansDao;
 import com.wxmp.wxcms.service.AccountFansService;
 import org.springframework.stereotype.Service;
+
 import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * @author : hermit
+ *
+ * @author hermit
+ * @version 2.0
+ * @date 2018-04-17 10:54:58
  */
 
 @Service
@@ -30,17 +39,8 @@ public class AccountFansServiceImpl implements AccountFansService{
 		return entityDao.list(searchEntity);
 	}
 
-	public Pagination<AccountFans> paginationEntity(AccountFans searchEntity,Pagination<AccountFans> pagination){
-		Integer totalItemsCount = entityDao.getTotalItemsCount(searchEntity);
-		
-		
-		
-		List<AccountFans> items = entityDao.paginationEntity(searchEntity,pagination);
-		
-		System.out.println("粉丝数量：-======" + items.size());
-		pagination.setTotalItemsCount(totalItemsCount);
-		pagination.setItems(items);
-		return pagination;
+	public List<AccountFans> getFansListByPage(AccountFans searchEntity){
+		return entityDao.getFansListByPage(searchEntity);
 	}
 	
 	public AccountFans getLastOpenId(){
@@ -53,10 +53,7 @@ public class AccountFansServiceImpl implements AccountFansService{
 		if(lastFans != null){
 			lastOpenId = lastFans.getOpenId();
 		}
-		
-		
 	}
-
 	public void add(AccountFans entity){
 		entityDao.add(entity);
 	}
@@ -71,15 +68,6 @@ public class AccountFansServiceImpl implements AccountFansService{
 
 	public void deleteByOpenId(String openId){
 		entityDao.deleteByOpenId(openId);
-	}
-
-	/* (non-Javadoc)
-	 * @see com.wxmp.wxcms.service.AccountFansService#getAccountFansList(com.wxmp.wxcms.domain.AccountFans)
-	 */
-	@Override
-	public List<AccountFans> getAccountFansList(AccountFans accountFans) {
-		// TODO Auto-generated method stub
-		return entityDao.getAccountFansList(accountFans);
 	}
 
 }

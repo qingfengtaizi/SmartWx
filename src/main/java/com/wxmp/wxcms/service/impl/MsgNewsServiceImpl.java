@@ -1,27 +1,41 @@
+/**
+ * Copyright &copy; 2017-2018 <a href="http://www.webcsn.com">webcsn</a> All rights reserved.
+ *
+ * @author hermit
+ * @date 2018-04-17 10:54:58
+ */
 package com.wxmp.wxcms.service.impl;
 
-import com.wxmp.core.page.Pagination;
 import com.wxmp.wxapi.process.MsgType;
 import com.wxmp.wxcms.domain.MediaFiles;
+import com.wxmp.wxcms.domain.MsgArticle;
 import com.wxmp.wxcms.domain.MsgBase;
 import com.wxmp.wxcms.domain.MsgNews;
-import com.wxmp.wxcms.domain.MsgNewsVO;
 import com.wxmp.wxcms.mapper.MediaFilesDao;
+import com.wxmp.wxcms.mapper.MsgArticleDao;
 import com.wxmp.wxcms.mapper.MsgBaseDao;
 import com.wxmp.wxcms.mapper.MsgNewsDao;
 import com.wxmp.wxcms.service.MsgNewsService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+
+import static com.wxmp.core.util.DateUtilOld.COMMON_FULL;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
- * @author : hermit
+ *
+ * @author hermit
+ * @version 2.0
+ * @date 2018-04-17 10:54:58
  */
 @Service
+@Transactional
 public class MsgNewsServiceImpl implements MsgNewsService{
 
 	@Resource
@@ -32,6 +46,9 @@ public class MsgNewsServiceImpl implements MsgNewsService{
 
 	@Resource
 	private MediaFilesDao mediaFilesDao;
+	
+	@Resource
+	private MsgArticleDao articleDao;
 
 	public MsgNews getById(String id){
 		return entityDao.getById(id);
@@ -41,28 +58,8 @@ public class MsgNewsServiceImpl implements MsgNewsService{
 		return entityDao.listForPage(searchEntity);
 	}
 	
-	public List<MsgNewsVO> pageWebNewsList(MsgNews searchEntity,Pagination<MsgNews> page){
-		List<MsgNews> list = entityDao.pageWebNewsList(searchEntity,page);
-		List<MsgNewsVO> pageList = new ArrayList<MsgNewsVO>();
-		for(MsgNews msg : list){
-			if(pageList.size() == 0){
-				MsgNewsVO vo = new MsgNewsVO();
-				vo.setCreateTimeStr(msg.getCreateTimeStr());
-				vo.getMsgNewsList().add(msg);
-				pageList.add(vo);
-			}else{
-				MsgNewsVO tmpMsgNewsVO = pageList.get(pageList.size() - 1);
-				if(tmpMsgNewsVO.getCreateTimeStr().equals(msg.getCreateTimeStr())){
-					tmpMsgNewsVO.getMsgNewsList().add(msg);
-				}else{
-					MsgNewsVO vo = new MsgNewsVO();
-					vo.setCreateTimeStr(msg.getCreateTimeStr());
-					vo.getMsgNewsList().add(msg);
-					pageList.add(vo);
-				}
-			}
-		}
-		return pageList;
+	public List<MsgNews> getWebNewsListByPage(MsgNews searchEntity){
+		return entityDao.getWebNewsListByPage(searchEntity);
 	}
 
 	
@@ -70,7 +67,7 @@ public class MsgNewsServiceImpl implements MsgNewsService{
 		
 		MsgBase base = new MsgBase();
 		base.setInputcode(entity.getInputcode());
-		base.setCreatetime(new Date());
+		base.setCreateTime(new Date());
 		base.setMsgtype(MsgType.News.toString());
 		baseDao.add(base);
 		
@@ -103,8 +100,10 @@ public class MsgNewsServiceImpl implements MsgNewsService{
 	public void delete(MsgNews entity){
 		MsgBase base = new MsgBase();
 		base.setId(entity.getBaseId());
+		articleDao.deleteByBatch(entity.getId().intValue());
 		entityDao.delete(entity);
 		baseDao.delete(entity);
+		
 	}
 
 	public List<MsgNews> getRandomMsg(String inputCode,Integer num){
@@ -131,34 +130,55 @@ public class MsgNewsServiceImpl implements MsgNewsService{
 	}
 
 
+	@Transactional  
 	@Override
 	public int addSingleNews(MsgNews news,MediaFiles entity) {
 		int n=0;
 	    int m = 0;
 	    try {
+	    	//保存基本消息
+			MsgBase base = new MsgBase();
+			base.setCreateTime(new Date());
+			base.setMsgtype(MsgType.News.toString());
+			 baseDao.add(base);
 	    	//保存图文信息
-	    	this.entityDao.addNews(news);
+			news.setCreateTime(new Date());
+			news.setBaseId(base.getId());
+			Integer newId= this.entityDao.addNews(news);
+	    	MsgArticle art = new MsgArticle();
+			art.setAuthor(news.getAuthor());
+			art.setContent(news.getDescription());
+			art.setContentSourceUrl(news.getFromurl());
+			art.setDigest(news.getBrief());
+			art.setMediaId(news.getMediaId());
+			art.setNewsIndex(0);
+			art.setPicUrl(news.getPicpath());
+			art.setShowCoverPic(news.getShowpic());
+			art.setThumbMediaId(news.getThumbMediaId());
+			art.setTitle(news.getTitle());
+			art.setUrl(news.getUrl());
+			
+			art.setNewsId(news.getId().intValue());
+			articleDao.add(art);
 	    	n = 1;
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
-	    
 	    if(n > 0){
-	    	 
 		    try {
 		    	mediaFilesDao.add(entity);
 		    	m = 1;
 			} catch (Exception e) {
 				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 	    }
-	    
 	    if(n >0 && m >0){
 	    	return 1;
 	    }else{
 	    	return 0;
 	    }
-	    
 	}
 	
 	
@@ -202,20 +222,76 @@ public class MsgNewsServiceImpl implements MsgNewsService{
 	/* (non-Javadoc)
 	 * @see com.wxmp.wxcms.service.MsgNewsService#addMoreNews(com.wxmp.wxcms.domain.MsgNews)
 	 */
+	@Transactional
 	@Override
 	public int addMoreNews(MsgNews news) {
 		int n=0;
 	   
 	    try {
+	    	List<MsgArticle> articles = news.getArticles();
+	    	List<MsgArticle> list = new ArrayList<MsgArticle>();
+			//保存基本消息
+			MsgBase base = new MsgBase();
+			base.setCreateTime(new Date());
+			base.setMsgtype(MsgType.News.toString());
+			baseDao.add(base);
+			news.setBaseId(base.getId());
+			news.setCreateTime(new Date());
 	    	//保存图文信息
 	    	this.entityDao.addNews(news);
+	    	for (int i = 0; i < articles.size(); i++) {
+	    		MsgArticle article=articles.get(i);
+	    		article.setNewsId(news.getId().intValue());
+	    		list.add(article);
+			}
+	    	articleDao.insertByBatch(list);
 	    	n = 1;
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
+	    if(n==1){
+			MediaFiles entity = new MediaFiles();
+			entity.setMediaId(news.getMediaId());
+			entity.setMediaType("news");
+			entity.setCreateTime(news.getCreateTime());
+			entity.setUpdateTime(news.getCreateTime());
+			mediaFilesDao.add(entity);
+	    }
 	    return n;
 	}
 
+	@Override
+	public Boolean addMoreNews(List<MsgNews> news) {
+		// TODO Auto-generated method stub
+		try {
+			//保存基本消息
+			Date date = new Date(System.currentTimeMillis());
+			MsgBase base = new MsgBase();
+			base.setCreateTime(date);
+			base.setMsgtype(MsgType.News.toString());
+			baseDao.add(base);
+			for (int i = 0; i < news.size(); i++) {
+				MsgNews one = news.get(i);
+				one.setBaseId(base.getId());
+				one.setCreateTime(date);
+				//保存图文信息
+				this.entityDao.addNews(one);
+			}
+			//添加到素材表中
+			MediaFiles entity = new MediaFiles();
+			entity.setMediaId(news.get(0).getMediaId());
+			entity.setMediaType("news");
+			entity.setCreateTime(date);
+			entity.setUpdateTime(date);
+			mediaFilesDao.add(entity);
+			
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 	/* (non-Javadoc)
 	 * @see com.wxmp.wxcms.service.MsgNewsService#deleteNews(java.lang.String)
 	 */
@@ -225,11 +301,29 @@ public class MsgNewsServiceImpl implements MsgNewsService{
 		this.entityDao.deleteByMediaId(mediaId);
 	}
 
-	/* (non-Javadoc)
+	/* (non-Javadoc)修改单图文
 	 * @see com.wxmp.wxcms.service.MsgNewsService#updateSingleNews(com.wxmp.wxcms.domain.MsgNews)
 	 */
+	@Transactional
 	@Override
 	public void updateSingleNews(MsgNews news) {
+    	MsgArticle art = new MsgArticle();
+		art.setAuthor(news.getAuthor());
+		art.setContent(news.getDescription());
+		art.setContentSourceUrl(news.getFromurl());
+		art.setDigest(news.getBrief());
+		art.setMediaId(news.getMediaId());
+		art.setNewsIndex(0);
+		art.setPicUrl(news.getPicpath());
+		art.setShowCoverPic(news.getShowpic());
+		art.setThumbMediaId(news.getThumbMediaId());
+		art.setTitle(news.getTitle());
+		art.setUrl(news.getUrl());
+		
+		art.setNewsId(news.getId().intValue());
+		int arId=articleDao.getByNewsId(news.getId().intValue()).get(0).getArId();
+		art.setArId(arId);
+		articleDao.update(art);
 		this.entityDao.updateNews(news);
 	}
 
@@ -241,5 +335,7 @@ public class MsgNewsServiceImpl implements MsgNewsService{
 		// TODO Auto-generated method stub
 		return this.entityDao.getByMediaId(mediaId);
 	}
+
+
 	
 }

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 时间工具类
  * 
- * @author mengLei
+ * @author hermit
  * @date 2017 -06-10 14:04:41
  */
 public class DateUtil {
@@ -43,7 +43,7 @@ public class DateUtil {
     }
     // 将字符串日期 转换成 yyyy-MM-dd
     public static Date changeStrToDate3(String dateStr,String pattern) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         Date date;
         try {
             date = sdf.parse(dateStr);
@@ -140,7 +140,7 @@ public class DateUtil {
      * 获得当前天(yyyy-MM-dd)
      * 
      * @Description
-     * @author mengLei
+     * @author hermit
      * @date 2015年3月6日 上午8:44:01
      * @return
      */
@@ -153,7 +153,7 @@ public class DateUtil {
      * 获得当时间(yyyy-MM-dd HH:mm:ss)
      * 
      * @Description
-     * @author mengLei
+     * @author hermit
      * @date 2015年3月6日 上午8:44:45
      * @return
      */
@@ -166,7 +166,7 @@ public class DateUtil {
      * 获取当前时间戳
      * 
      * @return
-     * @author mengLei
+     * @author hermit
      * @date 2015年10月
      */
     public static String getTimeStamp() {
@@ -177,7 +177,7 @@ public class DateUtil {
     /**
      * 
      * @Description 获取yyyyMM年月
-     * @author mengLei
+     * @author hermit
      * @date 2015年3月19日 下午2:23:38
      * @param date
      * @return
@@ -190,7 +190,7 @@ public class DateUtil {
     /**
      * 
      * @Description 获取任意时间
-     * @author mengLei
+     * @author hermit
      * @date 2015年4月14日 下午12:28:26
      * @param year 0为 当年，1为下一年
      * @param month 0为 当月，1为下一月
@@ -214,7 +214,7 @@ public class DateUtil {
     /**
      * 
      * @Description 加num个月
-     * @author mengLei
+     * @author hermit
      * @date 2015年4月14日 上午11:23:23
      * @param date 当前时间
      * @param num 延长的月数
@@ -231,7 +231,7 @@ public class DateUtil {
     /**
      * 当前时间延期num个月数
      * 
-     * @author mengLei
+     * @author hermit
      * @date 2015年4月14日 下午5:24:06
      * @param num
      * @return
@@ -347,20 +347,20 @@ public class DateUtil {
         return today;
     }
 
+    public static Date timestampToDate(String str_num) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        if (str_num.length() == 13) {
+            String date = format.format(new Date(Long.parseLong(str_num)));
+            return changeStrToDate(date);
+        } else {
+            String date = format.format(new Date(Integer.parseInt(str_num) * 1000L));
+            return changeStrToDate(date);
+        }
+    }
 
+    public static void main(String[] args) throws Exception{
 
-
-    public static void main(String[] args) {
-
-
-        String dd = DateUtil.getNowDate();
-        String tt = DateUtil.getNowTime();
-
-        System.out.println(dd);
-        System.out.println(tt);
-
-        Date date1 = DateUtil.changeStrToDate(tt);
-        System.out.println(date1);
+//        System.out.println(timestamp2Date("1480405849"));
     }
 
 }

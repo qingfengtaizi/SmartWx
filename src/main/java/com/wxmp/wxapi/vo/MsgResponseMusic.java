@@ -1,22 +1,14 @@
 package com.wxmp.wxapi.vo;
 
+import lombok.Data;
+
 /**
  * 公众号回复给用户的消息 - 音乐消息
  * 
  */
-
+@Data
 public class MsgResponseMusic extends MsgResponse{
 
-	private static final long serialVersionUID = -1533051743403128524L;
-	
 	private Music Music;
 
-	public Music getMusic() {
-		return Music;
-	}
-
-	public void setMusic(Music music) {
-		Music = music;
-	}
-	
 }

@@ -1,16 +1,19 @@
+/**
+ * Copyright &copy; 2017-2018 <a href="http://www.webcsn.com">webcsn</a> All rights reserved.
+ *
+ * @author hermit
+ * @date 2018-04-17 10:54:58
+ */
 package com.wxmp.wxcms.mapper;
 
 import com.wxmp.wxcms.domain.SysUser;
 
-/** 
- * @title : 
- * @description : 
- * @projectname : wxmp
- * @classname : SysUserDao
- * @version 1.0
- * @author : hermit
- * @createtime : 2017年5月9日 下午5:40:50
-*/
+/**
+ *
+ * @author hermit
+ * @version 2.0
+ * @date 2018-04-17 10:54:58
+ */
 public interface SysUserDao {
 
 	/**
@@ -22,7 +25,7 @@ public interface SysUserDao {
     
 	/**
 	 * 根据用户名密码查询
-	 * @param sysUser
+	 * @param userId
 	 * @return
 	 */
     public SysUser getSysUserById(String userId);

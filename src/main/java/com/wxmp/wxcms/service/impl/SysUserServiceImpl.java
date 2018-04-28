@@ -1,39 +1,29 @@
+/**
+ * Copyright &copy; 2017-2018 <a href="http://www.webcsn.com">webcsn</a> All rights reserved.
+ *
+ * @author hermit
+ * @date 2018-04-17 10:54:58
+ */
 package com.wxmp.wxcms.service.impl;
 
 import com.wxmp.wxcms.domain.SysUser;
 import com.wxmp.wxcms.mapper.SysUserDao;
-import com.wxmp.wxcms.service.ISysUserService;
+import com.wxmp.wxcms.service.SysUserService;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
 
-
 /**
- * 
- * @title : 
- * @description : 
- * @projectname : wxmp
- * @classname : SysUserServiceImpl
- * @version 1.0
- * @author : sw_jee_dev
- * @createtime : 2017年4月2日 上午10:05:11
+ *
+ * @author hermit
+ * @version 2.0
+ * @date 2018-04-17 10:54:58
  */
-
 @Service
-public class SysUserServiceImpl  implements ISysUserService{
+public class SysUserServiceImpl  implements SysUserService{
 
 	@Resource
 	private SysUserDao sysUserDao;
 	
-	
-	
-	@Override
-	public boolean isAccount(String account) {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-
 	@Override
 	public SysUser getSysUser(SysUser sysUser) {
 		SysUser resUser = null;
@@ -76,5 +66,4 @@ public class SysUserServiceImpl  implements ISysUserService{
 		}
 		return n;
 	}
-
 }
