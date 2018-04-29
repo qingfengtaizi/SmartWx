@@ -6,34 +6,59 @@
  */
 package com.wxmp.wxapi.ctrl;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.alibaba.fastjson.JSON;
+import com.wxmp.core.common.BaseCtrl;
 import com.wxmp.core.exception.BusinessException;
 import com.wxmp.core.spring.JsonView;
 import com.wxmp.core.util.AjaxResult;
 import com.wxmp.core.util.DateUtil;
 import com.wxmp.core.util.UploadUtil;
 import com.wxmp.core.util.wx.SignUtil;
-import com.wxmp.wxapi.process.*;
+import com.wxmp.wxapi.process.ErrCode;
+import com.wxmp.wxapi.process.MediaType;
+import com.wxmp.wxapi.process.MpAccount;
+import com.wxmp.wxapi.process.MsgType;
+import com.wxmp.wxapi.process.MsgXmlUtil;
+import com.wxmp.wxapi.process.WxApiClient;
+import com.wxmp.wxapi.process.WxMemoryCacheClient;
+import com.wxmp.wxapi.process.WxSign;
 import com.wxmp.wxapi.service.MyService;
-import com.wxmp.wxapi.vo.*;
-import com.wxmp.core.common.BaseCtrl;
+import com.wxmp.wxapi.vo.Material;
+import com.wxmp.wxapi.vo.MaterialArticle;
+import com.wxmp.wxapi.vo.MaterialItem;
+import com.wxmp.wxapi.vo.MsgRequest;
+import com.wxmp.wxapi.vo.TemplateMessage;
 import com.wxmp.wxcms.domain.AccountFans;
 import com.wxmp.wxcms.domain.MsgNews;
 import com.wxmp.wxcms.domain.MsgText;
 import com.wxmp.wxcms.service.MsgNewsService;
 import com.wxmp.wxcms.service.MsgTextService;
-import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.*;
+import net.sf.json.JSONObject;
 
 
 /**
@@ -61,6 +86,13 @@ public class WxApiCtrl extends BaseCtrl{
 	@RequestMapping(value = "/{account}/message",  method = RequestMethod.GET)
 	public @ResponseBody String doGet(HttpServletRequest request,@PathVariable String account) {
 		//如果是多账号，根据url中的account参数获取对应的MpAccount处理即可
+		
+		System.out.println("-------------------------------------------------------");
+		request.getParameterMap().keySet().forEach(h->{
+			System.out.println("key: " + h + " value: " + request.getParameterMap().get(h));
+		});
+		
+		
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		if(mpAccount != null){
 			String token = mpAccount.getToken();//获取token，进行验证；
@@ -68,6 +100,14 @@ public class WxApiCtrl extends BaseCtrl{
 			String timestamp = request.getParameter("timestamp");// 时间戳
 			String nonce = request.getParameter("nonce");// 随机数
 			String echostr = request.getParameter("echostr");// 随机字符串
+			
+			System.out.println("-------------------------------------------------------");
+			System.out.println("token :  " + token);
+			System.out.println("signature :  " + signature);
+			System.out.println("timestamp :  " + timestamp);
+			System.out.println("nonce :  " + nonce);
+			System.out.println("echostr :  " + echostr);
+			
 			
 			// 校验成功返回  echostr，成功成为开发者；否则返回error，接入失败
 			if (SignUtil.validSign(signature, token, timestamp, nonce)) {
@@ -315,32 +355,36 @@ public class WxApiCtrl extends BaseCtrl{
 	 * @return
 	 */
 	@RequestMapping(value = "/sendTemplateMessage", method = RequestMethod.POST)
-	public void sendTemplateMessage(HttpServletRequest request,HttpServletResponse response,String openid){
+	@ResponseBody
+	public AjaxResult sendTemplateMessage(String tplId,String content,String openIds){
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		TemplateMessage tplMsg = new TemplateMessage();
 		
-		tplMsg.setOpenid(openid);
-		//微信公众号号的template id，开发者自行处理参数
-		tplMsg.setTemplateId("Wyme6_kKUqv4iq7P4d2NVldw3YxZIql4sL2q8CUES_Y"); 
+		com.alibaba.fastjson.JSONObject obj = com.alibaba.fastjson.JSONObject.parseObject(content);
 		
-		tplMsg.setUrl("http://www.weixinpy.com");
-		Map<String, String> dataMap = new HashMap<String,String>();
-		dataMap.put("first", "微信官方微信模板消息测试");
-		dataMap.put("keyword1", "时间：" + DateUtil.changeDateTOStr(new Date()));
-		dataMap.put("keyword2", "关键字二：你好");
-		dataMap.put("remark", "备注：感谢您的来访");
-		tplMsg.setDataMap(dataMap);
-		
-		JSONObject result = WxApiClient.sendTemplateMessage(tplMsg, mpAccount);
-		try {
-			if(result.getInt("errcode") != 0){
-				response.getWriter().write("send failure");
-			}else{
-				response.getWriter().write("send success");
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		String[] openIdAarry = {"0"};
+		if(openIds.contains(",")){
+			openIdAarry = openIds.split(",");
+		}else{
+			openIdAarry[0] = openIds;
 		}
+		
+		for(int i = 0; i<openIdAarry.length; i++){
+			Map<String, String> dataMap = new HashMap<String,String>();
+			String openid = openIdAarry[i];
+			tplMsg.setTemplateId(tplId); 
+			
+			Set<String> keySet = obj.keySet();
+			keySet.stream().forEach(h->{
+				dataMap.put(h, obj.getString(h));
+			});
+			
+			tplMsg.setOpenid(openid);
+			tplMsg.setDataMap(dataMap);
+			JSONObject result = WxApiClient.sendTemplateMessage(tplMsg, mpAccount);
+		}
+		
+		return AjaxResult.success();
 	}
 	
 	/**

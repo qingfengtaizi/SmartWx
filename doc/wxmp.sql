@@ -299,6 +299,19 @@ CREATE TABLE `wxcms_msg_text` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
+
+DROP TABLE IF EXISTS `wxcms_tpl_msg_text`;
+CREATE TABLE `wxcms_tpl_msg_text` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tpl_id` varchar(50) DEFAULT NULL,
+  `title` varchar(10) DEFAULT NULL,
+  `content` longtext,
+  `base_id` int(11) NOT NULL,
+  `account` varchar(100) DEFAULT NULL,
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+
 /*Data for the table `wxcms_msg_text` */
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
