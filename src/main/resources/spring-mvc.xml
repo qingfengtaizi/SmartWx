@@ -63,6 +63,7 @@
                     <value>/user/login</value>
                     <value>/wxweb/sendmsg</value>
                     <value>/wxapi/oauthOpenid</value>
+                    <value>/views/login.html</value>
                 </list>
             </property>
         </bean>

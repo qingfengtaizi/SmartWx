@@ -17,7 +17,7 @@
 	<!--加载log4j-->
 	<context-param>
 		<param-name>log4jConfigLocation</param-name>
-		<param-value>/WEB-INF/classes/property/log4j.properties</param-value>
+		<param-value>classpath:property/log4j.properties</param-value>
 	</context-param>
 
 	<!--Spring刷新Log4j配置文件变动的间隔,单位为毫秒 -->
