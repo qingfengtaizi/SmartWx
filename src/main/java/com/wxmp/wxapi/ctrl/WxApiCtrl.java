@@ -93,7 +93,7 @@ public class WxApiCtrl extends BaseCtrl{
         while(iterator.hasNext()){  
             //如果存在，则调用next实现迭代  
             String key=iterator.next();    
-            System.out.println("key: " + key + " value: " + request.getParameterMap().get(key));
+            log.info("key: " + key + " value: " + request.getParameterMap().get(key));
         }
 		
 		
@@ -105,12 +105,12 @@ public class WxApiCtrl extends BaseCtrl{
 			String nonce = request.getParameter("nonce");// 随机数
 			String echostr = request.getParameter("echostr");// 随机字符串
 			
-			System.out.println("-------------------------------------------------------");
-			System.out.println("token :  " + token);
-			System.out.println("signature :  " + signature);
-			System.out.println("timestamp :  " + timestamp);
-			System.out.println("nonce :  " + nonce);
-			System.out.println("echostr :  " + echostr);
+			log.info("-------------------------------------------------------");
+			log.info("token :  " + token);
+			log.info("signature :  " + signature);
+			log.info("timestamp :  " + timestamp);
+			log.info("nonce :  " + nonce);
+			log.info("echostr :  " + echostr);
 			
 			
 			// 校验成功返回  echostr，成功成为开发者；否则返回error，接入失败
@@ -133,6 +133,7 @@ public class WxApiCtrl extends BaseCtrl{
 			return myService.processMsg(msgRequest,mpAccount);
 		} catch (Exception e) {
 			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return "error";
 		}
 	}
@@ -383,7 +384,6 @@ public class WxApiCtrl extends BaseCtrl{
 	        while(iterator.hasNext()){  
 	            //如果存在，则调用next实现迭代  
 	            String key=iterator.next();    
-	            System.out.println("key: " + key + " value: " + request.getParameterMap().get(key));
 	            dataMap.put(key, obj.getString(key));
 	        }
 			
@@ -408,12 +408,6 @@ public class WxApiCtrl extends BaseCtrl{
 		String jsTicket = WxApiClient.getJSTicket(mpAccount);
 		WxSign sign = new WxSign(mpAccount.getAppid(),jsTicket,url);//sha1签名得到signature
 		
-		/*System.out.println("jsTicket = " + jsTicket);
-		System.out.println("appId = " + sign.getAppId());
-		System.out.println("nonceStr = "+sign.getNonceStr());
-		System.out.println("timestamp = " + sign.getTimestamp());
-		System.out.println("url = " + url);
-		System.out.println("signature = " + sign.getSignature());*/
 		
 		JsonView jv = new JsonView();
 		jv.setData(sign);
@@ -461,7 +455,6 @@ public class WxApiCtrl extends BaseCtrl{
 		
 		String jsonStr = requestBodyXml;
 		Map<String, Object> dataMap = new HashMap<String, Object>();
-		//System.out.println(jsonStr);
 	
 		Map map = new HashMap();
 		try {
@@ -477,14 +470,10 @@ public class WxApiCtrl extends BaseCtrl{
 			
 		    return_code="<![CDATA[SUCCESS]]>";
 		    return_msg="<![CDATA[OK]]>";		
-	//		System.out.println("-----------------<<<微信扫码支付 异步回调函数>>>---------------transaction_id:"+transaction_id);
-	//		System.out.println("-----------------<<<微信扫码支付 异步回调函数>>>---------------out_trade_no:"+out_trade_no);
-	//		System.out.println("-----------------<<<微信扫码支付 异步回调函数>>>---------------mch_id:"+mch_id);
 		}else{
 			 return_msg= (String) map.get("err_code_des");
 			 return_code="<![CDATA[FAIL]]>";
 			 return_msg="<![CDATA["+return_msg+"]]>";	
-	//	     System.out.println("-----------------<<<微信扫码支付 异步回调函数>>>---------------return_msg:"+return_msg);
 		}		  
 	
 		

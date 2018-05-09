@@ -144,8 +144,6 @@ public class MsgNewsCtrl  extends BaseCtrl {
 			Matcher m = p.matcher(description);
 
 			while (m.find()) {
-				// System.out.println(m.group()+"-------------↓↓↓↓↓↓");
-				System.out.println(m.group(1));
 				String imgSrc = m.group(1);
 				subOldFilePath +=  imgSrc + ",";
 				String[] split = imgSrc.split("/");
@@ -299,8 +297,6 @@ public class MsgNewsCtrl  extends BaseCtrl {
 				Matcher m = p.matcher(description);
 
 				while (m.find()) {
-					// System.out.println(m.group()+"-------------↓↓↓↓↓↓");
-					System.out.println(m.group(1));
 					String imgSrc = m.group(1);
 					subOldFilePath +=  imgSrc + ",";
 					String[] split = imgSrc.split("/");
@@ -548,8 +544,6 @@ public class MsgNewsCtrl  extends BaseCtrl {
 			Matcher m = p.matcher(description);
 
 			while (m.find()) {
-				// System.out.println(m.group()+"-------------↓↓↓↓↓↓");
-				System.out.println(m.group(1));
 				String imgSrc = m.group(1);
 				subOldFilePath +=  imgSrc + ",";
 				String[] split = imgSrc.split("/");
