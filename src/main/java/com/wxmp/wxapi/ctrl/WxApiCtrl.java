@@ -88,9 +88,13 @@ public class WxApiCtrl extends BaseCtrl{
 		//如果是多账号，根据url中的account参数获取对应的MpAccount处理即可
 		
 		System.out.println("-------------------------------------------------------");
-		request.getParameterMap().keySet().forEach(h->{
-			System.out.println("key: " + h + " value: " + request.getParameterMap().get(h));
-		});
+		Set<String> keySet = request.getParameterMap().keySet();
+		Iterator<String> iterator = keySet.iterator();
+        while(iterator.hasNext()){  
+            //如果存在，则调用next实现迭代  
+            String key=iterator.next();    
+            System.out.println("key: " + key + " value: " + request.getParameterMap().get(key));
+        }
 		
 		
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
@@ -375,9 +379,13 @@ public class WxApiCtrl extends BaseCtrl{
 			tplMsg.setTemplateId(tplId); 
 			
 			Set<String> keySet = obj.keySet();
-			keySet.stream().forEach(h->{
-				dataMap.put(h, obj.getString(h));
-			});
+			Iterator<String> iterator = keySet.iterator();
+	        while(iterator.hasNext()){  
+	            //如果存在，则调用next实现迭代  
+	            String key=iterator.next();    
+	            System.out.println("key: " + key + " value: " + request.getParameterMap().get(key));
+	            dataMap.put(key, obj.getString(key));
+	        }
 			
 			tplMsg.setOpenid(openid);
 			tplMsg.setDataMap(dataMap);
