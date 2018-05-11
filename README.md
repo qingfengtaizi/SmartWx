@@ -1,4 +1,13 @@
-# SmartWx
+## 本项目是一个完整的微信公众号web操作版，直接编译即可运行。让用户不再用关心微信的底层接口，直接使用页面进行操作，简单方便。
+### 包括服务器绑定、文本管理、图文管理、菜单管理、粉丝管理、群发消息等
+---------------------------------
+[![QQ](https://img.shields.io/badge/chat-on%20QQ-ff69b4.svg?style=flat-square)](https://jq.qq.com/?_wv=1027&k=5bGtRX8)
+[![GPL-3.0](https://img.shields.io/hexpm/l/plug.svg)](https://gitee.com/qingfengtaizi/wxmp/blob/dev/LICENSE)
+[![使用IntelliJ IDEA开发维护](https://img.shields.io/badge/IntelliJ%20IDEA-提供支持-blue.svg)](https://www.jetbrains.com/idea/)
+
+---------------------------------
+
+##  技术框架
 
 开发语言：JAVA
 
@@ -13,7 +22,6 @@ JAVA开发框架：Spring MVC+Spring+Mybatis
 前台模板引擎：art-template
 
 ## 简介
-本项目是一个完整的微信公众号web操作版，直接编译即可运行。让用户不再用关心微信的底层接口，直接使用页面进行操作，简单方便。
 1. QQ群：[![加入QQ群](https://img.shields.io/badge/QQ群-671585861-blue.svg)](http://shang.qq.com/wpa/qunwpa?idkey=b7f4442a2a6b369a55aaa549bc0fbf14c478543d6a9c8f74eafca0378fcfcf40) 或 [![加入QQ群](https://img.shields.io/badge/QQ群-671585861-blue.svg)](https://jq.qq.com/?_wv=1027&k=5bGtRX8)，推荐点击按钮入群，当然如果无法成功操作，请自行搜索群号`671585861`进行添加
 1. 官方网址：[http://smartwx.webcsn.com](http://smartwx.webcsn.com/)
 1. 本项目在以下代码托管网站同步更新:
@@ -29,28 +37,28 @@ JAVA开发框架：Spring MVC+Spring+Mybatis
 - 如果您手中有很多公众号，那么您可以用SmartWx
 
 ## 功能模块
-- 账号信息
+- ###账号信息
 1. 绑定公众号信息
 
-- 文本信息
+- ###文本信息
 1. 新建消息
 2. 消息发送
 
-- 图文管理
+- ###图文管理
 1. 多图文
 2. 单图文
 
-- 菜单管理
+- ###菜单管理
 1. 支持几乎所有的微信菜单类型
 2. 可视化管理
 3. 保存&同步
 
-- 粉丝管理
+- ###粉丝管理
 1. 批量同步粉丝
 2. 单个粉丝同步
 3. 发送文本消息和图文消息
 
-- 多账号管理
+- ###多账号管理
 1. 添加公众号
 2. 选择公众号
 
