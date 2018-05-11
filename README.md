@@ -2,7 +2,7 @@
 ### 包括服务器绑定、文本管理、图文管理、菜单管理、粉丝管理、群发消息等
 ---------------------------------
 [![QQ](https://img.shields.io/badge/chat-on%20QQ-ff69b4.svg?style=flat-square)](https://jq.qq.com/?_wv=1027&k=5bGtRX8)
-[![GPL-3.0](https://img.shields.io/hexpm/l/plug.svg)](https://gitee.com/qingfengtaizi/wxmp/blob/dev/LICENSE)
+[![GPL-3.0](https://img.shields.io/cran/l/devtools.svg)](https://gitee.com/qingfengtaizi/wxmp/blob/master/LICENSE)
 [![使用IntelliJ IDEA开发维护](https://img.shields.io/badge/IntelliJ%20IDEA-提供支持-blue.svg)](https://www.jetbrains.com/idea/)
 
 ---------------------------------
@@ -37,10 +37,10 @@ JAVA开发框架：Spring MVC+Spring+Mybatis
 - 如果您手中有很多公众号，那么您可以用SmartWx
 
 ## 功能模块
-- ###账号信息
+ ###账号信息
 1. 绑定公众号信息
 
-- ###文本信息
+ ###文本信息
 1. 新建消息
 2. 消息发送
 
