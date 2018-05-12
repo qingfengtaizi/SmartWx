@@ -106,7 +106,7 @@
 	</update>
 	
 	<update id="update" parameterType="com.wxmp.wxcms.domain.MsgNews" flushCache="true">
-		UPDATE wxcms_msg_news SET title = #{title},author = #{author},brief = #{brief},description = #{description},pic_path = #{picpath},url = #{url},from_url = #{fromurl},show_pic = #{showpic} WHERE id = #{id}
+		UPDATE wxcms_msg_news SET title = #{title},author = #{author},brief = #{brief},description = #{description},pic_path = #{picpath},url = #{url},thumb_media_id = #{thumbMediaId},from_url = #{fromurl},show_pic = #{showpic} WHERE id = #{id}
 	</update>
 
 	<delete id="delete" parameterType="com.wxmp.wxcms.domain.MsgNews" >

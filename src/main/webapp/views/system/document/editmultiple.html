@@ -201,7 +201,6 @@
                     return false;
                 }
             });
-            debugger
                 if(data.title == ""){
                     layer.msg("请完善标题信息");
                     isValidated == false;
@@ -228,7 +227,6 @@
                 }
 
                 if(isValidated){
-                    //TODO:ajax保存
                     $.ajax({
                     	type:"POST",
                         url: '/msgnews/updateSubMoreNews',
@@ -276,7 +274,9 @@
                     v.auth=author;
 //                     v.digest=brief;
                     v.showCoverPic=showpic;
+                    v.showCoverPic=showpic;
                     v.picUrl=picpath;
+                    v.thumbMediaId=thumbMediaId;
                     v.contentSourceUrl=fromurl;
 //                     v.open_comment=open_comment;
 //                     v.fans_can_comment=fans_can_comment;
