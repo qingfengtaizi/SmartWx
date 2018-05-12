@@ -40,7 +40,6 @@
         <!-- environment setting -->
         <jdk.version>1.8</jdk.version>
         <tomcat.version>2.2</tomcat.version>
-        <jetty.version>7.6.14.v20131031</jetty.version>
         <webserver.port>8080</webserver.port>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <downloadSources>true</downloadSources>
@@ -99,34 +98,6 @@
                 <configuration>
                     <source>${jdk.version}</source>
                     <target>${jdk.version}</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>${jetty.version}</version>
-                <configuration>
-                    <stopPort>9988</stopPort>
-                    <stopKey>shutdown</stopKey>
-                    <connectors>
-                        <connector
-                                implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-                            <port>${webserver.port}</port>
-                        </connector>
-                    </connectors>
-                    <webAppConfig>
-                        <contextPath>/</contextPath>
-                    </webAppConfig>
-                    <systemProperties>
-                        <systemProperty>
-                            <name>org.mortbay.util.URI.charset</name>
-                            <value>${project.build.sourceEncoding}</value>
-                        </systemProperty>
-                        <systemProperty>
-                            <name>log4j.configuration</name>
-                            <value>file:///${basedir}/src/main/resources/property/log4j.properties</value>
-                        </systemProperty>
-                    </systemProperties>
                 </configuration>
             </plugin>
         </plugins>

@@ -80,7 +80,6 @@ public class ImgResourceCtrl extends BaseCtrl {
 		}
 		file.transferTo(saveFile);
 
-
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		//添加永久图片
 		String materialType = MediaType.Image.toString();
