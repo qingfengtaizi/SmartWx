@@ -86,15 +86,25 @@ JAVA开发框架：Spring MVC+Spring+Mybatis
 1. 访问系统。地址：[http://localhost:8080/](http://localhost:8080/)；用户名：smartwx，密码：smartwx
 1. 由于项目采用前后台分离，也为了将来nginx读写分离，项目需root根目录运行，如若不然可能会js，css加载不到的情况（自己可修改）
 
-## 相关连接
+ ## 相关连接
 官方网址：[https://smartwx.webcsn.com](https://smartwx.webcsn.com/)
 
 版主QQ：[794890569](http://wpa.qq.com/msgrd?v=3&uin=794890569&site=qq&menu=yes/)
 
 服务器支持：[http://webcsn.com](http://webcsn.com/)
 
+ ## 更新内容
+ ####2.0.1版本 已发布，此次修改内容如下：
+1.增加模板信息
+2.修改图文上传模式 支持 本地+nginx
+3.修改 退出问题
+4.修改 日志打印两边问题
+5修改j2cache 可以放弃二级缓存（redis）
+6.修改批量同步粉丝，昵称乱码
+7.修改群发图文 文本消息
+
 ---------------------------------
-## 2.0版新页面
+## 页面展示
 
 ![登陆页](https://gitee.com/uploads/images/2018/0416/121618_e13f2f9a_1256378.png "登陆页.png")
 ![首页](https://gitee.com/uploads/images/2018/0416/121734_4481f09b_1256378.png "首页.png")
