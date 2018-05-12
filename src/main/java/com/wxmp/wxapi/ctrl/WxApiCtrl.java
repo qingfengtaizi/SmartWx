@@ -6,6 +6,7 @@
  */
 package com.wxmp.wxapi.ctrl;
 
+import com.wxmp.core.common.BaseCtrl;
 import com.wxmp.core.exception.BusinessException;
 import com.wxmp.core.spring.JsonView;
 import com.wxmp.core.util.AjaxResult;
@@ -15,7 +16,6 @@ import com.wxmp.core.util.wx.SignUtil;
 import com.wxmp.wxapi.process.*;
 import com.wxmp.wxapi.service.MyService;
 import com.wxmp.wxapi.vo.*;
-import com.wxmp.core.common.BaseCtrl;
 import com.wxmp.wxcms.domain.AccountFans;
 import com.wxmp.wxcms.domain.MsgNews;
 import com.wxmp.wxcms.domain.MsgText;
@@ -61,6 +61,17 @@ public class WxApiCtrl extends BaseCtrl{
 	@RequestMapping(value = "/{account}/message",  method = RequestMethod.GET)
 	public @ResponseBody String doGet(HttpServletRequest request,@PathVariable String account) {
 		//如果是多账号，根据url中的account参数获取对应的MpAccount处理即可
+		
+		System.out.println("-------------------------------------------------------");
+		Set<String> keySet = request.getParameterMap().keySet();
+		Iterator<String> iterator = keySet.iterator();
+        while(iterator.hasNext()){  
+            //如果存在，则调用next实现迭代  
+            String key=iterator.next();    
+            log.info("key: " + key + " value: " + request.getParameterMap().get(key));
+        }
+		
+		
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		if(mpAccount != null){
 			String token = mpAccount.getToken();//获取token，进行验证；
@@ -89,6 +100,7 @@ public class WxApiCtrl extends BaseCtrl{
 			return myService.processMsg(msgRequest,mpAccount);
 		} catch (Exception e) {
 			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return "error";
 		}
 	}
@@ -311,36 +323,33 @@ public class WxApiCtrl extends BaseCtrl{
 	
 	/**
 	 * 发送模板消息
-	 * @param openid
 	 * @return
 	 */
 	@RequestMapping(value = "/sendTemplateMessage", method = RequestMethod.POST)
-	public void sendTemplateMessage(HttpServletRequest request,HttpServletResponse response,String openid){
+	@ResponseBody
+	public AjaxResult sendTemplateMessage(HttpServletRequest request, HttpServletResponse response, String openIds) {
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		TemplateMessage tplMsg = new TemplateMessage();
-		
-		tplMsg.setOpenid(openid);
-		//微信公众号号的template id，开发者自行处理参数
-		tplMsg.setTemplateId("Wyme6_kKUqv4iq7P4d2NVldw3YxZIql4sL2q8CUES_Y"); 
-		
-		tplMsg.setUrl("http://www.weixinpy.com");
-		Map<String, String> dataMap = new HashMap<String,String>();
-		dataMap.put("first", "微信官方微信模板消息测试");
-		dataMap.put("keyword1", "时间：" + DateUtil.changeDateTOStr(new Date()));
-		dataMap.put("keyword2", "关键字二：你好");
-		dataMap.put("remark", "备注：感谢您的来访");
-		tplMsg.setDataMap(dataMap);
-		
-		JSONObject result = WxApiClient.sendTemplateMessage(tplMsg, mpAccount);
-		try {
-			if(result.getInt("errcode") != 0){
-				response.getWriter().write("send failure");
-			}else{
-				response.getWriter().write("send success");
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+
+		String[] openIdArray = StringUtils.split(openIds, ",");
+		for (String openId : openIdArray) {
+			tplMsg.setOpenid(openId);
+			//微信公众号号的template id，开发者自行处理参数
+			tplMsg.setTemplateId("azx4q5sQjWUk1O3QY0MJSJkwePQmjR-T5rCyjyMUw8U");
+
+			tplMsg.setUrl("https://smartwx.webcsn.com");
+			Map<String, String> dataMap = new HashMap<String, String>();
+			dataMap.put("first", "多公众号管理开源平台");
+			dataMap.put("keyword1", "时间：" + DateUtil.changeDateTOStr(new Date()));
+			dataMap.put("keyword2", "码云平台地址：https://gitee.com/qingfengtaizi/wxmp");
+			dataMap.put("keyword3", "github平台地址：https://github.com/qingfengtaizi/wxmp-web");
+			dataMap.put("remark", "我们期待您的加入");
+			tplMsg.setDataMap(dataMap);
+
+			JSONObject result = WxApiClient.sendTemplateMessage(tplMsg, mpAccount);
 		}
+
+		return AjaxResult.success();
 	}
 	
 	/**
@@ -356,12 +365,6 @@ public class WxApiCtrl extends BaseCtrl{
 		String jsTicket = WxApiClient.getJSTicket(mpAccount);
 		WxSign sign = new WxSign(mpAccount.getAppid(),jsTicket,url);//sha1签名得到signature
 		
-		/*System.out.println("jsTicket = " + jsTicket);
-		System.out.println("appId = " + sign.getAppId());
-		System.out.println("nonceStr = "+sign.getNonceStr());
-		System.out.println("timestamp = " + sign.getTimestamp());
-		System.out.println("url = " + url);
-		System.out.println("signature = " + sign.getSignature());*/
 		
 		JsonView jv = new JsonView();
 		jv.setData(sign);
@@ -409,7 +412,6 @@ public class WxApiCtrl extends BaseCtrl{
 		
 		String jsonStr = requestBodyXml;
 		Map<String, Object> dataMap = new HashMap<String, Object>();
-		//System.out.println(jsonStr);
 	
 		Map map = new HashMap();
 		try {
@@ -425,14 +427,10 @@ public class WxApiCtrl extends BaseCtrl{
 			
 		    return_code="<![CDATA[SUCCESS]]>";
 		    return_msg="<![CDATA[OK]]>";		
-	//		System.out.println("-----------------<<<微信扫码支付 异步回调函数>>>---------------transaction_id:"+transaction_id);
-	//		System.out.println("-----------------<<<微信扫码支付 异步回调函数>>>---------------out_trade_no:"+out_trade_no);
-	//		System.out.println("-----------------<<<微信扫码支付 异步回调函数>>>---------------mch_id:"+mch_id);
 		}else{
 			 return_msg= (String) map.get("err_code_des");
 			 return_code="<![CDATA[FAIL]]>";
 			 return_msg="<![CDATA["+return_msg+"]]>";	
-	//	     System.out.println("-----------------<<<微信扫码支付 异步回调函数>>>---------------return_msg:"+return_msg);
 		}		  
 	
 		

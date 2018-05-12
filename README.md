@@ -2,45 +2,112 @@
 ### 包括服务器绑定、文本管理、图文管理、菜单管理、粉丝管理、群发消息等
 ---------------------------------
 [![QQ](https://img.shields.io/badge/chat-on%20QQ-ff69b4.svg?style=flat-square)](https://jq.qq.com/?_wv=1027&k=5bGtRX8)
-[![Apache-2.0](https://img.shields.io/hexpm/l/plug.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
+[![GPL-3.0](https://img.shields.io/cran/l/devtools.svg)](https://gitee.com/qingfengtaizi/wxmp/blob/master/LICENSE)
 [![使用IntelliJ IDEA开发维护](https://img.shields.io/badge/IntelliJ%20IDEA-提供支持-blue.svg)](https://www.jetbrains.com/idea/)
 
 ---------------------------------
-### 重要信息
 
-1. **为保证以后项目扩展，项目正式更名为SmartWx**
+##  技术框架
 
-1. **项目2.0版本已发版，演示地址如下：[【http://smartwx.webcsn.com】](http://smartwx.webcsn.com)**
+开发语言：JAVA
 
-1. **本次2.0版本，个人学习免费。商业请先授权，具体请参考项目中的授权协议。另，1.0版本完全免费，欢迎大牛 拉取分支**
+数据库：MYSQL
 
+JAVA开发框架：Spring MVC+Spring+Mybatis
 
---------------------------------
-### 其他说明
-1. 如有新功能需求，发现BUG，或者由于微信官方接口调整导致的代码问题，可以直接在[【Issues】](https://gitee.com/qingfengtaizi/wxmp/issues)页提出issue，便于讨论追踪问题；
-1. **捐助渠道已开通，如有意向请直接前往[【托管于码云的项目首页】](https://gitee.com/qingfengtaizi/wxmp)，在评论区上方可以找到“捐助”按钮。非常感谢各位捐助的同学！**
-1. 本项目要求的最低JDK版本是1.7，其他更早的JDK版本则需要自己改造实现。
+缓存框架：j2cache
+
+前端开发框架：Layui+JQuery+html
+
+前台模板引擎：art-template
+
+## 简介
+1. QQ群：[![加入QQ群](https://img.shields.io/badge/QQ群-671585861-blue.svg)](http://shang.qq.com/wpa/qunwpa?idkey=b7f4442a2a6b369a55aaa549bc0fbf14c478543d6a9c8f74eafca0378fcfcf40) 或 [![加入QQ群](https://img.shields.io/badge/QQ群-671585861-blue.svg)](https://jq.qq.com/?_wv=1027&k=5bGtRX8)，推荐点击按钮入群，当然如果无法成功操作，请自行搜索群号`671585861`进行添加
+1. 官方网址：[http://smartwx.webcsn.com](http://smartwx.webcsn.com/)
 1. 本项目在以下代码托管网站同步更新:
 * 码云：https://gitee.com/qingfengtaizi/wxmp
 * github：https://github.com/qingfengtaizi/wxmp-web
 
----------------------------------
-### 技术交流方式
-1. QQ群： [![加入QQ群](https://img.shields.io/badge/QQ群-671585861-blue.svg)](http://shang.qq.com/wpa/qunwpa?idkey=b7f4442a2a6b369a55aaa549bc0fbf14c478543d6a9c8f74eafca0378fcfcf40) 或 [![加入QQ群](https://img.shields.io/badge/QQ群-671585861-blue.svg)](https://jq.qq.com/?_wv=1027&k=5bGtRX8)，推荐点击按钮入群，当然如果无法成功操作，请自行搜索群号`671585861`进行添加
-1. 其他的帮助方式以及论坛我们也会逐步完善
+
+## 应用场景
+- SmartWx是一款基于JAVA企业级平台研发的微信公众号管理系统， 依托企业级JAVA的高效、安全、稳定等优势，开创国内JAVA版开源微信公众号管理系统先河。
+- SmartWx采用最流行的Spring语言，来实现多公众号的管理。
+- 如果您要需要搭建一个微信公众号管理系统,那么您可以用SmartWx
+- 如果您厌烦了微信公众号管理后台枯燥的页面，那么您可以用SmartWx
+- 如果您手中有很多公众号，那么您可以用SmartWx
+
+## 功能模块
+ #### 账号信息
+1. 绑定公众号信息
+
+ #### 文本信息
+1. 新建消息
+2. 消息发送
+
+ #### 模板消息
+1. 由于模板消息需要自己创建模板，系统中只是演示功能，大家可以自行更改
+
+ #### 图文管理
+1. 多图文
+2. 单图文
+
+ #### 菜单管理
+1. 支持几乎所有的微信菜单类型
+2. 可视化管理
+3. 保存&同步
+
+ #### 粉丝管理
+1. 批量同步粉丝
+2. 单个粉丝同步
+3. 发送文本消息和图文消息
+
+ #### 多账号管理
+1. 添加公众号
+2. 选择公众号
+
+ ## 环境要求
+
+- JDK7或更高版本
+- Tomcat7.0或更高版本
+- MySQL5.1或更高版本
+
+ ## 部署说明
+
+1. 创建数据库。如使用MySQL，字符集选择为`utf8`。
+1. 执行数据库脚本。数据库脚本在`/doc`目录下。
+1. 在eclipse中导入maven项目。点击eclipse菜单`File` - `Import`，选择`Maven` - `Existing Maven Projects`。
+1. 设置项目编码为utf-8，选择jdk1.7版本或以上，不要选择jre。
+1. 修改数据库连接。打开`/src/main/resources/property/jdbc.properties`文件，根据实际情况修改`jdbc.url`、`jdbc.username`、`jdbc.password`的值
+1. 上传图片设置。upload.properties 如属性文件所描述，如图片想放到项目中，res.upload.url注释即可
+1. j2cache缓存设置。j2cache.properties 如果不需要启用二级缓存，属性文件中 13行j2cache.broadcast设置为jgroups，31行j2cache.L2.provider_class设置为none。如需启用redis，反之即可
+1. 七牛云配置。app.properties 项目中暂时未用到，可废弃
+1. 编译项目。在eclipse中，右键点击项目名，选择`Run as` - `Maven build...`，`Goals`填入`clean package`，然后点击`Run`，第一次运行需要下载jar包，请耐心等待。
+1. 部署项目。将项目部署到Tomcat7或以上版本，启动Tomcat。也可使用maven tomcat7插件运行，jetty插件运行暂时有问题
+1. 访问系统。地址：[http://localhost:8080/](http://localhost:8080/)；用户名：smartwx，密码：smartwx
+1. 由于项目采用前后台分离，也为了将来nginx读写分离，项目需root根目录运行，如若不然可能会js，css加载不到的情况（自己可修改）
+
+ ## 相关连接
+官方网址：[https://smartwx.webcsn.com](https://smartwx.webcsn.com/)
+
+版主QQ：[794890569](http://wpa.qq.com/msgrd?v=3&uin=794890569&site=qq&menu=yes/)
+
+服务器支持：[http://webcsn.com](http://webcsn.com/)
+
+ ## 更新内容
+ #### 2.0.1版本 已发布，此次修改内容如下：
+1. 增加模板信息
+1. 修改图文上传模式 支持 本地+nginx
+1. 修改 退出问题
+1. 修改 日志打印两边问题
+1. 修改j2cache 可以放弃二级缓存（redis）
+1. 修改批量同步粉丝，昵称乱码
+1. 修改群发图文 文本消息
 
 ---------------------------------
-### 版本说明
-1. 本项目定为大约每两个月发布一次正式版，版本号格式为X.X.0（如2.1.0，2.2.0等），遇到重大问题需修复会及时提交新版本，欢迎大家随时提交Pull Request；
-1. BUG修复和新特性一般会先发布成小版本作为临时测试版本（如2.4.5.BETA，2.4.6.BETA等，即尾号不为0，并添加BETA字样，以区别于正式版）；
-分别查看所有最新的版本。
- 
----------------------------------
-### 2.0版新页面
+## 页面展示
 
 ![登陆页](https://gitee.com/uploads/images/2018/0416/121618_e13f2f9a_1256378.png "登陆页.png")
 ![首页](https://gitee.com/uploads/images/2018/0416/121734_4481f09b_1256378.png "首页.png")
-![运营数据](https://gitee.com/uploads/images/2018/0416/121758_c768271b_1256378.png "运营数据.png")
 ![账号信息](https://gitee.com/uploads/images/2018/0416/121832_438ad9c0_1256378.png "账号信息.png")
 ![菜单](https://gitee.com/uploads/images/2018/0416/121900_097ad23f_1256378.png "菜单.png")
 ![单图文](https://gitee.com/uploads/images/2018/0416/121924_d1f66f51_1256378.png "单图文.png")

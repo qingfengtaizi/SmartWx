@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <!--  the code template created by wxmp-generator @author hermit @version 2.0 @date 2018-04-17 10:43:21 -->
 <mapper namespace="com.wxmp.wxcms.mapper.MsgNewsDao">
 	
@@ -106,7 +106,7 @@
 	</update>
 	
 	<update id="update" parameterType="com.wxmp.wxcms.domain.MsgNews" flushCache="true">
-		UPDATE wxcms_msg_news SET title = #{title},author = #{author},brief = #{brief},description = #{description},pic_path = #{picpath},url = #{url},from_url = #{fromurl},show_pic = #{showpic} WHERE id = #{id}
+		UPDATE wxcms_msg_news SET title = #{title},author = #{author},brief = #{brief},description = #{description},pic_path = #{picpath},url = #{url},thumb_media_id = #{thumbMediaId},from_url = #{fromurl},show_pic = #{showpic} WHERE id = #{id}
 	</update>
 
 	<delete id="delete" parameterType="com.wxmp.wxcms.domain.MsgNews" >

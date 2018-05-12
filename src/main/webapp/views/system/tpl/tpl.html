@@ -1,0 +1,136 @@
+<div class="fsh-rightPanel">
+    <div class="layui-anim layui-anim-upbit">
+        <div class="layui-form-item wx-search" id="list_form">
+            <div class="layui-inline">
+                <input type="text" name="inputcode" placeholder="请输入关键字" autocomplete="off" class="layui-input">
+            </div>
+            <button class="layui-btn btn-primary" id="search">搜索</button>
+            <div class="layui-inline right">
+                <button class="layui-btn btn-primary" id="msg_add">新建消息</button>
+                <button class="layui-btn btn-danger" id="msg_del">批量删除</button>
+            </div>
+        </div>
+        <table id="list_table" class="layui-hide" lay-filter="mainList"></table>
+    </div>
+</div>
+
+<script>
+    layui.use(['layer', 'table'], function () {
+        var layer = layui.layer;
+        var table = layui.table;
+
+
+        var tableObj = table.render({
+            id: 'list_table',
+            elem: '#list_table',
+            url: '/tplmsgtext/list',
+            align: "center",
+            cols: [[ //表头
+                {type: 'checkbox'},
+                {type: 'numbers', title: '序号',width:50},
+                {field: 'tplId', title: '模板ID', width: 300, align: 'center',},
+                {field: 'title', title: '模板标题', width: 100, align: 'center',},
+                {field: 'wxTpl', title: '微信模板', align: 'center',},
+                {field: 'content', title: '模板内容', align: 'center',},
+                {
+                    field: 'lock', title: '操作', width: 150, align: 'center', templet: function (d) {
+                    return '<a class="font-primary2" lay-event="edit" href="javascript:;">修改</a>' +
+                        '<a class="font-primary" lay-event="mass" href="javascript:;">发送</a>';
+                }, unresize: true, align: 'center'
+                }
+            ]],
+        });
+
+        $("#search").click(function () {
+            reloadTable(tableObj);
+        });
+
+        // 添加
+        $("#msg_add").click(function () {
+            showDialog({
+                title: '添加'
+                , template: 'add'
+                , saveUrl: '/tplmsgtext/updateText'
+                , tableObj: tableObj
+            })
+        });
+
+        // 删除
+        $("#msg_del").click(function () {
+            var data = table.checkStatus('list_table').data;//已选中数据
+            if (data.length == 0) {
+                layer.msg("至少选择一条");
+                return;
+            }
+            var arr = [];     //选中数组
+            for (var i = 0; i < data.length; i++) {
+                arr.push(data[i].id)
+            }
+            showConfirm("确认删除？", function () {
+                $.ajax({
+                    url: '/tplmsgtext/deleteById',
+                    data: {"baseId": arr.join(",")},
+                    success: function (result) {
+                        if (result.success) {
+                            layer.msg("删除成功");
+                            reloadTable(tableObj);
+                        } else {
+                            layer.msg("删除失败");
+                        }
+                    }
+                })
+            });
+        });
+
+
+        //表格内部操作按钮监听
+        table.on('tool(mainList)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+		
+            if (layEvent === 'edit') {
+                showDialog({
+                    title: '修改',
+                    template: 'edit',
+                    saveUrl: '/tplmsgtext/updateText',
+                    tableObj: tableObj,
+                    htmlData: data,
+                })
+            } else if (layEvent === 'mass') {
+                showDialog({
+                    title: '发送'
+                    , template: 'mass'
+                    , height: 600
+                    , yes:function (index) {
+                        var checkStatus = table.checkStatus('fans'); //test即为基础参数id对应的值
+                        var cdata=checkStatus.data;
+                        var fans=[];
+                        for(var i=0;i<cdata.length;i++){
+                            fans.push(cdata[i].openId);
+                        }
+                        $.ajax({
+                            url: '/wxapi/sendTemplateMessage',
+                            data: {
+                            	tplId:data.tplId,
+                            	content:data.content,
+                                openIds: fans.join(",")
+                            },
+                            success: function (result) {
+                                if ( result.success == true) {
+                                    layer.msg("群发成功");
+                                    reloadTable(tableObj);
+                                    layer.close(index);
+                                } else {
+                                    layer.msg("群发失败");
+                                }
+                            }
+                        })
+                    }
+                });
+            }
+        });
+
+
+
+    });
+</script>

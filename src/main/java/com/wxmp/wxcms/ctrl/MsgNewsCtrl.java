@@ -144,8 +144,6 @@ public class MsgNewsCtrl  extends BaseCtrl {
 			Matcher m = p.matcher(description);
 
 			while (m.find()) {
-				// System.out.println(m.group()+"-------------↓↓↓↓↓↓");
-				System.out.println(m.group(1));
 				String imgSrc = m.group(1);
 				subOldFilePath +=  imgSrc + ",";
 				String[] split = imgSrc.split("/");
@@ -299,8 +297,6 @@ public class MsgNewsCtrl  extends BaseCtrl {
 				Matcher m = p.matcher(description);
 
 				while (m.find()) {
-					// System.out.println(m.group()+"-------------↓↓↓↓↓↓");
-					System.out.println(m.group(1));
 					String imgSrc = m.group(1);
 					subOldFilePath +=  imgSrc + ",";
 					String[] split = imgSrc.split("/");
@@ -548,8 +544,6 @@ public class MsgNewsCtrl  extends BaseCtrl {
 			Matcher m = p.matcher(description);
 
 			while (m.find()) {
-				// System.out.println(m.group()+"-------------↓↓↓↓↓↓");
-				System.out.println(m.group(1));
 				String imgSrc = m.group(1);
 				subOldFilePath +=  imgSrc + ",";
 				String[] split = imgSrc.split("/");
@@ -632,6 +626,14 @@ public class MsgNewsCtrl  extends BaseCtrl {
 			article.setContent(description2);
 			// 更新成功
 			this.articleService.update(article);
+			//修改图文news表数据
+			MsgNews msgNews = this.entityService.getById(String.valueOf(article.getNewsId()));
+			List<MsgArticle> newArticles = msgNews.getArticles();
+			if(newArticles.get(0).getArId()==article.getArId()){
+				//这里只修改title 为了模糊查询的时候可以查询到数据
+				msgNews.setTitle(article.getTitle());
+				this.entityService.updateMediaId(msgNews);
+			}
 			return AjaxResult.updateSuccess();
 		} else {
 			return AjaxResult.failure();

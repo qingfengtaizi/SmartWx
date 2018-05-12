@@ -152,7 +152,6 @@ public class RequestHandler {
 
 		// 去掉最后一个&
 		String packageValue = sb.append("sign=" + sign).toString();
-//		System.out.println("UrlEncode后 packageValue=" + packageValue);
 		return packageValue;
 	}
 
