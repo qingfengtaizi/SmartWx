@@ -32,26 +32,34 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 		String requestUrl = request.getRequestURI().replace(request.getContextPath(), "");
 		if (null != allowUrls && allowUrls.length >= 1)
 			for (String url : allowUrls) {
-				if (requestUrl.contains(".css") || requestUrl.contains(".js") || requestUrl.contains(".png") || requestUrl.contains(".jpg")||requestUrl.contains("/message") || requestUrl.equals(url)) {
+				if (requestUrl.contains(".svg") || requestUrl.contains(".ttf") || requestUrl.contains(".woff") || requestUrl.contains(".eot") || requestUrl.contains(".css") || requestUrl.contains(".js") || requestUrl.contains(".png") || requestUrl.contains(".jpg") || requestUrl.contains("/message") || requestUrl.equals(url)) {
 					return true;
 				}
 			}
 		if (SessionUtil.getUser() != null) {
 			SessionUtil.session.setMaxInactiveInterval(60 * 60 * 30);
 		}
-		//验证登陆超时问题 auth = null，默认验证
-		String baseUri = request.getContextPath();
-		SysUser user = SessionUtil.getUser();
-		
-	
-		if(user  == null){
-			response.setStatus(response.SC_GATEWAY_TIMEOUT);
-			response.sendRedirect(baseUri+"/");
+		if(null==SessionUtil.getUser()){
+			if (isAjaxRequest(request)) {
+				// 赋值错误状态码
+				response.setStatus(300);
+				// 前端弹出登录框
+				response.setHeader("sessionState", "notLogin");
+			} else {
+				// 跳转到登录页
+				response.sendRedirect("/views/login.html");
+			}
 			return false;
 		}
-
 		return super.preHandle(request, response, handler);
 	}
 
-	
+	public static boolean isAjaxRequest(HttpServletRequest request) {
+		boolean isAjax = request.getHeader("x-requested-with") != null && request.getHeader("x-requested-with").equalsIgnoreCase("XMLHttpRequest");
+		return isAjax;
+	}
+
+//	public static boolean isReferer(HttpServletRequest request) {
+//		return Util.isEmpty(request.getHeader("Referer")) && request.getMethod().equals("GET");
+//	}
 }
