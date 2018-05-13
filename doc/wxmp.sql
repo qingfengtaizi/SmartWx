@@ -2,7 +2,8 @@
 SQLyog Ultimate v11.24 (32 bit)
 MySQL - 5.7.21 : Database - wxmp
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 
@@ -304,8 +305,9 @@ DROP TABLE IF EXISTS `wxcms_tpl_msg_text`;
 CREATE TABLE `wxcms_tpl_msg_text` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tpl_id` varchar(50) DEFAULT NULL,
-  `title` varchar(10) DEFAULT NULL,
+  `title` varchar(200) DEFAULT NULL,
   `content` longtext,
+  `wx_tpl` varchar(200) DEFAULT NULL,
   `base_id` int(11) NOT NULL,
   `account` varchar(100) DEFAULT NULL,
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
