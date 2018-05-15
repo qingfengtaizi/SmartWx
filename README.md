@@ -81,13 +81,13 @@ JAVA开发框架：Spring MVC+Spring+Mybatis
 1. 上传图片设置。upload.properties 如属性文件所描述，如图片想放到项目中，res.upload.url注释即可
 1. 缓存设置。为兼容jdk1.7，此版本中暂时废弃j2cache，默认仅使用ehcache缓存，如想使用，修改J2CacheUtil,用CacheJ2Utils替换CacheUtils,修改依赖文件
 1. 七牛云配置。app.properties 项目中暂时未用到，可废弃
-1. 项目中为简化代码，用到了***lomok***插件，大家可自行安装。
-1. 由于项目采用前后台分离，也为了将来配置读写分离，项目需***root***根目录运行，如若不然可能会js，css加载不到的情况（自己可修改）
+1. 项目中为简化代码，用到了 ***lombok*** 插件，大家可自行安装。
+1. 由于项目采用前后台分离，也为了将来配置读写分离，项目需 ***root*** 根目录运行，如若不然可能会js，css加载不到的情况（自己可修改）
 1. 编译项目。在eclipse中，右键点击项目名，选择`Run as` - `Maven build...`，`Goals`填入`clean package`，然后点击`Run`，第一次运行需要下载jar包，请耐心等待
 1. 部署项目。将项目部署到Tomcat7或以上版本，启动Tomcat。也可使用maven tomcat7插件运行，jetty插件运行暂时有问题
 1. 访问系统。地址：[http://localhost:8080/](http://localhost:8080/)；用户名：smartwx，密码：smartwx
 1. 由于eclipse识别问题，部分xml文件和html页面会报错，无需关心，运行即可。
-1. 添加公众号页面，url和token两项自动生成，***无需手动填写***。将 ***开通80端口的公网ip或域名（切记全路径）+url*** 和***token*** 这两项填入到微信后台即可
+1. 添加公众号页面，url和token两项自动生成，***无需手动填写***。将 ***开通80端口的公网ip或域名（切记全路径）+url*** 和 ***token*** 这两项填入到微信后台即可
 1. 添加完公众号，大家先尝试下 同步粉丝功能，若成功，则项目配置完成，若无法获取accesstoken，切记检查 微信后台 ***获取accesstoken白名单设置***
 
  ## 相关连接
