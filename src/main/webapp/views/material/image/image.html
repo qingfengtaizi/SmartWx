@@ -1,0 +1,28 @@
+<div class="fsh-rightPanel">
+    <div class="layui-anim layui-anim-upbit">
+        <div class="layui-form-item wx-search" id="list_form">
+            <div class="layui-inline right">
+                <button class="layui-btn btn-primary" id="video_uploader">新增</button>
+            </div>
+        </div>
+        <div id="image_wrap">
+            <ul class="wxmp-list-image">
+                <li>
+                    <img src="/images/common/portrait.jpg" alt="" class="img-main">
+                    <div class="layui-btn-group">
+                        <button class="layui-btn" event="edit"><i class="iconfont icon-delete"></i></button>
+                        <button class="layui-btn" event="del"><i class="iconfont icon-delete"></i></button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use(['layer', 'table'], function () {
+        var layer = layui.layer;
+        var table = layui.table;
+
+    });
+</script>

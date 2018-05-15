@@ -88,6 +88,14 @@
         var upload = layui.upload;
         var form = layui.form;
         form.render();
+
+        // 设置富文本上传接口
+        layedit.set({
+            uploadImage: {
+                url: '/managerImg/uploadFile',
+                type: 'post'
+            }
+        });
         var layeditIndex = layedit.build('content');
 
         //开启关闭留言
@@ -106,8 +114,8 @@
         });
         //取消
         $("#add_canl").click(function () {
-//         	location.href = "/views/index.html#/system/document/document";
-        	jump("/system/document/document[type=single]");
+//         	location.href = "/views/index.html#/material/document/document";
+        	jump("/material/document/document[type=single]");
         });
         //提交
         form.on('submit(addsingle_form)', function (d) {
@@ -141,7 +149,7 @@
                     if (result.success) {
                         layer.msg("保存成功");
                         setTimeout(function () {
-                            jump("/system/document/document[type=single]");
+                            jump("/material/document/document[type=single]");
                         }, 1000);
                     }
                 },

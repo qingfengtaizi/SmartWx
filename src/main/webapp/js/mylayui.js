@@ -1,15 +1,16 @@
-
 /**
  * 全局变量
  */
-var GLOBAL = {};
+var GLOBAL = {
+    choosed: []      //用于弹出层多选
+};
+var DEFAULT_FORMID = "list_form"; //默认表单id
 
 /**
  * 设置ajax全局默认参数
  *
  */
 jQuery.ajaxSetup({
-    //global : false,
     async: true,//异步加载
     type: "post",
     dataType: "json",
@@ -23,29 +24,25 @@ jQuery.ajaxSetup({
         var sessionState = XMLHttpRequest.getResponseHeader("sessionState"); //通过XMLHttpRequest取得响应头,sessionState
         //判断是否登录
         if (sessionState == 'notLogin') {
-            // layer.confirm('请先登录系统', {icon: 3, title: '提示'}, function () {
-            //     location.href("/common/index.html");
-            // })
             layer.msg('请先登录系统', {shift: -1}, function () {
                 location.href = "/views/login.html";
             });
         }
-        // if (sessionState == 'notAuth') {
-        //     // layer.confirm('请先登录系统', {icon: 3, title: '提示'}, function () {
-        //     //     location.href("/common/index.html");
-        //     // })
-        //     layer.msg('对不起您没有相应权限', {shift: -1}, function () {
-        //         location.href = "/common/index";
-        //     });
-        // }
     }
 });
 
-//替换template模板语法定界符
+//替换template模板语法定界符避免layui模板冲突
 template.defaults.rules[1].test = /<%(#?)((?:==|=#|[=-])?)[ \t]*([\w\W]*?)[ \t]*(-?)%>/;
 
-function initPage(page, callBack,container) {
-    !container && (container=$("#pagination"));
+/**
+ * pagination方法封装
+ *
+ * @param page 分页对象
+ * @param callBack 回调函数
+ * @param containe 容器(可选)
+ */
+function initPage(page, callBack, container) {
+    !container && (container = $("#pagination"));
     if (page.total != 0) {
         // 创建分页
         container.pagination(page.total, {
@@ -70,11 +67,6 @@ function initPage(page, callBack,container) {
     return page;
 }
 
-
-
-
-
-
 /******************************************** layer相关 开始 ***********************************************/
 
 /**
@@ -89,9 +81,7 @@ function showAlert(content, icon) {
     if (!icon) {
         icon = 0;
     }
-
-    var index = layer.alert(content, {icon: icon});
-    return index;
+    return layer.alert(content, {icon: icon});
 }
 
 /**
@@ -106,29 +96,12 @@ function showTopMsg(content, icon) {
     }
     var index = layer.msg(content, {
         offset: 0,
-        shift: randomInt,
+        shift: Math.floor(Math.random() * 6),
         icon: icon
     });
-
     return index;
 }
 
-/**
- * 提示信息
- * @param content
-
- */
-function showMsg(content) {
-    layer.msg(content);
-}
-
-/**
- * 生成随机数
- * @returns {number}
- */
-function randomInt() {
-    return Math.floor(Math.random() * 6);
-}
 
 /**
  * 确认对话框
@@ -141,7 +114,7 @@ function randomInt() {
  */
 function showConfirm(content, okCallBack, icon, cancelCallBack) {
     var index;
-    isDefined(icon) || (icon = 3);
+    util.isDefined(icon) || (icon = 3);
     if (cancelCallBack) {
         index = layer.confirm(content, {icon: icon, title: '提示'}, okCallBack, cancelCallBack);
     } else {
@@ -161,7 +134,6 @@ function showConfirm(content, okCallBack, icon, cancelCallBack) {
  *          saveUrl:保存/修改 接口
  *
  *          tableObj:table对象
- *          treeObj:TODO，暂时不用，之后再拿ztree先封装一个
  *
  *          beforeSubmit:表单提交前执行的方法
  *          submited：表单提交前执行的方法
@@ -178,7 +150,7 @@ function showDialog(params) {
     if (!params.height) {
         params.height = 500;// 默认高度
     }
-    if (!isDefined(params.btn)) {
+    if (!util.isDefined(params.btn)) {
         params.btn = ['确认', '取消'];// 默认按钮名称
     }
 
@@ -197,38 +169,38 @@ function showDialog(params) {
                     , content: template.render(html, params.htmlData)
                     , btn: params.btn
                     , yes: function (index, layero) {
-                        if (isFunction(params.yes)) {
+                        if (util.isFunction(params.yes)) {
                             //回调函数
                             params.yes(index, layero);
                         } else {
                             if (params.saveUrl) {
                                 //注：先注册监听事件：监听提交，验证通过才会执行此方法
                                 layui.form.on('submit(*)', function (data) {
-                                    var beforeSubmit = true;
-                                    if (isFunction(params.beforeSubmit)) {
-                                        beforeSubmit = params.beforeSubmit();
+                                    var field = data.field || {};
+                                    if (util.isFunction(params.beforeSubmit)) {
+                                        var res = params.beforeSubmit(field);
+                                        if (res == false) {
+                                            return false;
+                                        }
+                                        res != true && (field = res);
                                     }
-                                    if (beforeSubmit) {
-                                        //新增
-                                        $.ajax({
-                                            url: params.saveUrl,
-                                            data: data.field,
-                                            async: false,
-                                            success: function (result) {
-                                                if (result.success) {
-                                                    close(index);
-                                                    showMsg(result.msg);
-                                                    //刷新列表
-                                                    params.tableObj && reloadTable(params.tableObj);
-                                                    //执行完成回调
-                                                    params.submited && isFunction(params.submited) && params.submited();
-                                                } else {
-                                                    showAlert(result.msg);
-                                                }
+                                    $.ajax({
+                                        url: params.saveUrl,
+                                        data: field,
+                                        async: false,
+                                        success: function (result) {
+                                            if (result.success) {
+                                                layer.close(index);
+                                                layer.msg(result.msg);
+                                                //刷新列表
+                                                params.tableObj && reloadTable(params.tableObj);
+                                                //执行完成回调
+                                                params.submited && util.isFunction(params.submited) && params.submited();
+                                            } else {
+                                                showAlert(result.msg);
                                             }
-                                        });
-                                    }
-
+                                        }
+                                    });
                                     return false;
                                 });
 
@@ -238,30 +210,30 @@ function showDialog(params) {
                         }
                     },
                     btn2: function (index, layero) {
-                        if (isFunction(params.btn2)) {
+                        if (util.isFunction(params.btn2)) {
                             //回调函数
                             params.btn2(index, layero);
                         } else {
-                            close(index);
+                            layer.close(index);
                         }
                     },
                     cancel: function (index, layero) {
-                        if (isFunction(params.cancel)) {
+                        if (util.isFunction(params.cancel)) {
                             //回调函数
                             params.cancel(index, layero);
                         } else {
-                            close(index);
+                            layer.close(index);
                         }
                     },
                     success: function (layero, index) {
-                        if (isFunction(params.success)) {
+                        if (util.isFunction(params.success)) {
                             //回调函数
                             params.success(index, layero);
                         }
                         layui.form && layui.form.render();
                     },
                     end: function (layero, index) {
-                        if (isFunction(params.end)) {
+                        if (util.isFunction(params.end)) {
                             //回调函数
                             params.end(index, layero);
                         }
@@ -303,15 +275,6 @@ function loading(icon) {
     return layer.load(icon);
 }
 
-/**
- * 关闭弹窗
- *
- * @param index 弹窗对象
-
- */
-function close(index) {
-    layer.close(index);
-}
 
 /******************************************** layer相关 结束 ***********************************************/
 /**
@@ -327,6 +290,10 @@ function close(index) {
 
  */
 function renderHtml(params) {
+    var $target = $('#' + params.targetId);
+    if ($target.length == 0) {
+        console && console.error("#" + params.targetId + "不存在！");
+    }
     //获取模板
     $.ajax({
         url: getTemplatePath(params.template),
@@ -335,7 +302,7 @@ function renderHtml(params) {
         // async: false,//异步加载
         success: function (html) {
             //渲染模板
-            $('#' + params.targetId).html(template.render(html, params.htmlData));
+            $target.html(template.render(html, params.htmlData));
             if (params.callBack) {
                 params.callBack();
             }
@@ -350,110 +317,13 @@ function renderHtml(params) {
  * @returns {string}
  */
 function getTemplatePath(template) {
-    if (template.indexOf("/") !=0) {
-        var path=location.hash.substring(1,location.hash.lastIndexOf("/")+1);
-        return "/views"+path+"template/" + template+".html";
+    if (template.indexOf("/") != 0) {
+        var path = location.hash.substring(1, location.hash.lastIndexOf("/") + 1);
+        return "/views" + path + "template/" + template + ".html";
     } else {
         return template;
     }
 }
-
-/**
- * 判断对象是否有定义
- *
- * @param template
- * @returns {boolean}
-
- */
-function isDefined(obj) {
-    return typeof(obj) != "undefined";
-}
-
-/**
- * 判断对象是否是个方法
- *
- * @param obj
- * @returns {boolean}
-
- */
-function isFunction(obj) {
-    if (obj && typeof(obj) == "function") {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-/**
- * Json对象转换为String字符串
- *
- * @param jsonObj Json对象
-
- */
-function json2String(jsonObj) {
-    return JSON.stringify(jsonObj);
-}
-
-/**
- * String字符串转换为Json对象
- *
- * @param str 字符串
-
- */
-function string2Json(str) {
-    return JSON.parse(str);
-}
-
-/**
- * 删除数组中指定值
- *
- * @param arr
- * @param val
-
- */
-function removeArrayValue(arr, val) {
-    for (var i = 0; i < arr.length; i++) {
-        if (arr[i] == val) {
-            arr.splice(i, 1);
-            break
-        }
-    }
-}
-
-/**
- * 获取所有表单域的键值对
- *
- * @param formId
-
- */
-function getFormData(formId) {
-    var field = [];
-    var fieldElem = $('#' + formId).find('input,select,textarea');
-
-    layui.each(fieldElem, function (_, item) {
-        if (!item.name) return;
-        if (/^checkbox|radio$/.test(item.type) && !item.checked) return;
-        field[item.name] = item.value;
-    });
-
-    return field;
-}
-
-
-/**
- * 列表页面查询数据
- *
- * @param tableObj render()返回table对象
- * @param formId 表单id，默认list_form
- * @param searchId 查询按钮id，默认list_search
-
- */
-function searchData(tableObj, formId, searchId) {
-    $('#' + getListSearchId(searchId)).on('click', function () {
-        reloadTable(tableObj, formId);
-    });
-}
-
 
 /**
  * 表格重载
@@ -463,14 +333,14 @@ function searchData(tableObj, formId, searchId) {
 
  */
 function reloadTable(tableObj, form) {
-    if(typeof form=="undefined" || typeof form=="string"){
+    if (typeof form == "undefined" || typeof form == "string") {
         tableObj.reload({
             page: {
                 curr: 1
             }
-            , where: getFormData(getListFormId(form))
+            , where: util.getFormData(form ? form : DEFAULT_FORMID)
         });
-    }else if(typeof form=="object"){                 //传入参数
+    } else if (typeof form == "object") {                 //传入参数
         tableObj.reload({
             page: {
                 curr: form.page || 1
@@ -478,214 +348,6 @@ function reloadTable(tableObj, form) {
             , where: form
         });
     }
-}
-
-/**
- * 列表页面默认表单id
- * @param id
-
- */
-function getListFormId(id) {
-    if (id) {
-        return id;
-    } else {
-        return 'list_form';
-    }
-}
-
-/**
- * 列表页面默认查询按钮id
- * @param id
-
- */
-function getListSearchId(id) {
-    if (id) {
-        return id;
-    } else {
-        return 'list_search';
-    }
-}
-
-
-//JS操作cookies方法!
-//读取cookies
-function getCookie(name) {
-    var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
-
-    if (arr = document.cookie.match(reg))
-
-        return (decodeURI(arr[2]));
-    else
-        return null;
-}
-
-//删除cookies
-function delCookie(name) {
-    var exp = new Date();
-    exp.setTime(exp.getTime() - 1);
-    var cval = getCookie(name);
-    if (cval != null)
-        document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
-}
-
-
-function pushArray2(arr,v) {
-    if(indexOfArray(arr,v)==-1){
-        arr.push(v);
-    }
-    return arr;
-}
-function indexOfArray(arr,v) {
-    if(!Array.isArray(arr)){
-        return -1;
-    }
-    for(var i=0;i<arr.length;i++){
-        if(arr[i]==v){
-            return i
-        }
-    }
-    return -1;
-}
-
-function removeFromArray(arr,v) {
-    var index = indexOfArray( arr, v);
-    if (index > -1) {
-        arr.splice(index, 1);
-    }
-    return arr;
-}
-
-/**
- * 执行js文件,不产生script标签
- *
- * @param src           string或array
- * @param callback      回调函数
- * @author zhaoqf
- */
-function executeJs(src,callback) {
-    if(typeof src=="string"){
-        src=[src];
-    }
-    if(src.length>0){
-        var url=src.shift();
-        $.ajax({
-            type: 'get',
-            url: url,
-            dataType: 'script',
-            success: function () {
-                if(src.length=0){
-                    callback && callback();
-                }else{
-                    executeJs(src,callback);
-                }
-            }
-        });
-    }
-}
-
-
-/**
- * 加载js文件,
- * 头部添加script标签,已存在不会重新加载,顺序加载
- *
- * @param src           string或array
- * @param callback      回调函数
- * @author zhaoqf
- */
-function loadJs(src,callback) {
-    if(typeof src=="string"){
-        src=[src];
-    }
-
-    var jsarr=[],scriptArr=document.getElementsByName("script");
-    for(var i=0;i<scriptArr.length;i++){
-        jsarr.push(scriptArr[i].src);
-    }
-    function load() {
-        if(src.length>0){
-            var link=src.shift();
-            if(ifinArray(jsarr,link)){
-                return load();
-            }
-            var head = document.getElementsByTagName('head')[0];
-            var script = document.createElement('script');
-            script.type = 'text/javascript';
-            script.src = link;
-            script.onload = load;
-            head.appendChild(script);
-        }else{
-            typeof callback=="function" && callback();
-        }
-    }
-    load();
-}
-
-/**
- * 加载css文件,
- * 头部添加link标签,已存在不会重新加载,顺序加载
- *
- * @param src           string或array
- * @param callback      回调函数
- * @author zhaoqf
- */
-function loadCss(href,callback) {
-    if(typeof href=="string"){
-        href=[href];
-    }
-    var cssarr=[],linkArr=document.getElementsByName("link");
-    for(var i=0;i<linkArr.length;i++){
-        cssarr.push(linkArr[i].href);
-    }
-    function load() {
-        if(href.length>0){
-            var url=href.shift();
-            if(ifinArray(cssarr,url)){
-                return load();
-            }
-            var head = document.getElementsByTagName('head')[0];
-            var link = document.createElement('link');
-            link.rel = "stylesheet";
-            link.type = "text/css";
-            link.href = url;
-            link.onload = load;
-            head.appendChild(link);
-        }else{
-            typeof callback=="function" && callback();
-        }
-    }
-    load();
-}
-
-/**
- * 是否在数组中
- *
- * @param arr
- * @param v
- * @author zhaoqf
- */
-function ifinArray(arr, v) {
-    if (!Array.isArray(arr)) {
-        return false;
-    }
-    for (var i = 0; i < arr.length; i++) {
-        if (arr[i] == v) {
-            return true;
-        }
-    }
-    return false;
-}
-
-/**
- * 获取url中的参数
- *
- * @param name
- * @returns {*}
- */
-function getUrlParam(name) {
-    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
-    var r = window.location.search.substr(1).match(reg);  //匹配目标参数
-    if (r != null) return decodeURI(r[2]);
-    return null; //返回参数值
 }
 
 /**
@@ -712,15 +374,15 @@ function getUrlParam(name) {
  * @author zhaoqf
  */
 function initSelect(param) {
-    var $elem = param.elem instanceof jQuery ? param.elem:$(param.elem);
+    var $elem = param.elem instanceof jQuery ? param.elem : $(param.elem);
     if ($elem.length == 0) {
         return;
     }
-    var vdefault=$elem.attr("data-value");
+    var vdefault = $elem.attr("data-value");
     $elem.removeAttr("data-value");
-    var ismultiple=$elem.attr("multiple")!=undefined?true:false;
-    var placeholder=$elem.attr("placeholder");
-    placeholder=placeholder?placeholder:"请选择";
+    var ismultiple = $elem.attr("multiple") != undefined ? true : false;
+    var placeholder = $elem.attr("placeholder");
+    placeholder = placeholder ? placeholder : "请选择";
     $.ajax({
         url: param.url,
         type: param.type || "POST",
@@ -729,25 +391,25 @@ function initSelect(param) {
             if (!result.success || !result.data) {
                 return;
             }
-            var data= param.before? param.before(result.data):result.data;
-            if(ismultiple){
-                var arr=vdefault==undefined?[]:vdefault.split(",");
-                $.each(data,function (i,v) {
-                    v.value=v[param.field[0]];
-                    v.name=v[param.field[1]];
-                    v.selected=ifinArray(arr,v.value)?"selected":"";
+            var data = param.before ? param.before(result.data) : result.data;
+            if (ismultiple) {
+                var arr = vdefault == undefined ? [] : vdefault.split(",");
+                $.each(data, function (i, v) {
+                    v.value = v[param.field[0]];
+                    v.name = v[param.field[1]];
+                    v.selected = ifinArray(arr, v.value) ? "selected" : "";
                 })
-            }else{
-                $.each(data,function (i,v) {
-                    v.value=v[param.field[0]];
-                    v.name=v[param.field[1]];
-                    v.selected=v.value==vdefault?"selected":"";
+            } else {
+                $.each(data, function (i, v) {
+                    v.value = v[param.field[0]];
+                    v.name = v[param.field[1]];
+                    v.selected = v.value == vdefault ? "selected" : "";
                 })
             }
-            var temp='<option value="">'+placeholder+'</option>'+'<% for(var i = 0; i < data.length; i++){ %>';
-            temp+='<option value="<%=data[i].value%>" <%=data[i].selected%> ><%=data[i].name%></option><%}%>';
-            $elem.html(template.render(temp,{data:data}));
-            ismultiple?(layui.select2 && layui.select2.render()):(layui.form.render("select"));
+            var temp = '<option value="">' + placeholder + '</option>' + '<% for(var i = 0; i < data.length; i++){ %>';
+            temp += '<option value="<%=data[i].value%>" <%=data[i].selected%> ><%=data[i].name%></option><%}%>';
+            $elem.html(template.render(temp, {data: data}));
+            ismultiple ? (layui.select2 && layui.select2.render()) : (layui.form.render("select"));
             param.callBack && param.callBack();
         }
     })
@@ -780,11 +442,11 @@ function initSelect(param) {
  * @author zhaoqf
  */
 function initCheckboxList(param) {
-    var $elem = param.elem instanceof jQuery ? param.elem:$(param.elem);
+    var $elem = param.elem instanceof jQuery ? param.elem : $(param.elem);
     if ($elem.length == 0) {
         return;
     }
-    var vdefault=$elem.attr("data-value");
+    var vdefault = $elem.attr("data-value");
     $elem.removeAttr("data-value");
     $.ajax({
         url: param.url,
@@ -794,18 +456,18 @@ function initCheckboxList(param) {
             if (!result.success || !result.data) {
                 return;
             }
-            var data= param.before? param.before(result.data):result.data;
-            var arr=vdefault==undefined?[]:vdefault.split(",");
-            $.each(data,function (i,v) {
-                v.value=v[param.field[0]];
-                v.title=v[param.field[1]];
-                v.checked=ifinArray(arr,v.value)?"checked":"";
+            var data = param.before ? param.before(result.data) : result.data;
+            var arr = vdefault == undefined ? [] : vdefault.split(",");
+            $.each(data, function (i, v) {
+                v.value = v[param.field[0]];
+                v.title = v[param.field[1]];
+                v.checked = ifinArray(arr, v.value) ? "checked" : "";
             });
 
-            var temp='<% for(var i = 0; i < data.length; i++){ %>';
-            temp+='<input type="checkbox" name="<%=name%>" <%=data[i].checked%>  value="<%=data[i].value%>" title=<%=data[i].title%> lay-skin="primary">';
-            temp+='<%}%>';
-            $elem.html(template.render(temp,{data:data,name:param.name}));
+            var temp = '<% for(var i = 0; i < data.length; i++){ %>';
+            temp += '<input type="checkbox" name="<%=name%>" <%=data[i].checked%>  value="<%=data[i].value%>" title=<%=data[i].title%> lay-skin="primary">';
+            temp += '<%}%>';
+            $elem.html(template.render(temp, {data: data, name: param.name}));
             layui.form.render("checkbox");
             param.callBack && param.callBack();
         }

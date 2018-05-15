@@ -1,10 +1,7 @@
-//loadLayout();
-// template.defaults.rules[1].test = /<%(#?)((?:==|=#|[=-])?)[ \t]*([\w\W]*?)[ \t]*(-?)%>/;
 layui.use(['element', 'layer', 'upload'], function () {
-
-
     var layer = layui.layer;
     var $firstA=$("#index_menu .layui-nav-item:first>a");
+
     if($firstA.attr("data-url")){
         window.homeHash=$firstA.attr("data-url");
     }else{
@@ -81,7 +78,7 @@ layui.use(['element', 'layer', 'upload'], function () {
         jump(hash);
     });
 
-    $("#userName").text(localStorage.username);
+    $("#userName").text(localStorage.nickname);
 
     //获取当前公众号及其他公众号
     getCountStatus();
@@ -100,8 +97,8 @@ function getCountStatus(id) {
                     location.reload();
                 }else{
                     renderHtml({
-                        targetId: 'counnt_nav',
-                        template: "/views/layout/nav.html",
+                        targetId: 'account_nav',
+                        template: "/views/common/template/account-nav.html",
                         htmlData:result
                     });
                 }

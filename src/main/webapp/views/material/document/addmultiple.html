@@ -88,6 +88,13 @@
         var form = layui.form;
         var upload = layui.upload;
         var $ = layui.$;
+        // 设置富文本上传接口
+        layedit.set({
+            uploadImage: {
+                url: '/managerImg/uploadFile',
+                type: 'post'
+            }
+        });
         var layeditIndex = layedit.build('content'); //建立编辑器
         window.listData = [{t: 1}];
         form.render();
@@ -124,8 +131,8 @@
         });
         //取消
         $("#add_canl").click(function () {
-//         	location.href = "/views/index.html#/system/document/document";
-        	jump("/system/document/document[type=more]");
+//         	location.href = "/views/index.html#/material/document/document";
+        	jump("/material/document/document[type=more]");
         });
 
         //点击回显
@@ -189,7 +196,7 @@
                         if (result.success) {
                             layer.msg("保存成功");
                             setTimeout(function () {
-                                location.href = "/views/index.html#/system/document/document";
+                                location.href = "/views/index.html#/material/document/document";
                             }, 1000);
                         }
                     },

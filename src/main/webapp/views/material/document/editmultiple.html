@@ -83,11 +83,19 @@
     layui.use('layedit', function () {
         var layedit = layui.layedit;
         var form = layui.form;
+        // 设置富文本上传接口
+        layedit.set({
+            uploadImage: {
+                url: '/managerImg/uploadFile',
+                type: 'post'
+            }
+        });
         var layeditIndex=layedit.build('content'); //建立编辑器
         var upload = layui.upload;
         var listData = [];
         var $ = layui.$;
         var id=getHashParam().id;
+
 
         $.ajax({
             url: '/msgnews/toUpdateMoreNews',
@@ -118,10 +126,6 @@
                 }
             }
         });
-
-
-
-
         var TEMP =function (t,title) {
         	var img;
         	$.each(listData,function (_,v) {
@@ -139,8 +143,8 @@
         };
         //取消
         $("#add_canl").click(function () {
-//         	location.href = "/views/index.html#/system/document/document";
-        	jump("/system/document/document[type=more]");
+//         	location.href = "/views/index.html#/material/document/document";
+        	jump("/material/document/document[type=more]");
         });
         //增加一条
         $("#doclist_add").click(function () {
@@ -235,7 +239,7 @@
                             if (result.success) {
                                 layer.msg("修改成功");
                                 setTimeout(function () {
-                                    location.href = "/views/index.html#/system/document/document";
+                                    location.href = "/views/index.html#/material/document/document";
                                 }, 1000);
                             }
                         },

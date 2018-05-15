@@ -98,22 +98,20 @@
                 })
             } else if (layEvent === 'mass') {
                 showDialog({
-                    title: '发送'
-                    , template: 'mass'
-                    , height: 600
-                    , yes:function (index) {
-                        var checkStatus = table.checkStatus('fans'); //test即为基础参数id对应的值
-                        var cdata=checkStatus.data;
-                        var fans=[];
-                        for(var i=0;i<cdata.length;i++){
-                            fans.push(cdata[i].openId);
+                    title: '发送',
+                    template: '/views/common/template/fans-chose.html',
+                    height: 600,
+                    yes:function (index) {
+                        if(GLOBAL.choosed.length<2){
+                            layer.msg("至少选择2个粉丝");
+                            return false;
                         }
                         $.ajax({
                             url: '/wxapi/sendTemplateMessage',
                             data: {
                             	tplId:data.tplId,
                             	content:data.content,
-                                openIds: fans.join(",")
+                                openIds: GLOBAL.choosed.join(",")
                             },
                             success: function (result) {
                                 if ( result.success == true) {
@@ -125,6 +123,9 @@
                                 }
                             }
                         })
+                    },
+                    end:function () {
+                        GLOBAL.choosed=[];
                     }
                 });
             }

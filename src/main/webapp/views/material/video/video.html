@@ -1,13 +1,8 @@
 <div class="fsh-rightPanel">
     <div class="layui-anim layui-anim-upbit">
         <div class="layui-form-item wx-search" id="list_form">
-            <div class="layui-inline">
-                <input type="text" name="inputcode" placeholder="请输入关键字" autocomplete="off" class="layui-input">
-            </div>
-            <button class="layui-btn btn-primary" id="search">搜索</button>
             <div class="layui-inline right">
-                <button class="layui-btn btn-primary" id="msg_add">新建消息</button>
-                <button class="layui-btn btn-danger" id="msg_del">批量删除</button>
+                <button class="layui-btn btn-primary" id="video_uploader">新增</button>
             </div>
         </div>
         <table id="list_table" class="layui-hide" lay-filter="mainList"></table>
@@ -25,7 +20,7 @@
             elem: '#list_table',
             url: '/msgtext/list',
             align: "center",
-            cols: [[ //表头
+            cols: [[
                 {type: 'checkbox'},
                 {type: 'numbers', title: '序号',width:50},
                 {field: 'inputcode', title: '关键词', width: 150, align: 'center',},

@@ -13,21 +13,21 @@
                             <input type="text" name="title" placeholder="请输入关键字" autocomplete="off" class="layui-input">
                         </div>
                         <div class="layui-inline">
-                            <input type="text" class="layui-input laydate" name="start" id="start1" >
+                            <input type="text" class="layui-input laydate" name="start" id="start1">
                             <i class="iconfont icon-rili"></i>
                         </div>
                         <span class="font-primary">-</span>
                         <div class="layui-inline">
-                            <input type="text" class="layui-input laydate" name="end" id="end1" >
+                            <input type="text" class="layui-input laydate" name="end" id="end1">
                             <i class="iconfont icon-rili"></i>
                         </div>
 
                         <button class="layui-btn btn-primary" id="search1">搜索</button>
 
                         <div class="layui-inline right">
-                            <button class="layui-btn btn-primary" onclick="jump('/system/document/addsingle')">添加单图文消息
+                            <button class="layui-btn btn-primary" onclick="jump('/material/document/addsingle')">添加单图文消息
                             </button>
-                            <button class="layui-btn btn-primary" onclick="jump('/system/document/addmultiple')">添加多图文消息
+                            <button class="layui-btn btn-primary" onclick="jump('/material/document/addmultiple')">添加多图文消息
                             </button>
                             <!--<button class="layui-btn btn-danger" id="msg_del">批量删除</button>-->
                         </div>
@@ -48,16 +48,16 @@
                         </div>
                         <span class="font-primary">-</span>
                         <div class="layui-inline">
-                            <input type="text" class="layui-input laydate" id="end2"  name="end">
+                            <input type="text" class="layui-input laydate" id="end2" name="end">
                             <i class="iconfont icon-rili"></i>
                         </div>
 
                         <button class="layui-btn btn-primary" id="search2">搜索</button>
 
                         <div class="layui-inline right">
-                            <button class="layui-btn btn-primary" onclick="jump('/system/document/addsingle')">添加单图文消息
+                            <button class="layui-btn btn-primary" onclick="jump('/material/document/addsingle')">添加单图文消息
                             </button>
-                            <button class="layui-btn btn-primary" onclick="jump('/system/document/addmultiple')">添加多图文消息
+                            <button class="layui-btn btn-primary" onclick="jump('/material/document/addmultiple')">添加多图文消息
                             </button>
                             <!--<button class="layui-btn btn-danger" id="msg_del">批量删除</button>-->
                         </div>
@@ -71,11 +71,9 @@
     </div>
 </div>
 <script>
-    layui.use(["laydate", "table", "layer", "layedit"], function () {
+    layui.use(["laydate", "table", "layer"], function () {
         var laydate = layui.laydate;
         var layer = layui.layer;
-        var table = layui.table;
-        var layedit = layui.layedit;
         var element = layui.element;
 
         var typet = getHashParam().type;
@@ -89,18 +87,11 @@
             }
         });
 
-        layedit.set({
-            uploadImage: {
-                url: '/managerImg/uploadFile',
-                type: 'post'
-            }
-        });
-
         laydate.render({
             elem: '#start1',
-            done: function(value, date, endDate){
-                var end=$("#end1").val();
-                if( value &&  end && (new Date(end)-new Date(value))<=0){
+            done: function (value, date, endDate) {
+                var end = $("#end1").val();
+                if (value && end && (new Date(end) - new Date(value)) <= 0) {
                     $("#start1").val("");
                     layer.msg("开始时间需小于结束时间");
                 }
@@ -108,9 +99,9 @@
         });
         laydate.render({
             elem: '#end1',
-            done: function(value, date, endDate){
-                var start=$("#start1").val();
-                if( value &&  start && (new Date(value)-new Date(start))<=0){
+            done: function (value, date, endDate) {
+                var start = $("#start1").val();
+                if (value && start && (new Date(value) - new Date(start)) <= 0) {
                     $("#end1").val("");
                     layer.msg("结束时间需大于开始时间");
                 }
@@ -118,9 +109,9 @@
         });
         laydate.render({
             elem: '#start2',
-            done: function(value, date, endDate){
-                var end=$("#end2").val();
-                if( value &&  end && (new Date(end)-new Date(value))<=0){
+            done: function (value, date, endDate) {
+                var end = $("#end2").val();
+                if (value && end && (new Date(end) - new Date(value)) <= 0) {
                     $("#start2").val("");
                     layer.msg("开始时间需小于结束时间");
                 }
@@ -128,9 +119,9 @@
         });
         laydate.render({
             elem: '#end2',
-            done: function(value, date, endDate){
-                var start=$("#start2").val();
-                if( value &&  start && (new Date(value)-new Date(start))<=0){
+            done: function (value, date, endDate) {
+                var start = $("#start2").val();
+                if (value && start && (new Date(value) - new Date(start)) <= 0) {
                     $("#end2").val("");
                     layer.msg("结束时间需大于开始时间");
                 }
@@ -142,8 +133,8 @@
         var params2 = {};
 
         $("#search1").click(function () {
-            var data = getFormData("search_form1");
-            data.title=$.trim(data.title);
+            var data = util.getFormData("search_form1");
+            data.title = $.trim(data.title);
             if (data.start && !data.end) {
                 layer.msg("请输入结束时间");
                 return false;
@@ -155,7 +146,7 @@
             getlist1(data);
         });
         $("#search2").click(function () {
-            var data = getFormData("search_form2");
+            var data = util.getFormData("search_form2");
             if (data.start && !data.end) {
                 layer.msg("请输入结束时间");
                 return false;
@@ -166,7 +157,6 @@
             }
             getlist2(data);
         });
-
 
         //多图文
         function getlist1(params) {
@@ -216,16 +206,18 @@
             var event = $(this).attr("event");
             var id = $(this).parent().attr("data-id");
             if (event == "edit") {
-                jump("/system/document/editmultiple[id=" + id + "]");
-            } else if (event == "mess") {//编辑
+                jump("/material/document/editmultiple[id=" + id + "]");
+            } else if (event == "mass") {// 群发
                 showDialog({
                     title: '群发'
-                    , template: 'mass'
+                    , template: '/views/common/template/fans-chose.html'
+                    , height: 600
                     , yes: function (index) {
-                        var checkStatus = table.checkStatus('fans'); //test即为基础参数id对应的值
-
-                        var cdata = checkStatus.data;
-                        if (cdata.length > 1) {
+                        if (GLOBAL.choosed.length == 0) {
+                            layer.msg("请选择1个粉丝");
+                            return false;
+                        }
+                        if (GLOBAL.choosed.length > 1) {
                             layer.msg("只能选择1个粉丝");
                             return false;
                         }
@@ -233,7 +225,7 @@
                             url: '/wxapi/sendNewsByOpenId',
                             data: {
                                 id: id,
-                                "openid": cdata[0].openId
+                                openid: GLOBAL.choosed[0]
                             },
                             success: function (result) {
                                 if (result.success) {
@@ -245,8 +237,11 @@
                             }
                         })
                     }
+                    , end: function () {
+                        GLOBAL.choosed = [];
+                    }
                 });
-            } else if (event == "del") {
+            } else if (event == "del") {// 删除
                 $.ajax({
                     url: '/msgnews/deleteMaterial',
                     data: {id: id},
@@ -291,7 +286,7 @@
                             callBack: function () {
                                 if (result.page.total > 12) {
                                     //初始化分页
-                                    initPage(result.page, getlist2,$("#pagination2"));
+                                    initPage(result.page, getlist2, $("#pagination2"));
                                 }
                             }
                         });
@@ -310,16 +305,15 @@
             var event = $(this).attr("event");
             var id = $(this).parent().attr("data-id");
             if (event == "edit") {
-                jump("/system/document/editsingle[id=" + id + "]");
+                jump("/material/document/editsingle[id=" + id + "]");
             } else if (event == "mess") {
                 //群发
                 showDialog({
-                    title: '群发'
-                    , template: 'mass'
-                    , yes: function (index) {
-                        var checkStatus = table.checkStatus('fans'); //test即为基础参数id对应的值
-                        var cdata = checkStatus.data;
-                        if (cdata.length > 1) {
+                    title: '群发',
+                    template: '/views/common/template/fans-chose.html',
+                    yes: function (index) {
+                        var data = GLOBAL.choosed;
+                        if (data.length > 1) {
                             layer.msg("只能选择1个粉丝");
                             return false;
                         }
@@ -327,7 +321,7 @@
                             url: '/wxapi/sendNewsByOpenId',
                             data: {
                                 id: id,
-                                "openid": cdata[0].openId
+                                "openid": data[0].openId
                             },
                             success: function (result) {
                                 if (result.success) {
@@ -338,29 +332,33 @@
                                 }
                             }
                         });
+                    },
+                    end: function () {
+                        GLOBAL.choosed = [];
                     }
                 });
             } else if (event == "del") {
-                $.ajax({
-                    url: '/msgnews/deleteMaterial',
-                    data: {id: id},
-                    success: function (result) {
-                        if (result.success) {
-                            layer.msg("操作成功");
-                            getlist2();
-                        } else {
-                            layer.msg("操作异常");
+                showConfirm("确认删除？", function () {
+                    $.ajax({
+                        url: '/msgnews/deleteMaterial',
+                        data: {id: id},
+                        success: function (result) {
+                            if (result.success) {
+                                layer.msg("操作成功");
+                                getlist2();
+                            } else {
+                                layer.msg("操作异常");
+                            }
                         }
-                    }
-                })
+                    })
+                });
             }
         });
 
 
-
         if (typet == "single") {
             $(".layui-tab-title li:last").trigger("click");
-        }else{
+        } else {
             getlist1();
         }
     });
