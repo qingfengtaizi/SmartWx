@@ -141,7 +141,6 @@ public class WxApiClient {
 			logger.info("获取用户信息接口返回结果："+jsonObj.toString());
 			if(jsonObj.containsKey("errcode")){
 				int errorCode = jsonObj.getInt("errcode");
-				System.out.println(String.format("获取用户信息失败 errcode:{} errmsg:{}", errorCode, ErrCode.errMsg(errorCode)));
 				return null;
 			}else{
 				AccountFans fans = new AccountFans();
