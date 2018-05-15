@@ -108,7 +108,7 @@ public class MyServiceImpl implements MyService{
 			if (null != fans) {
 				AccountFans tmpFans = fansDao.getByOpenId(openId);
 				if(tmpFans == null){
-					tmpFans.setAccount(mpAccount.getAccount());
+					fans.setAccount(mpAccount.getAccount());
 					fansDao.add(fans);
 				}else{
 					fans.setId(tmpFans.getId());

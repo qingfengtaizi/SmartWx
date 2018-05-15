@@ -86,8 +86,8 @@ public class WxUtil {
 				}
 			}
 			//存msgtype id
-			obj.put("msgType", menu.getMsgType());//以 _fix_ 开头
-			obj.put("msgId", menu.getMsgId());//以 _fix_ 开头
+			obj.put("msgType", menu.getMsgType());
+			obj.put("msgId", menu.getMsgId());//
 		}else{//链接菜单-view
 			obj.put("url", menu.getUrl());
 		}
@@ -112,7 +112,7 @@ public class WxUtil {
 		if(CollectionUtils.isNotEmpty(msgTextList)){
 			for (MsgText text:msgTextList) {
 				JSONObject obj = new JSONObject();
-				obj.put("id",text.getId());
+				obj.put("id",text.getBaseId());
 				obj.put("title",text.getTitle());
 				obj.put("type", MsgType.Text.toString());
 				arr.add(obj);
@@ -121,7 +121,7 @@ public class WxUtil {
 		if(CollectionUtils.isNotEmpty(msgNews)){
 			for (MsgNews news:msgNews) {
 				JSONObject obj = new JSONObject();
-				obj.put("id",news.getId());
+				obj.put("id",news.getBaseId());
 				obj.put("title",news.getTitle());
 				obj.put("type", MsgType.News.toString());
 				arr.add(obj);

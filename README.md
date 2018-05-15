@@ -75,17 +75,20 @@ JAVA开发框架：Spring MVC+Spring+Mybatis
 
 1. 创建数据库。如使用MySQL，字符集选择为`utf8`。
 1. 执行数据库脚本。数据库脚本在`/doc`目录下。
-1. 在eclipse中导入maven项目。点击eclipse菜单`File` - `Import`，选择`Maven` - `Existing Maven Projects`。
+1. 在eclipse中导入maven项目。点击eclipse菜单`File` - `Import`，选择`Maven` - `Existing Maven Projects`
 1. 设置项目编码为utf-8，选择jdk1.7版本或以上，不要选择jre。
 1. 修改数据库连接。打开`/src/main/resources/property/jdbc.properties`文件，根据实际情况修改`jdbc.url`、`jdbc.username`、`jdbc.password`的值
 1. 上传图片设置。upload.properties 如属性文件所描述，如图片想放到项目中，res.upload.url注释即可
-1. j2cache缓存设置。j2cache.properties 如果不需要启用二级缓存，属性文件中 13行j2cache.broadcast设置为jgroups，31行j2cache.L2.provider_class设置为none。如需启用redis，反之即可
+1. 缓存设置。为兼容jdk1.7，此版本中暂时废弃j2cache，默认仅使用ehcache缓存，如想使用，修改J2CacheUtil,用CacheJ2Utils替换CacheUtils,修改依赖文件
 1. 七牛云配置。app.properties 项目中暂时未用到，可废弃
-1. 编译项目。在eclipse中，右键点击项目名，选择`Run as` - `Maven build...`，`Goals`填入`clean package`，然后点击`Run`，第一次运行需要下载jar包，请耐心等待。
+1. 项目中为简化代码，用到了 ***lombok*** 插件，大家可自行安装。
+1. 由于项目采用前后台分离，也为了将来配置读写分离，项目需 ***root*** 根目录运行，如若不然可能会js，css加载不到的情况（自己可修改）
+1. 编译项目。在eclipse中，右键点击项目名，选择`Run as` - `Maven build...`，`Goals`填入`clean package`，然后点击`Run`，第一次运行需要下载jar包，请耐心等待
 1. 部署项目。将项目部署到Tomcat7或以上版本，启动Tomcat。也可使用maven tomcat7插件运行，jetty插件运行暂时有问题
 1. 访问系统。地址：[http://localhost:8080/](http://localhost:8080/)；用户名：smartwx，密码：smartwx
-1. 项目中为简化代码，用到了lomok插件，大家可自行安装。
-1. 由于项目采用前后台分离，也为了将来nginx读写分离，项目需root根目录运行，如若不然可能会js，css加载不到的情况（自己可修改）
+1. 由于eclipse识别问题，部分xml文件和html页面会报错，无需关心，运行即可。
+1. 添加公众号页面，url和token两项自动生成，***无需手动填写***。将 ***开通80端口的公网ip或域名（切记全路径）+url*** 和 ***token*** 这两项填入到微信后台即可
+1. 添加完公众号，大家先尝试下 同步粉丝功能，若成功，则项目配置完成，若无法获取accesstoken，切记检查 微信后台 ***获取accesstoken白名单设置***
 
  ## 相关连接
 官方网址：[https://smartwx.webcsn.com](https://smartwx.webcsn.com/)
@@ -107,7 +110,7 @@ JAVA开发框架：Spring MVC+Spring+Mybatis
 ---------------------------------
 ## 页面展示
 
-![登陆页](https://gitee.com/uploads/images/2018/0416/121618_e13f2f9a_1256378.png "登陆页.png")
+![登陆页](https://gitee.com/uploads/images/2018/0513/142230_56517aa2_1256378.png "登陆页.png")
 ![首页](https://gitee.com/uploads/images/2018/0416/121734_4481f09b_1256378.png "首页.png")
 ![账号信息](https://gitee.com/uploads/images/2018/0416/121832_438ad9c0_1256378.png "账号信息.png")
 ![菜单](https://gitee.com/uploads/images/2018/0416/121900_097ad23f_1256378.png "菜单.png")

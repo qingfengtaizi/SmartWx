@@ -20,16 +20,16 @@ jQuery.ajaxSetup({
         // console.log(errorThrown);
     },
     complete: function (XMLHttpRequest, textStatus) {
-        // var sessionState = XMLHttpRequest.getResponseHeader("sessionState"); //通过XMLHttpRequest取得响应头,sessionState
-        // //判断是否登录
-        // if (sessionState == 'notLogin') {
-        //     // layer.confirm('请先登录系统', {icon: 3, title: '提示'}, function () {
-        //     //     location.href("/common/index.html");
-        //     // })
-        //     layer.msg('请先登录系统', {shift: -1}, function () {
-        //         location.href = "/login";
-        //     });
-        // }
+        var sessionState = XMLHttpRequest.getResponseHeader("sessionState"); //通过XMLHttpRequest取得响应头,sessionState
+        //判断是否登录
+        if (sessionState == 'notLogin') {
+            // layer.confirm('请先登录系统', {icon: 3, title: '提示'}, function () {
+            //     location.href("/common/index.html");
+            // })
+            layer.msg('请先登录系统', {shift: -1}, function () {
+                location.href = "/views/login.html";
+            });
+        }
         // if (sessionState == 'notAuth') {
         //     // layer.confirm('请先登录系统', {icon: 3, title: '提示'}, function () {
         //     //     location.href("/common/index.html");

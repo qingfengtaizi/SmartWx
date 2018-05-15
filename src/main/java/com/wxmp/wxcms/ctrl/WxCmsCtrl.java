@@ -94,7 +94,7 @@ public class WxCmsCtrl extends BaseCtrl {
 	@RequestMapping(value = "/getUrl")
 	@ResponseBody
 	public AjaxResult getUrl(Account account){
-		String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/wxapi/" + account.getAccount() + "/message.html";
+		String url = "/wxapi/" + account.getAccount() + "/message.html";
 		
 		if(account.getId() == null){//新增
 			account.setUrl(url);

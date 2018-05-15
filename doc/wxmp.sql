@@ -83,7 +83,7 @@ CREATE TABLE `wxcms_account_fans` (
   `open_id` varchar(100) DEFAULT NULL,
   `subscribe_status` int(1) DEFAULT '1',
   `subscribe_time` varchar(50) DEFAULT NULL,
-  `nick_name` varchar(50) DEFAULT NULL,
+  `nick_name` varbinary(50) DEFAULT NULL,
   `gender` tinyint(4) DEFAULT '1',
   `language` varchar(50) DEFAULT NULL,
   `country` varchar(30) DEFAULT NULL,
