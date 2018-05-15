@@ -23,6 +23,10 @@
 	<!-- 引入SPRING配置文件 -->
 	<import resource="classpath*:spring/spring-*.xml"/>
 	<bean class="com.wxmp.core.spring.SpringContextHolder" lazy-init="false"/>
+	<!-- 缓存配置 -->
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation" value="classpath:j2cache/ehcache.xml" />
+	</bean>
 	<!--&lt;!&ndash; 服务器启动时自动加载，目前主要提取加载需要缓存的公众号信息 &ndash;&gt;-->
 	<!--<bean id="appServiceImpl" class="com.wxmp.core.common.AppDefineInitService"></bean>-->
 	<!--<bean id="beanDefineConfigue" class="com.wxmp.core.spring.SpringBeanDefineConfigue">-->
