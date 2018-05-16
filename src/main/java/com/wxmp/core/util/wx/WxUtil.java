@@ -51,6 +51,7 @@ public class WxUtil {
 	 * @return
 	 */
 	public static JSONObject prepareMenus(List<AccountMenu> menus, Matchrule matchrule) {
+		JSONObject root = new JSONObject();
 		if(!CollectionUtils.isEmpty(menus)){
 			List<AccountMenu> parentAM = new ArrayList<AccountMenu>();
 			Map<Long,List<JSONObject>> subAm = new HashMap<Long,List<JSONObject>>();
@@ -74,14 +75,12 @@ public class WxUtil {
 					arr.add(getMenuJSONObj(m));
 				}
 			}
-			JSONObject root = new JSONObject();
 			root.put("button", arr);
 			root.put("matchrule", JSONObject.toJSON(matchrule).toString());
-			//添加消息id
-			root.put("msgs", getMsg());
-			return root;
 		}
-		return null;
+		//添加消息id
+		root.put("msgs", getMsg());
+		return root;
 	}
 
 	/**
