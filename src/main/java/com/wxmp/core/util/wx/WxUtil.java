@@ -31,39 +31,40 @@ public class WxUtil {
 	 * @param matchrule	个性化菜单配置
 	 * @return
 	 */
-	public static JSONObject prepareMenus(List<AccountMenu> menus, Matchrule matchrule) {
-		if(!CollectionUtils.isEmpty(menus)){
-			List<AccountMenu> parentAM = new ArrayList<AccountMenu>();
-			Map<Long,List<JSONObject>> subAm = new HashMap<Long,List<JSONObject>>();
-			for(AccountMenu m : menus){
-				if (m.getParentId().intValue() == 0) {//一级菜单
-					parentAM.add(m);
-				}else{//二级菜单
-					if(subAm.get(m.getParentId()) == null){
-						subAm.put(m.getParentId(), new ArrayList<JSONObject>());
-					}
-					List<JSONObject> tmpMenus = subAm.get(m.getParentId());
-					tmpMenus.add(getMenuJSONObj(m));
-					subAm.put(m.getParentId(), tmpMenus);
-				}
-			}
-			JSONArray arr = new JSONArray();
-			for(AccountMenu m : parentAM){
-				if(subAm.get(m.getId()) != null){//有子菜单
-					arr.add(getParentMenuJSONObj(m,subAm.get(m.getId())));
-				}else{//没有子菜单
-					arr.add(getMenuJSONObj(m));
-				}
-			}
-			JSONObject root = new JSONObject();
-			root.put("button", arr);
-			root.put("matchrule", JSONObject.fromObject(matchrule).toString());
-			//添加消息id
-			root.put("msgs", getMsg());
-			return root;
-		}
-		return null;
-	}
+    public static JSONObject prepareMenus(List<AccountMenu> menus, Matchrule matchrule) {
+        JSONObject root = new JSONObject();
+        if (!CollectionUtils.isEmpty(menus)) {
+            List<AccountMenu> parentAM = new ArrayList<AccountMenu>();
+            Map<Long, List<JSONObject>> subAm = new HashMap<Long, List<JSONObject>>();
+            for (AccountMenu m : menus) {
+                if (m.getParentId().intValue() == 0) {// 一级菜单
+                    parentAM.add(m);
+                } else {// 二级菜单
+                    if (subAm.get(m.getParentId()) == null) {
+                        subAm.put(m.getParentId(), new ArrayList<JSONObject>());
+                    }
+                    List<JSONObject> tmpMenus = subAm.get(m.getParentId());
+                    tmpMenus.add(getMenuJSONObj(m));
+                    subAm.put(m.getParentId(), tmpMenus);
+                }
+            }
+            JSONArray arr = new JSONArray();
+            for (AccountMenu m : parentAM) {
+                if (subAm.get(m.getId()) != null) {// 有子菜单
+                    arr.add(getParentMenuJSONObj(m, subAm.get(m.getId())));
+                } else {// 没有子菜单
+                    arr.add(getMenuJSONObj(m));
+                }
+            }
+            
+            root.put("button", arr);
+            root.put("matchrule", JSONObject.fromObject(matchrule).toString());
+            
+        }
+        // 添加消息id
+        root.put("msgs", getMsg());
+        return root;
+    }
 
 	/**
 	 * 此方法是构建菜单对象的；构建菜单时，对于  key 的值可以任意定义；
