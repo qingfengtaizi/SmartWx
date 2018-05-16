@@ -53,6 +53,7 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
@@ -77,8 +78,8 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * HttpClient 搬砖工具类
@@ -87,7 +88,9 @@ import org.slf4j.LoggerFactory;
  */
 public class HttpClientUtils {
 
-    private HttpClientUtils() {
+	private static Logger logger = LogManager.getLogger(HttpClientUtils.class);
+    
+	private HttpClientUtils() {
         throw new IllegalAccessError("工具类不能实例化");
     }
 
@@ -96,7 +99,6 @@ public class HttpClientUtils {
 
     // private static HttpClientBuilder httpClientBuilder=null;
 
-    private static final Logger logger = LoggerFactory.getLogger(HttpClientUtils.class);
     private static RequestConfig requestConfig = RequestConfig.custom()
     		.setSocketTimeout(5000)
     		.setConnectTimeout(5000)
@@ -631,7 +633,7 @@ public class HttpClientUtils {
      * @return
      */
     public static String httpsRequestToString(String path, String method, String body) {
-        if(path==null||method==null){
+        if(StringUtils.isBlank(path)||StringUtils.isBlank(method)){
             return null;
         }
         String response = null;
@@ -679,8 +681,10 @@ public class HttpClientUtils {
             	response = buffer.toString();
             }
         } catch (IOException e) {
+        	logger.error(e.getMessage(), e);
      	   //这里可以抛出异常，比说自定义的微信异常
         } catch (GeneralSecurityException e) {
+        	logger.error(e.getMessage(), e);
      	   //这里可以抛出异常，比说自定义的微信异常
         }finally{
             if(conn!=null){
@@ -701,6 +705,7 @@ public class HttpClientUtils {
  	           	}
                 
             } catch (IOException e) {
+            	logger.error(e.getMessage(), e);
             }
         }
         return response;
@@ -713,7 +718,7 @@ public class HttpClientUtils {
      * @return
      */
     public static String httpsRequestToUpload(String path, String method,File file){
-       	if(path==null||method==null||!file.exists()){
+       	if(StringUtils.isBlank(path)||StringUtils.isBlank(method)||!file.exists()){
                return null;
            }
            String response = null;
@@ -742,7 +747,8 @@ public class HttpClientUtils {
                conn.setReadTimeout(30000);
                
                // 设置请求头信息
-    			conn.setRequestProperty("Connection", "Keep-Alive");    
+    			conn.setRequestProperty("Connection", "Keep-Alive"); 
+    			conn.setRequestProperty("Cache-Control", "no-cache");
     			conn.setRequestProperty("Charset", "UTF-8");
     			// 设置边界    
     		    String BOUNDARY = "----------" + System.currentTimeMillis();    
@@ -789,8 +795,10 @@ public class HttpClientUtils {
     		    	 response = buffer.toString();
     		     }
            } catch (IOException e) {
+        	   logger.error(e.getMessage(), e);
         	   //这里可以抛出异常，比说自定义的微信异常
            } catch (GeneralSecurityException e) {
+        	   logger.error(e.getMessage(), e);
         	   //这里可以抛出异常，比说自定义的微信异常
            }finally{
                if(conn!=null){
@@ -827,7 +835,7 @@ public class HttpClientUtils {
      */
     public static String httpsRequestToUpload(String path, String method,File file,Map<String,String> params){
 	   	
- 	   if(path==null||method==null||!file.exists()){
+ 	   if(StringUtils.isBlank(path)||StringUtils.isBlank(method)||!file.exists()){
  	           return null;
  	       }
         String response = null;
@@ -917,8 +925,10 @@ public class HttpClientUtils {
  		    	 response = buffer.toString();
  		     }
         } catch (IOException e) {
+        	logger.error(e.getMessage(), e);
      	   //这里可以抛出异常，比说自定义的微信异常
         } catch (GeneralSecurityException e) {
+        	logger.error(e.getMessage(), e);
      	   //这里可以抛出异常，比说自定义的微信异常
         }finally{
 
@@ -947,17 +957,19 @@ public class HttpClientUtils {
         return response;
     }
     /**
-     * 文件下载
+     * 文件下载 -使用object返回是为了判断返回数据类型
      * @param path
      * @param method
+     * @param param
      * @param storageDir
      * @return
      */
-    public static File httpsRequestToDownload(String path, String method,String storageDir){
-	   	if(path==null||method==null){
+    public static Object httpsRequestToDownload(String path, String method,String param,String storageDir){
+	   	if(StringUtils.isBlank(path)||StringUtils.isBlank(method)){
 	           return null;
 	       }
    		File file = null;
+   		OutputStream outputStream=null;
        BufferedInputStream inputStream = null;
        InputStream ips = null;
        InputStreamReader inputStreamReader = null;
@@ -982,16 +994,21 @@ public class HttpClientUtils {
            conn.setReadTimeout(30000);
            
            // 设置请求头信息
-			conn.setRequestProperty("Connection", "Keep-Alive");    
+			conn.setRequestProperty("Connection", "Keep-Alive"); 
+			conn.setRequestProperty("Cache-Control", "no-cache");
 			conn.setRequestProperty("Charset", "UTF-8");
 			// 设置边界    
-		    String BOUNDARY = "----------" + System.currentTimeMillis();    
-		    conn.setRequestProperty("Content-Type", "multipart/form-data; boundary="+ BOUNDARY);
+//		    String BOUNDARY = "----------" + System.currentTimeMillis();    
+//		    conn.setRequestProperty("Content-Type", "multipart/form-data; boundary="+ BOUNDARY);
 		    // 打开到此 URL 引用的资源的通信链接（如果尚未建立这样的连接）。
 		    conn.connect();
+		    if (StringUtils.isNotBlank(param)) {
+                outputStream = conn.getOutputStream();
+                outputStream.write(param.getBytes("UTF-8"));
+            }
 		    
-//		    log.info("Content-Length: " + conn.getContentLength());
-//		    log.info("Headers: "+conn.getHeaderFields().toString());
+		    logger.info("Content-Length: " + conn.getContentLength());
+		    logger.info("Headers: "+conn.getHeaderFields().toString());
 		    // 文件大小
 		    int fileLength = conn.getContentLength();
 		  
@@ -1052,15 +1069,21 @@ public class HttpClientUtils {
 			    	 }
 			    	 //如果下载文件失败，就要把错误信息抛出去throw
 			    	 System.err.println("upload err => "+buffer.toString());
+			    	 return buffer.toString();
 			     }
 		    }
        } catch (IOException e) {
+    	   logger.error(e.getMessage(), e);
     	   //这里可以抛出异常，比说自定义的微信异常
        } catch (GeneralSecurityException e) {
+    	   logger.error(e.getMessage(), e);
     	   //这里可以抛出异常，比说自定义的微信异常
        }finally{
           
            try {
+        	   if(outputStream!=null){
+        		   outputStream.close();
+        	   }
         	   if(out!=null){
         		   out.close();
         	   }
@@ -1078,6 +1101,7 @@ public class HttpClientUtils {
 	           		ips.close();
 	           	}
            } catch (IOException e) {
+        	   logger.error(e.getMessage(), e);
            }
            if(conn!=null){
                conn.disconnect();
