@@ -38,7 +38,15 @@
 	</update>
 
 	<delete id="delete" parameterType="com.wxmp.wxcms.domain.TplMsgText" >
-		DELETE FROM wxcms_tpl_msg_text WHERE ID = #{id}
+		DELETE FROM wxcms_tpl_msg_text
+		<where>
+			<if test="id != null">
+				ID = #{id}
+			</if>
+			<if test="baseId != null">
+				and base_id = #{baseId}
+			</if>
+		</where>
 	</delete>
 
 	<select id="getByBaseId" parameterType="java.lang.String" resultType="com.wxmp.wxcms.domain.TplMsgText">

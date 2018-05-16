@@ -29,11 +29,25 @@
         <commons-beanutils.version>1.9.1</commons-beanutils.version>
         <xstream.version>1.4.9</xstream.version>
         <jackson.version>2.8.6</jackson.version>
+        <fastjson.version>1.2.4</fastjson.version>
+        <metadata-extractor.version>2.6.2</metadata-extractor.version>
         <jsoup.version>1.11.2</jsoup.version>
         <lombok.version>1.16.16</lombok.version>
         <guava.version>20.0</guava.version>
         <commons-lang3.version>3.5</commons-lang3.version>
         <common-lang.version>2.6</common-lang.version>
+        <zxing.version>2.2</zxing.version>
+        <junit.version>4.11</junit.version>
+        <httpclient.version>4.5.2</httpclient.version>
+        <httpcore.version>4.4.6</httpcore.version>
+        <swagger-ui.version>2.5.0</swagger-ui.version>
+        <configuration.version>1.7</configuration.version>
+        <aspectj.version>1.7.4</aspectj.version>
+        <cglib.version>3.1</cglib.version>
+        <taglibs.version>1.1.2</taglibs.version>
+        <jstl.version>1.2</jstl.version>
+        <servlet-api.version>3.0.1</servlet-api.version>
+        <commons-dbcp.version>1.4</commons-dbcp.version>
         <!-- jdbc driver setting -->
         <mysql.driver.version>5.1.30</mysql.driver.version>
 
@@ -178,17 +192,17 @@
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
-            <version>1.7.4</version>
+            <version>${aspectj.version}</version>
         </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
-            <version>1.7.4</version>
+            <version>${aspectj.version}</version>
         </dependency>
         <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
-            <version>3.1</version>
+            <version>${cglib.version}</version>
         </dependency>
         <!-- AOP end -->
 
@@ -240,48 +254,27 @@
         <dependency>
             <groupId>taglibs</groupId>
             <artifactId>standard</artifactId>
-            <version>1.1.2</version>
+            <version>${taglibs.version}</version>
             <type>jar</type>
         </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
-            <version>1.2</version>
+            <version>${jstl.version}</version>
             <type>jar</type>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>3.0.1</version>
+            <version>${servlet-api.version}</version>
             <scope>provided</scope>
         </dependency>
 
-        <!-- java ee jar 包 -->
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>6.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <version>2.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/javax.persistence/persistence-api -->
         <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>persistence-api</artifactId>
             <version>1.0.2</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-servlet -->
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-servlet</artifactId>
-            <version>9.4.7.RC0</version>
         </dependency>
 
         <dependency>
@@ -351,7 +344,7 @@
         <dependency>
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>
-            <version>1.4</version>
+            <version>${commons-dbcp.version}</version>
         </dependency>
         <!-- jackson json -->
         <dependency>
@@ -377,7 +370,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.47</version>
+            <version>${fastjson.version}</version>
         </dependency>
         <!-- xstream xml -->
         <dependency>
@@ -390,26 +383,26 @@
         <dependency>
             <groupId>com.drewnoakes</groupId>
             <artifactId>metadata-extractor</artifactId>
-            <version>2.6.2</version>
+            <version>${metadata-extractor.version}</version>
         </dependency>
 
         <!-- 条形码、二维码生成  -->
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>core</artifactId>
-            <version>2.2</version>
+            <version>${zxing.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>javase</artifactId>
-            <version>2.2</version>
+            <version>${zxing.version}</version>
         </dependency>
 
         <!-- TEST begin -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>${junit.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -421,37 +414,32 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpcore</artifactId>
-            <version>4.4.6</version>
+            <version>${httpcore.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.2</version>
+            <version>${httpclient.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpmime</artifactId>
-            <version>4.5.2</version>
+            <version>${httpclient.version}</version>
         </dependency>
 
         <!-- swagger-springmvc -->
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
-            <version>2.5.0</version>
+            <version>${swagger-ui.version}</version>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
-            <version>2.5.0</version>
+            <version>${swagger-ui.version}</version>
         </dependency>
         <!-- swagger-springmvc dependencies -->
-        <!--httpclient -->
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.2</version>
-        </dependency>
+      
         <!-- UTILS begin -->
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -468,11 +456,10 @@
             <artifactId>commons-lang</artifactId>
             <version>${common-lang.version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/commons-configuration/commons-configuration -->
         <dependency>
             <groupId>commons-configuration</groupId>
             <artifactId>commons-configuration</artifactId>
-            <version>1.7</version>
+            <version>${configuration.version}</version>
         </dependency>
         <!-- UTILS end -->
 
@@ -480,20 +467,6 @@
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
             <version>${jsoup.version}</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/net.sf.json-lib/json-lib -->
-        <dependency>
-            <groupId>net.sf.json-lib</groupId>
-            <artifactId>json-lib</artifactId>
-            <version>2.4</version>
-            <classifier>jdk15</classifier>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.8.2</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.github.pagehelper/pagehelper -->

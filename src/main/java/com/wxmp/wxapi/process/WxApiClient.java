@@ -1,11 +1,36 @@
-/**
- * Copyright &copy; 2017-2018 <a href="http://www.webcsn.com">webcsn</a> All rights reserved.
+/*
+ * FileName：WxApiClient.java 
+ * <p>
+ * Copyright (c) 2017-2020, <a href="http://www.webcsn.com">hermit (794890569@qq.com)</a>.
+ * <p>
+ * Licensed under the GNU General Public License, Version 3 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.gnu.org/licenses/gpl-3.0.html
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  *
- * @author hermit
- * @date 2018-04-17 10:54:58
  */
 package com.wxmp.wxapi.process;
 
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.wxmp.core.common.Identities;
 import com.wxmp.core.util.DateUtil;
 import com.wxmp.wxapi.vo.Material;
@@ -13,17 +38,7 @@ import com.wxmp.wxapi.vo.MaterialArticle;
 import com.wxmp.wxapi.vo.MaterialItem;
 import com.wxmp.wxapi.vo.TemplateMessage;
 import com.wxmp.wxcms.domain.AccountFans;
-import com.wxmp.wxcms.domain.MsgArticle;
 import com.wxmp.wxcms.domain.MsgNews;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
-
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.util.*;
 
 /**
  * 微信 客户端，统一处理微信相关接口
@@ -140,12 +155,12 @@ public class WxApiClient {
 		if (null != jsonObj) {
 			logger.info("获取用户信息接口返回结果："+jsonObj.toString());
 			if(jsonObj.containsKey("errcode")){
-				int errorCode = jsonObj.getInt("errcode");
+				int errorCode = jsonObj.getIntValue("errcode");
 				return null;
 			}else{
 				AccountFans fans = new AccountFans();
 				fans.setOpenId(jsonObj.getString("openid"));// 用户的标识
-				fans.setSubscribeStatus(new Integer(jsonObj.getInt("subscribe")));// 关注状态（1是关注，0是未关注），未关注时获取不到其余信息
+				fans.setSubscribeStatus(new Integer(jsonObj.getIntValue("subscribe")));// 关注状态（1是关注，0是未关注），未关注时获取不到其余信息
 				if(jsonObj.containsKey("subscribe_time")){
 					fans.setSubscribeTime(DateUtil.timestampToDate(jsonObj.getString("subscribe_time")));// 用户关注时间
 				}
@@ -158,7 +173,7 @@ public class WxApiClient {
 					}
 				}
 				if(jsonObj.containsKey("sex")){// 用户的性别（1是男性，2是女性，0是未知）
-					fans.setGender(jsonObj.getInt("sex"));
+					fans.setGender(jsonObj.getIntValue("sex"));
 				}
 				if(jsonObj.containsKey("language")){// 用户的语言，简体中文为zh_CN
 					fans.setLanguage(jsonObj.getString("language"));
@@ -204,12 +219,12 @@ public class WxApiClient {
 		try {
 			JSONObject jsonObj = WxApi.httpsRequest(url, "POST", body);
 			if (jsonObj.containsKey("errcode")) {//获取素材失败
-				System.out.println(ErrCode.errMsg(jsonObj.getInt("errcode")));
+				System.out.println(ErrCode.errMsg(jsonObj.getIntValue("errcode")));
 				return null;
 			}else{
 				Material material = new Material();
-				material.setTotalCount(jsonObj.getInt("total_count"));
-				material.setItemCount(jsonObj.getInt("item_count"));
+				material.setTotalCount(jsonObj.getIntValue("total_count"));
+				material.setItemCount(jsonObj.getIntValue("item_count"));
 				JSONArray arr = jsonObj.getJSONArray("item");
 				if(arr != null && arr.size() > 0){
 					List<MaterialItem> itemList = new ArrayList<MaterialItem>();
@@ -226,7 +241,7 @@ public class WxApiClient {
 								MaterialArticle ma = new MaterialArticle();
 								ma.setTitle(article.getString("title"));
 								ma.setThumb_media_id(article.getString("thumb_media_id"));
-								ma.setShow_cover_pic(article.getInt("show_cover_pic"));
+								ma.setShow_cover_pic(article.getIntValue("show_cover_pic"));
 								ma.setAuthor(article.getString("author"));
 								ma.setContent_source_url(article.getString("content_source_url"));
 								ma.setContent(article.getString("content"));
@@ -734,6 +749,3 @@ public class WxApiClient {
 //		return dataMap;
 //	}
 }
-
-
-

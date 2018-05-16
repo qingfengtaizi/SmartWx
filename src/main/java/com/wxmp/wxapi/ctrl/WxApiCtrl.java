@@ -1,11 +1,48 @@
-/**
- * Copyright &copy; 2017-2018 <a href="http://www.webcsn.com">webcsn</a> All rights reserved.
+/*
+ * FileName：WxApiCtrl.java 
+ * <p>
+ * Copyright (c) 2017-2020, <a href="http://www.webcsn.com">hermit (794890569@qq.com)</a>.
+ * <p>
+ * Licensed under the GNU General Public License, Version 3 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.gnu.org/licenses/gpl-3.0.html
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  *
- * @author hermit
- * @date 2018-04-17 10:54:58
  */
 package com.wxmp.wxapi.ctrl;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.alibaba.fastjson.JSONObject;
 import com.wxmp.core.common.BaseCtrl;
 import com.wxmp.core.exception.BusinessException;
 import com.wxmp.core.spring.JsonView;
@@ -13,27 +50,25 @@ import com.wxmp.core.util.AjaxResult;
 import com.wxmp.core.util.DateUtil;
 import com.wxmp.core.util.UploadUtil;
 import com.wxmp.core.util.wx.SignUtil;
-import com.wxmp.wxapi.process.*;
+import com.wxmp.wxapi.process.ErrCode;
+import com.wxmp.wxapi.process.MediaType;
+import com.wxmp.wxapi.process.MpAccount;
+import com.wxmp.wxapi.process.MsgType;
+import com.wxmp.wxapi.process.MsgXmlUtil;
+import com.wxmp.wxapi.process.WxApiClient;
+import com.wxmp.wxapi.process.WxMemoryCacheClient;
+import com.wxmp.wxapi.process.WxSign;
 import com.wxmp.wxapi.service.MyService;
-import com.wxmp.wxapi.vo.*;
+import com.wxmp.wxapi.vo.Material;
+import com.wxmp.wxapi.vo.MaterialArticle;
+import com.wxmp.wxapi.vo.MaterialItem;
+import com.wxmp.wxapi.vo.MsgRequest;
+import com.wxmp.wxapi.vo.TemplateMessage;
 import com.wxmp.wxcms.domain.AccountFans;
 import com.wxmp.wxcms.domain.MsgNews;
 import com.wxmp.wxcms.domain.MsgText;
 import com.wxmp.wxcms.service.MsgNewsService;
 import com.wxmp.wxcms.service.MsgTextService;
-import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.*;
 
 
 /**
@@ -117,7 +152,7 @@ public class WxApiCtrl extends BaseCtrl{
 					ModelAndView mv = new ModelAndView("common/success");
 					mv.addObject("successMsg", "创建菜单成功");
 					return mv;
-				}else if(rstObj.containsKey("errcode") && rstObj.getInt("errcode") == 0){
+				}else if(rstObj.containsKey("errcode") && rstObj.getIntValue("errcode") == 0){
 					ModelAndView mv = new ModelAndView("common/success");
 					mv.addObject("successMsg", "创建菜单成功");
 					return mv;
@@ -128,7 +163,7 @@ public class WxApiCtrl extends BaseCtrl{
 		ModelAndView mv = new ModelAndView("common/failure");
 		String failureMsg = "创建菜单失败，请检查菜单：可创建最多3个一级菜单，每个一级菜单下可创建最多5个二级菜单。";
 		if(rstObj != null){
-			failureMsg += ErrCode.errMsg(rstObj.getInt("errcode"));
+			failureMsg += ErrCode.errMsg(rstObj.getIntValue("errcode"));
 		}
 		mv.addObject("failureMsg", failureMsg);
 		return mv;
@@ -141,7 +176,7 @@ public class WxApiCtrl extends BaseCtrl{
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		if(mpAccount != null){
 			rstObj = myService.deleteMenu(mpAccount);
-			if(rstObj != null && rstObj.getInt("errcode") == 0){
+			if(rstObj != null && rstObj.getIntValue("errcode") == 0){
 				ModelAndView mv = new ModelAndView("common/success");
 				mv.addObject("successMsg", "删除菜单成功");
 				return mv;
@@ -150,7 +185,7 @@ public class WxApiCtrl extends BaseCtrl{
 		ModelAndView mv = new ModelAndView("common/failure");
 		String failureMsg = "删除菜单失败";
 		if(rstObj != null){
-			failureMsg += ErrCode.errMsg(rstObj.getInt("errcode"));
+			failureMsg += ErrCode.errMsg(rstObj.getIntValue("errcode"));
 		}
 		mv.addObject("failureMsg", failureMsg);
 		return mv;
@@ -223,7 +258,7 @@ public class WxApiCtrl extends BaseCtrl{
 			mv.addObject("successMsg", "上传图文素材成功,素材 media_id : " + rstObj.getString("media_id"));
 			return mv;
 		}else{
-			rstMsg = ErrCode.errMsg(rstObj.getInt("errcode"));
+			rstMsg = ErrCode.errMsg(rstObj.getIntValue("errcode"));
 		}
 		ModelAndView mv = new ModelAndView("common/failure");
 		mv.addObject("failureMsg", rstMsg);
@@ -287,7 +322,7 @@ public class WxApiCtrl extends BaseCtrl{
 			JSONObject result = WxApiClient.massSendTextByOpenIds(openidList, content, mpAccount);
 			
 			try {
-				if(result.getInt("errcode") != 0){
+				if(result.getIntValue("errcode") != 0){
 					response.getWriter().write("send failure");
 				}else{
 					response.getWriter().write("send success");
@@ -311,7 +346,7 @@ public class WxApiCtrl extends BaseCtrl{
 		String content = "微信派官方测试客服消息";
 		JSONObject result = WxApiClient.sendCustomTextMessage(openid, content, mpAccount);
 		try {
-			if(result.getInt("errcode") != 0){
+			if(result.getIntValue("errcode") != 0){
 				response.getWriter().write("send failure");
 			}else{
 				response.getWriter().write("send success");
@@ -468,7 +503,7 @@ public class WxApiCtrl extends BaseCtrl{
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		JSONObject result = WxApiClient.sendCustomTextMessage(openid, content, mpAccount);
 
-		if (result.getInt("errcode") != 0) {
+		if (result.getIntValue("errcode") != 0) {
 			return AjaxResult.failure(result.toString());
 		} else {
 			return AjaxResult.success();
@@ -491,7 +526,7 @@ public class WxApiCtrl extends BaseCtrl{
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		JSONObject result = WxApiClient.sendCustomNews(openid, msgNews, mpAccount);
 		log.info(" 客服接口-发送图文消息：" + result.toString());
-		if (result.getInt("errcode") != 0) {
+		if (result.getIntValue("errcode") != 0) {
 			return AjaxResult.failure(result.toString());
 		} else {
 			return AjaxResult.success();
@@ -552,7 +587,7 @@ public class WxApiCtrl extends BaseCtrl{
 		}
 		JSONObject result = WxApiClient.massSendTextByOpenIds(openidList,content,mpAccount);
 		log.info(" 群发-文本消息："+result.toString());
-		if(result.getInt("errcode") != 0){
+		if(result.getIntValue("errcode") != 0){
 			code = result.toString();//发送失败
 		}else{
 			code = "1";//发送成功
@@ -590,7 +625,7 @@ public class WxApiCtrl extends BaseCtrl{
 		}
 		JSONObject massQesultObj = WxApiClient.massSendByOpenIds(openidList,media_id,MsgType.MPNEWS,mpAccount);
 		
-		if(massQesultObj.getInt("errcode") != 0){
+		if(massQesultObj.getIntValue("errcode") != 0){
 			code = massQesultObj.toString();
 		}else{
 			code = "1";//发送成功
@@ -620,7 +655,7 @@ public class WxApiCtrl extends BaseCtrl{
 		}
 		JSONObject massQesultObj = WxApiClient.massSendByOpenIds(openidList,mediaId,MsgType.MPNEWS,mpAccount);
 		
-		if(massQesultObj.getInt("errcode") != 0){
+		if(massQesultObj.getIntValue("errcode") != 0){
 			code = massQesultObj.toString();
 		}else{
 			code = "1";//发送成功
@@ -643,7 +678,7 @@ public class WxApiCtrl extends BaseCtrl{
 //					mv.addObject("successMsg", "创建菜单成功");
 //					code = "1";
 //					return code;
-//				}else if(rstObj.containsKey("errcode") && rstObj.getInt("errcode") == 0){
+//				}else if(rstObj.containsKey("errcode") && rstObj.getIntValue("errcode") == 0){
 //					ModelAndView mv = new ModelAndView("common/success");
 //					mv.addObject("successMsg", "创建菜单成功");
 //					code = "1";
@@ -664,7 +699,7 @@ public class WxApiCtrl extends BaseCtrl{
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		if(mpAccount != null){
 			rstObj = myService.deleteMenu(mpAccount);
-			if(rstObj != null && rstObj.getInt("errcode") == 0){
+			if(rstObj != null && rstObj.getIntValue("errcode") == 0){
 				code = "1";
 				return code;
 			}
@@ -672,12 +707,9 @@ public class WxApiCtrl extends BaseCtrl{
 		
 		String failureMsg = "删除菜单失败";
 		if(rstObj != null){
-			failureMsg += ErrCode.errMsg(rstObj.getInt("errcode"));
+			failureMsg += ErrCode.errMsg(rstObj.getIntValue("errcode"));
 		}
 		code = failureMsg;
 		return code;
 	}
 }
-
-
-

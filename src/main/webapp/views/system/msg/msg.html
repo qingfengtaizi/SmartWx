@@ -63,7 +63,7 @@
             }
             var arr = [];     //选中数组
             for (var i = 0; i < data.length; i++) {
-                arr.push(data[i].id)
+                arr.push(data[i].baseId)
             }
             showConfirm("确认删除？", function () {
                 $.ajax({
