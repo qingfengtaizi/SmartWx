@@ -894,19 +894,20 @@ public class HttpClientUtils {
  		    	 out.write(bufferOut, 0, bytes);    
  		     }    
  		     // 文件写入流结束《= 
- 		     
- 		     //添加param参数
- 		     for (Map.Entry<String, String> entry : params.entrySet()) {  
- 	    	   String key = entry.getKey().toString();  
- 	    	   String value = entry.getValue().toString();  
- 	    	   sb = new StringBuilder();
- 	    	   sb.append("--"); // 必须多两道线    
- 	    	   sb.append(BOUNDARY);    
- 	    	   sb.append("\r\n");    
- 	    	   sb.append("Content-Disposition: form-data;name=\""+key+"\";\r\n\r\n"); 
- 	    	   sb.append(value);
- 	    	   byte[] paramb = sb.toString().getBytes("UTF-8");
- 	    	   out.write(paramb);
+ 		     if(params!=null){
+ 		    	//添加param参数
+ 	 		     for (Map.Entry<String, String> entry : params.entrySet()) {  
+ 	 	    	   String key = entry.getKey().toString();  
+ 	 	    	   String value = entry.getValue().toString();  
+ 	 	    	   sb = new StringBuilder();
+ 	 	    	   sb.append("--"); // 必须多两道线    
+ 	 	    	   sb.append(BOUNDARY);    
+ 	 	    	   sb.append("\r\n");    
+ 	 	    	   sb.append("Content-Disposition: form-data;name=\""+key+"\";\r\n\r\n"); 
+ 	 	    	   sb.append(value);
+ 	 	    	   byte[] paramb = sb.toString().getBytes("UTF-8");
+ 	 	    	   out.write(paramb);
+ 	 		     } 
  		     }
  		     
  		     // 结尾部分    
@@ -998,13 +999,14 @@ public class HttpClientUtils {
 			conn.setRequestProperty("Cache-Control", "no-cache");
 			conn.setRequestProperty("Charset", "UTF-8");
 			// 设置边界    
-//		    String BOUNDARY = "----------" + System.currentTimeMillis();    
-//		    conn.setRequestProperty("Content-Type", "multipart/form-data; boundary="+ BOUNDARY);
+		    String BOUNDARY = "----------" + System.currentTimeMillis();    
+		    conn.setRequestProperty("Content-Type", "multipart/form-data; boundary="+ BOUNDARY);
 		    // 打开到此 URL 引用的资源的通信链接（如果尚未建立这样的连接）。
 		    conn.connect();
 		    if (StringUtils.isNotBlank(param)) {
                 outputStream = conn.getOutputStream();
                 outputStream.write(param.getBytes("UTF-8"));
+                outputStream.flush();
             }
 		    
 		    logger.info("Content-Length: " + conn.getContentLength());
