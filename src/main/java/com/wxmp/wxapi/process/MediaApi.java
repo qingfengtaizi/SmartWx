@@ -50,12 +50,16 @@ public class MediaApi {
 	//获取永久素材   POST
 	public static final String GET_MATERIA="https://api.weixin.qq.com/cgi-bin/material/get_material?access_token=%s";
 	
+	//获取临时素材  GET
+	public static final String GET_MEDIA="https://api.weixin.qq.com/cgi-bin/media/get?access_token=%s&media_id=%s";
+	
 	//删除永久素材   POST
 	public static final String DEL_MATERIAL="https://api.weixin.qq.com/cgi-bin/material/del_material?access_token=%s";
 	
 	//素材文件后缀
 	public static Map<String,String> type_fix= new HashMap<>();
 	public static Map<String,String> media_fix= new HashMap<>();
+	//素材文件大小
 	public static Map<String,Long> type_length= new HashMap<>();
 	static{
 		type_fix.put("image","bmp|png|jpeg|jpg|gif");
@@ -123,6 +127,7 @@ public class MediaApi {
 		String fileName=file.getName();
 		//获取后缀名
 		String suffix = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+		//文件大小，单位：b
 		long length=file.length();
 		//此处做判断是为了尽可能的减少对微信API的调用次数
 		if(media_fix.get(type).indexOf(suffix)==-1){
@@ -131,7 +136,7 @@ public class MediaApi {
 		if(length>type_length.get(type)){
 			throw new WxErrorException(WxError.newBuilder().setErrorCode(40006).setErrorMsg("不合法的文件大小").build());
 		}
-		String url=String.format(ADD_MATERIA, accessToken,type);
+		String url=String.format(ADD_MEDIA, accessToken,type);
 		String result = HttpClientUtils.httpsRequestToUpload(url, "POST", file);
 		WxError wxError = WxError.fromJson(result);
 		if(wxError.getErrorCode()!=0){
@@ -157,7 +162,68 @@ public class MediaApi {
 			WxError wxError = WxError.fromJson((String)obj);
 			throw new WxErrorException(wxError);
 		}
+		if(null==obj){
+			throw new WxErrorException(WxError.newBuilder().setErrorCode(-3).setErrorMsg("下载出错").build());
+		}
 		
 		return (File)obj;
+	}
+	/**
+	 * 永久视频素材信息获取-获取url后自行处理
+	 * @param accessToken 微信token
+	 * @param mediaId 视频素材ID
+	 * @return
+	 * @throws WxErrorException
+	 */
+	public static JSONObject getMateriaVideo(String accessToken,String mediaId)throws WxErrorException{
+		String url=String.format(GET_MATERIA, accessToken);
+		JSONObject json=new JSONObject();
+		json.put("media_id", mediaId);
+		String result = HttpClientUtils.httpsRequestToString(url, "POST", json.toJSONString());
+		WxError wxError = WxError.fromJson(result);
+		if(wxError.getErrorCode()!=0){
+			throw new WxErrorException(wxError);
+		}
+		
+		return JSONObject.parseObject(result);
+	}
+	/**
+	 * 临时素材下载-包含图片、语音、视频、缩略图
+	 * @param accessToken 微信token
+	 * @param mediaId 临时素材Id
+	 * @param storageDir 要下载到的目录 例如D://temp
+	 * @return
+	 * @throws WxErrorException
+	 */
+	public static File downlodMedia(String accessToken,String mediaId,String storageDir)throws WxErrorException{
+		String url=String.format(GET_MEDIA, accessToken,mediaId);
+		Object obj = HttpClientUtils.httpsRequestToDownload(url, "GET", null, storageDir);
+		if(obj instanceof String){
+			WxError wxError = WxError.fromJson((String)obj);
+			throw new WxErrorException(wxError);
+		}
+		if(null==obj){
+			throw new WxErrorException(WxError.newBuilder().setErrorCode(-3).setErrorMsg("下载出错").build());
+		}
+		
+		return (File)obj;
+	}
+	/**
+	 * 删除永久素材
+	 * @param accessToken 微信token
+	 * @param mediaId 素材Id
+	 * @return
+	 * @throws WxErrorException
+	 */
+	public static Boolean delMaterial(String accessToken,String mediaId)throws WxErrorException{
+		String url=String.format(DEL_MATERIAL, accessToken);
+		JSONObject json=new JSONObject();
+		json.put("media_id", mediaId);
+		String result = HttpClientUtils.httpsRequestToString(url, "POST", json.toJSONString());
+		WxError wxError = WxError.fromJson(result);
+		if(wxError.getErrorCode()!=0){
+			throw new WxErrorException(wxError);
+		}
+		return true;
 	}
 }

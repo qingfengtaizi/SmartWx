@@ -1017,7 +1017,7 @@ public class HttpClientUtils {
 		    //获取传输数据类型Content-Type
 		    String outype=conn.getContentType();
 		    
-		    if(StringUtils.isBlank(outype)||outype.indexOf("application/json")==-1){
+		    if(StringUtils.isBlank(outype)||(outype.indexOf("text/plain")==-1&&outype.indexOf("application/json")==-1)){
 		    	
 		    	String disposition=conn.getHeaderField("Content-disposition");
 		    	
@@ -1062,7 +1062,7 @@ public class HttpClientUtils {
 		    }else{
 			     if(conn.getResponseCode() == conn.HTTP_OK){
 			    	 ips = conn.getInputStream();
-			    	 inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+			    	 inputStreamReader = new InputStreamReader(ips, "UTF-8");
 			    	 bufferedReader = new BufferedReader(inputStreamReader);
 			    	 String str = null;
 			    	 StringBuffer buffer = new StringBuffer();
