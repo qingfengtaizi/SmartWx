@@ -47,4 +47,7 @@ public class MediaFiles extends Page implements Serializable {
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm", iso = DateTimeFormat.ISO.DATE_TIME)
    	private Date createTime;
    	private Date updateTime;
+   	
+	private String start;
+	private String end;
 }

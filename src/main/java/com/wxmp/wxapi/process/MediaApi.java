@@ -24,7 +24,6 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wxmp.core.exception.WxError;
-import com.wxmp.core.exception.WxError.Builder;
 import com.wxmp.core.exception.WxErrorException;
 import com.wxmp.core.util.HttpClientUtils;
 
@@ -70,10 +69,10 @@ public class MediaApi {
 		media_fix.put("voice","mp3|amr");
 		media_fix.put("video","mp4");
 		media_fix.put("thumb","jpg");
-		type_length.put("image",new Long((long)(2*1024*1024)));
-		type_length.put("voice",new Long((long)(2*1024*1024)));
-		type_length.put("video",new Long((long)(10*1024*1024)));
-		type_length.put("thumb",new Long((long)(64*1024)));
+		type_length.put("image",new Long(2*1024*1024));
+		type_length.put("voice",new Long(2*1024*1024));
+		type_length.put("video",new Long(10*1024*1024));
+		type_length.put("thumb",new Long(64*1024));
 	}
 	/**
 	 *  永久素材添加-不包含图文
