@@ -1017,7 +1017,7 @@ public class HttpClientUtils {
 		    //获取传输数据类型Content-Type
 		    String outype=conn.getContentType();
 		    
-		    if(outype.indexOf("application/json")==-1){
+		    if(StringUtils.isBlank(outype)||outype.indexOf("application/json")==-1){
 		    	
 		    	String disposition=conn.getHeaderField("Content-disposition");
 		    	
