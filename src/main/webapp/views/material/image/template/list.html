@@ -1,24 +1,13 @@
-<ul class="wxmp-list-justify media-list">
+<ul class="wxmp-list-image">
     <%for(var i=0;i< data.length;i++){%>
-    <li class="item">
-        <a href="<%=data[i].url%>" target="_blank">
-            <img src="<%=data[i].picpath%>" alt="" class="main">
-        </a>
-        <div class="content">
-            <h3 class="ellipsis"><%=data[i].title%></h3>
-            <p class="time">
-                <%=data[i].createTime%>
-            </p>
-            <p class="abstract">
-                <%=data[i].brief%>
-            </p>
+    <li>
+        <div class="img-box">
+            <img src="<%=data[i].src%>" alt="" class="img-main">
         </div>
-        <div class="btn-group" data-id="<%=data[i].id%>">
-            <button class="layui-btn btn-primary-reversal" event="edit">编辑</button>
-            <button class="layui-btn btn-danger-reversal" event="mass">群发</button>
-            <button class="layui-btn btn-danger-reversal" event="del">删除</button>
+        <div class="btn-box" data-id="<%=data[i].id%>">
+            <button class="layui-btn" event="del"><i class="iconfont icon-delete"></i></button>
         </div>
     </li>
     <%}%>
 </ul>
-<div id='pagination2' class="pagination"></div>
+<div id='pagination' class="pagination"></div>

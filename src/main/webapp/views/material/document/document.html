@@ -8,7 +8,7 @@
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
                     <!--搜索框-->
-                    <div class="layui-form-item wx-search" id="search_form1">
+                    <div class="layui-form-item wxmp-search" id="search_form1">
                         <div class="layui-inline">
                             <input type="text" name="title" placeholder="请输入关键字" autocomplete="off" class="layui-input">
                         </div>
@@ -21,8 +21,10 @@
                             <input type="text" class="layui-input laydate" name="end" id="end1">
                             <i class="iconfont icon-rili"></i>
                         </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn btn-primary" id="search1">搜索</button>
+                        </div>
 
-                        <button class="layui-btn btn-primary" id="search1">搜索</button>
 
                         <div class="layui-inline right">
                             <button class="layui-btn btn-primary" onclick="jump('/material/document/addsingle')">添加单图文消息
@@ -38,7 +40,7 @@
                 </div>
                 <div class="layui-tab-item">
                     <!--搜索框-->
-                    <div class="layui-form-item wx-search" id="search_form2">
+                    <div class="layui-form-item wxmp-search" id="search_form2">
                         <div class="layui-inline">
                             <input type="text" name="title" placeholder="请输入关键字" autocomplete="off" class="layui-input">
                         </div>
@@ -51,8 +53,11 @@
                             <input type="text" class="layui-input laydate" id="end2" name="end">
                             <i class="iconfont icon-rili"></i>
                         </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn btn-primary" id="search2">搜索</button>
+                        </div>
 
-                        <button class="layui-btn btn-primary" id="search2">搜索</button>
+
 
                         <div class="layui-inline right">
                             <button class="layui-btn btn-primary" onclick="jump('/material/document/addsingle')">添加单图文消息
@@ -242,18 +247,20 @@
                     }
                 });
             } else if (event == "del") {// 删除
-                $.ajax({
-                    url: '/msgnews/deleteMaterial',
-                    data: {id: id},
-                    success: function (result) {
-                        if (result.success) {
-                            layer.msg("操作成功");
-                            getlist1();
-                        } else {
-                            layer.msg("操作异常");
+                showConfirm("确认删除？",function () {
+                    $.ajax({
+                        url: '/msgnews/deleteMaterial',
+                        data: {id: id},
+                        success: function (result) {
+                            if (result.success) {
+                                layer.msg("操作成功");
+                                getlist1();
+                            } else {
+                                layer.msg("操作异常");
+                            }
                         }
-                    }
-                })
+                    })
+                });
             }
         });
 

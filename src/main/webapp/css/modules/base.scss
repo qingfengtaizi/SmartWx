@@ -66,6 +66,10 @@
     clear: both;
   }
 }
+@mixin clearfix() {
+  @include clear-before();
+  @include clear-after();
+}
 
 @mixin border() {
   border: 1px solid $border-default;
@@ -185,6 +189,9 @@ $browser: null;
   }
   .clear-after {
     @include clear-after()
+  }
+  .clearfix{
+    @include clearfix()
   }
   .ellipsis {
     @include ellipsis()

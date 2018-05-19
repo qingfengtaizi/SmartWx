@@ -31,8 +31,44 @@ jQuery.ajaxSetup({
     }
 });
 
+function ajax(o) {
+    var i=showLoading();
+    o.success=o.success
+        ? function(r){
+        layer.close(i);
+        o.success(r);
+    }
+        : function () {
+        layer.close(i);
+    };
+    o.error=o.error
+        ? function(x,t,e){
+        layer.close(i);
+        o.error(x,t,e);
+    }
+        : function () {
+        layer.close(i);
+    };
+    $.ajax(o);
+}
+
 //替换template模板语法定界符避免layui模板冲突
-template.defaults.rules[1].test = /<%(#?)((?:==|=#|[=-])?)[ \t]*([\w\W]*?)[ \t]*(-?)%>/;
+// template.defaults.rules[1].test = /<%(#?)((?:==|=#|[=-])?)[ \t]*([\w\W]*?)[ \t]*(-?)%>/;
+
+/**
+ * 加载层
+ *
+ * @param icon
+ * @returns {*}
+
+ */
+function showLoading() {
+    return layer.load(1, {
+        shade: [0.1,'#000'] //0.1透明度的白色背景
+    });
+}
+
+
 
 /**
  * pagination方法封装
@@ -184,7 +220,7 @@ function showDialog(params) {
                                         }
                                         res != true && (field = res);
                                     }
-                                    $.ajax({
+                                    ajax({
                                         url: params.saveUrl,
                                         data: field,
                                         async: false,
@@ -260,19 +296,13 @@ function showMiniDialog(params) {
     showDialog(params);
 }
 
-
 /**
- * 加载层
+ * 显示默认空数据提示
  *
- * @param icon
- * @returns {*}
-
+ * @param $ele
  */
-function loading(icon) {
-    if (!icon) {
-        icon = 0;
-    }
-    return layer.load(icon);
+function showEmpty($ele,str) {
+    $ele.html("<p class='nothing'>"+(str?str:"没有查询到相关数据！")+"</p>");
 }
 
 

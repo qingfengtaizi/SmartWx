@@ -1,0 +1,15 @@
+{
+  "success": 1,
+  "data":
+    {
+      "id": 1,
+      "title": "宣传片",
+      "src": "/views/test/test.mp4"
+    },
+  "page": {
+    "page": 1,
+    "pageSize": 10,
+    "total": 18,
+    "totalPage": 2
+  }
+}

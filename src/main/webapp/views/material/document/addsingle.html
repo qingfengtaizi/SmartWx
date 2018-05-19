@@ -142,7 +142,7 @@
                 layer.msg("请输入文章内容");
                 return false;
             }
-            $.ajax({
+            ajax({
                 url: '/msgnews/addSingleNews',
                 data: data,
                 success: function (result) {
@@ -158,10 +158,14 @@
         });
         //上传
         upload.render({
-            elem: '#uploader'
-            , url: '/managerImg/uploadImg'
-            , done: function (result) {
-                if (result.success == 1) {
+            elem: '#uploader',
+            url: '/managerImg/uploadImg',
+            before: function(){
+                showLoading();
+            },
+            done: function (result) {
+                layer.closeAll('loading');
+                if (result.success) {
                     $("#uploader").html("<img src='" + result.data.url + "' style='width: 150px;height: 150px;'/><p>点击重新上传，或将文件拖拽到此处</p>");
                     $("#add_picpath").val(result.data.url);
                     $("#add_thumbMediaId").val(result.data.imgMediaId);
@@ -169,6 +173,10 @@
                 } else {
                     layer.msg("上传接口异常");
                 }
+            },
+            error: function(){
+                layer.closeAll('loading');
+                layer.msg(result.msg || "上传接口异常");
             }
         });
 

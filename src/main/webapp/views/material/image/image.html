@@ -1,28 +1,76 @@
 <div class="fsh-rightPanel">
     <div class="layui-anim layui-anim-upbit">
-        <div class="layui-form-item wx-search" id="list_form">
+        <div class="layui-form-item wxmp-search" id="list_form" style="">
             <div class="layui-inline right">
                 <button class="layui-btn btn-primary" id="video_uploader">新增</button>
             </div>
         </div>
         <div id="image_wrap">
-            <ul class="wxmp-list-image">
-                <li>
-                    <img src="/images/common/portrait.jpg" alt="" class="img-main">
-                    <div class="layui-btn-group">
-                        <button class="layui-btn" event="edit"><i class="iconfont icon-delete"></i></button>
-                        <button class="layui-btn" event="del"><i class="iconfont icon-delete"></i></button>
-                    </div>
-                </li>
-            </ul>
+            <ul class="wxmp-list-image"></ul>
         </div>
     </div>
 </div>
-
 <script>
-    layui.use(['layer', 'table'], function () {
-        var layer = layui.layer;
-        var table = layui.table;
+    layui.use(['layer',"upload"], function () {
+        var upload=layui.upload;
+        var viewer=null;
+        util.loadCss("/js/plugin/viewerjs/viewer.min.css");
+        util.loadJs("/js/plugin/viewerjs/viewer.min.js",function () {
+            getImglist();
+        });
 
+        var uploader = upload.render({
+            elem: '#video_uploader',
+            url: '/views/test/list.json',
+            size: 5120,
+            before: function(){
+                showLoading();
+            },
+            done: function(res){
+                layer.closeAll('loading');
+                if(res.success){
+                    layer.msg("上传成功");
+                    getImglist();
+                }else{
+                    layer.msg("上传失败");
+                }
+            }
+            ,error: function(){
+                layer.closeAll('loading');
+                layer.msg("上传失败");
+            }
+        });
+
+        function getImglist(param) {
+            var data={page:1};
+            if (param && param.page) {
+                data.page = param.page;
+            }
+            $.ajax({
+                url: '/views/test/list.json',
+                data: data,
+                success: function (result) {
+                    if (result.success && result.page && result.page.total > 0) {
+                        //渲染列表
+                        renderHtml({
+                            targetId: 'image_wrap',
+                            template: "list",
+                            htmlData: result,
+                            callBack: function () {
+                                if (result.page.total > 15) {
+                                    initPage(result.page, getImglist);
+                                    viewer=viewer?viewer.update():new Viewer($("#image_wrap")[0]);
+                                }
+                            }
+                        });
+                    } else {
+                        showEmpty($("#image_wrap"));
+                    }
+                },
+                error: function () {
+                    showEmpty($("#image_wrap"));
+                }
+            })
+        }
     });
 </script>
