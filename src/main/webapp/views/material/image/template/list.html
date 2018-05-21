@@ -6,6 +6,7 @@
         </div>
         <div class="btn-box" data-id="<%=data[i].id%>">
             <button class="layui-btn" event="del"><i class="iconfont icon-delete"></i></button>
+            <a class="layui-btn" href="<%=data[i].url%>" event="del" download="<%=data[i].url.substring(data[i].url.lastIndexOf('/')+1)%>"><i class="iconfont icon-icondownload"></i></a>
         </div>
     </li>
     <%}%>

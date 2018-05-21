@@ -18,7 +18,7 @@ layui.use(['form', 'layer'], function () {
             layer.msg('请输入密码');
             return;
         }
-        $.ajax({
+        ajax({
             url: '/user/login',
             type: 'POST',
             dataType: 'json',

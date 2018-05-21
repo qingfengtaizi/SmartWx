@@ -46,6 +46,7 @@
             if (param && param.page) {
                 data.page = param.page;
             }
+            data.pageSize=15;
             $.ajax({
                 url: '/managerImg/list',
                 data: data,

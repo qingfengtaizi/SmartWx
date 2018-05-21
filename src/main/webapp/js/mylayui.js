@@ -33,21 +33,15 @@ jQuery.ajaxSetup({
 
 function ajax(o) {
     var i=showLoading();
-    o.success=o.success
-        ? function(r){
+    var s=o.success;
+    var e=o.error;
+    o.success= function(r){
         layer.close(i);
-        o.success(r);
-    }
-        : function () {
-        layer.close(i);
+        s && s(r);
     };
-    o.error=o.error
-        ? function(x,t,e){
+    o.error= function(x,t,e){
         layer.close(i);
-        o.error(x,t,e);
-    }
-        : function () {
-        layer.close(i);
+        e && e(x,t,e);
     };
     $.ajax(o);
 }
