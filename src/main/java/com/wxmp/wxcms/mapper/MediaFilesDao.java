@@ -52,4 +52,10 @@ public interface MediaFilesDao {
 	 * @return
 	 */
 	public MediaFiles getFileByMediaId(String mediaId);
+	/**
+	 * 条件查询
+	 * @param mediaId
+	 * @return
+	 */
+	public MediaFiles getFileBySou(MediaFiles entity);
 }

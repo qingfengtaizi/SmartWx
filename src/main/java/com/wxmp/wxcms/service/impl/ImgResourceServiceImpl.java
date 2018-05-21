@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.wxmp.core.util.DateUtilOld.COMMON_FULL;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -74,7 +75,12 @@ public class ImgResourceServiceImpl implements ImgResourceService {
 		return img.getUrl();
 	}
 
-
+	@Override
+	public List<ImgResource> getImgListByPage(ImgResource entity) {
+		// TODO Auto-generated method stub
+		return imgResourceDao.getImgListByPage(entity);
+	}
+	
 	@Override
 	public boolean removeOtherToImg(String otherId) {
 		// TODO Auto-generated method stub
@@ -87,5 +93,7 @@ public class ImgResourceServiceImpl implements ImgResourceService {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+
 
 }

@@ -21,7 +21,7 @@
 
         var uploader = upload.render({
             elem: '#video_uploader',
-            url: '/views/test/list.json',
+            url: '/managerImg/uploadImg',
             size: 5120,
             before: function(){
                 showLoading();
@@ -47,7 +47,7 @@
                 data.page = param.page;
             }
             $.ajax({
-                url: '/views/test/list.json',
+                url: '/managerImg/list',
                 data: data,
                 success: function (result) {
                     if (result.success && result.page && result.page.total > 0) {

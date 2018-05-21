@@ -15,33 +15,51 @@
         <result property="updateTime" column="update_time"/>
         <result property="createTime" column="create_time"/>
         <result property="account" column="account"/>
-        
+        <result property="baseId" column="base_id"/>
 	</resultMap>
     <!-- 单个查询 -->
    	<select id="getFileByMediaId" parameterType="java.lang.String" 
 		resultMap="mediaMap">
 		SELECT * FROM wxcms_media_files WHERE media_id = #{mediaId}
 	</select>
+	<!-- 条件查询单条数据 -->
+	<select id="getFileBySou" parameterType="com.wxmp.wxcms.domain.MediaFiles" 
+		resultMap="mediaMap">
+		SELECT * FROM wxcms_media_files WHERE 
+		<where>
+			1=1
+			<if test="mediaId!=null and mediaId!='' ">
+				and media_id = #{mediaId}
+			</if>
+			<if test="baseId!=null and baseId!='' ">
+				and base_id = #{baseId}
+			</if>
+			<if test="id!=null and id!='' ">
+				and id = #{id}
+			</if>
+		</where>
+		
+	</select>
 	<!-- 模糊分页 -->
 	<select id="getMediaListByPage" parameterType="com.wxmp.wxcms.domain.MediaFiles" resultMap="mediaMap">
 		SELECT  t.* FROM wxcms_media_files t
 		<where>
-			
+			1=1
 			<if test="mediaType!=null and mediaType!='' ">
-				media_type = #{mediaType}
+				and t.media_type = #{mediaType}
 			</if>
 			<if test="title!=null and title!='' ">
-				and title like concat('%',#{title},'%')
+				and t.title like concat('%',#{title},'%')
 			</if>
 			<if test="start!=null and start!='' and end!=null and end!=''">
-				and (create_time
+				and (t.create_time
 				between  
 				str_to_date(#{start}, '%Y-%m-%d')
 				and 
 				str_to_date(#{end}, '%Y-%m-%d'))
 			</if>
 			<if test="account != null">
-				and account = #{account}
+				and t.account = #{account}
 			</if>
 		</where>
 		ORDER BY t.create_time desc
@@ -57,6 +75,7 @@
 		  upload_url,
 		  rmk,
 		  account,
+		  base_id,
 		  create_time,
 		  update_time)
 		  VALUES(
@@ -68,6 +87,7 @@
           #{uploadUrl},
           #{rmk},
           #{account},
+          #{baseId},
           #{createTime},
           #{updateTime}) 
 	</insert>

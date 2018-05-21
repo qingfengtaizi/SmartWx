@@ -20,6 +20,7 @@ package com.wxmp.wxcms.ctrl;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -52,6 +53,13 @@ public class ImgResourceCtrl extends BaseCtrl {
 	@Autowired
 	private ImgResourceService imgResourceService;
 
+    @RequestMapping(value = "/list")
+    @ResponseBody
+    public AjaxResult list(ImgResource searchEntity) {
+        List<ImgResource> pageList = imgResourceService.getImgListByPage(searchEntity);
+        return getResult(searchEntity, pageList);
+    }
+	
 	/**
 	 * 上传图片(需要同步微信用)
 	 * @return

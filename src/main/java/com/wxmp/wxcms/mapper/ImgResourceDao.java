@@ -18,6 +18,8 @@
  */
 package com.wxmp.wxcms.mapper;
 
+import java.util.List;
+
 import com.wxmp.wxcms.domain.ImgResource;
 
 /**
@@ -28,6 +30,13 @@ import com.wxmp.wxcms.domain.ImgResource;
  */
 
 public interface ImgResourceDao {
+	
+	/**
+	 * 分页查询
+	 * @param entity
+	 * @return
+	 */
+	public List<ImgResource> getImgListByPage(ImgResource entity);
 	/**
 	 * 获取图片信息
 	 * @param id

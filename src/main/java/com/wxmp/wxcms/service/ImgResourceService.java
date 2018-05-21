@@ -18,6 +18,8 @@
  */
 package com.wxmp.wxcms.service;
 
+import java.util.List;
+
 import com.wxmp.wxcms.domain.ImgResource;
 
 /**
@@ -27,6 +29,8 @@ import com.wxmp.wxcms.domain.ImgResource;
  * @date 2018-04-17 10:54:58
  */
 public interface ImgResourceService {
+	
+	public List<ImgResource> getImgListByPage(ImgResource entity);
 	/**
 	 * 获取图片信息
 	 * @param id
