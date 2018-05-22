@@ -21,8 +21,10 @@ package com.wxmp.wxcms.service.impl;
 import com.wxmp.core.common.Constants;
 import com.wxmp.wxcms.domain.ImgResource;
 import com.wxmp.wxcms.domain.MediaFiles;
+import com.wxmp.wxcms.domain.MsgBase;
 import com.wxmp.wxcms.mapper.ImgResourceDao;
 import com.wxmp.wxcms.mapper.MediaFilesDao;
+import com.wxmp.wxcms.mapper.MsgBaseDao;
 import com.wxmp.wxcms.service.ImgResourceService;
 import com.wxmp.core.util.CommonUtil;
 import org.springframework.stereotype.Service;
@@ -49,6 +51,8 @@ public class ImgResourceServiceImpl implements ImgResourceService {
     private ImgResourceDao imgResourceDao;
 	@Resource
 	private MediaFilesDao mediaFilesDao;
+	@Resource
+	private MsgBaseDao baseDao;
 	
 	@Override
 	public ImgResource getImg(String id) {
@@ -92,6 +96,19 @@ public class ImgResourceServiceImpl implements ImgResourceService {
 	public boolean updateImgFlag(String id, Integer flag) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public boolean delImg(String id) {
+		// TODO Auto-generated method stub
+		ImgResource img = imgResourceDao.getImgById(id);
+//		MsgBase base = new MsgBase();
+//		base.setId(img.);
+//		baseDao.delete(base);
+		mediaFilesDao.deleteByMediaId(img.getMediaId());
+		imgResourceDao.deleteByMediaId(img.getMediaId());
+		
+		return true;
 	}
 
 

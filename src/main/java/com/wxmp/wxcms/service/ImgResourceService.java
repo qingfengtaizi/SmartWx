@@ -58,4 +58,6 @@ public interface ImgResourceService {
 	 * @return
 	 */
 	public boolean updateImgFlag(String id, Integer flag);
+	
+	public boolean delImg(String id);
 }

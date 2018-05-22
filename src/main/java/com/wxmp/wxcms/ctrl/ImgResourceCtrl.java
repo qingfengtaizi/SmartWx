@@ -36,6 +36,7 @@ import com.wxmp.core.common.BaseCtrl;
 import com.wxmp.core.util.AjaxResult;
 import com.wxmp.core.util.ImgTypeUtil;
 import com.wxmp.core.util.PropertiesUtil;
+import com.wxmp.wxapi.process.MediaApi;
 import com.wxmp.wxapi.process.MediaType;
 import com.wxmp.wxapi.process.MpAccount;
 import com.wxmp.wxapi.process.WxApiClient;
@@ -188,5 +189,21 @@ public class ImgResourceCtrl extends BaseCtrl {
 		mapData.put("src", resURL + fileName);//图片url
 		mapData.put("title", fileName);//图片名称，这个会显示在输入框里
 		return map;
+	}
+	/**
+	 *  删除图片
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping("delMediaImg")
+	public AjaxResult delMediaImg(String id)throws Exception {
+		ImgResource img = imgResourceService.getImg(id);
+		 MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();
+		 String accessToken = WxApiClient.getAccessToken(mpAccount);
+		MediaApi.delMaterial(accessToken, img.getMediaId());
+		imgResourceService.delImg(id);
+		return AjaxResult.deleteSuccess();
 	}
 }

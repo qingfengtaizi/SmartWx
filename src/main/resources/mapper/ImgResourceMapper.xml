@@ -32,6 +32,7 @@
 		  size,
 		  create_time,
 		  update_time,
+		  account,
 		  flag)
 		  VALUES(#{id},
 		          #{mediaId},
@@ -43,6 +44,7 @@
 		          #{size},
 		          #{createTime},
 		          #{updateTime},
+		          #{account},
 		          #{flag}) 
 	</insert>
 
