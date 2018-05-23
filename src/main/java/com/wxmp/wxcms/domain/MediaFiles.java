@@ -51,4 +51,5 @@ public class MediaFiles extends Page implements Serializable {
    	
 	private String start;
 	private String end;
+	private String url;//文件绝对路径
 }

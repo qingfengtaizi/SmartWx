@@ -9,7 +9,8 @@
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label"><i>*</i>上传<br>(推荐mp4)</label>
             <div class="layui-input-block">
-                <input type="hidden" name="path" id="add_path" value="">
+                <input type="hidden" name="uploadUrl" id="add_path" value="">
+                <input type="hidden" name="url" id="add_url" value="">
                 <div class="layui-upload-drag" id="uploader">
                     <i class="layui-icon"></i>
                     <p>点击上传，或将文件拖拽到此处</p>
@@ -20,7 +21,7 @@
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label"><i>*</i>描述</label>
             <div class="layui-input-block">
-                <textarea class="layui-textarea" name="rmk" id="" maxlength="150" lay-verify="required" placeholder="请输入描述"></textarea>
+                <textarea class="layui-textarea" name="introduction" id="" maxlength="150" lay-verify="required" placeholder="请输入描述"></textarea>
             </div>
         </div>
     </div>
@@ -30,7 +31,7 @@
         var upload = layui.upload;
         var uploader = upload.render({
             elem: '#uploader',
-            url: '/views/test/up-video.json',
+            url: '/mediaFile/uploadFile',
             size: 20480,
             exts:"mp4|ogg|webm",
             before: function(){
@@ -41,6 +42,7 @@
                     layer.closeAll('loading');
                     $("#uploader").html("<i class='iconfont icon-bofang' data-src='"+result.data.src+"'></i><p>点击播放预览，点击空白处或将文件拖拽到此处重新上传</p>");
                     $("#add_path").val(result.data.src);
+                    $("#add_url").val(result.data.url);
                 } else {
                     layer.msg(result.msg || "上传接口异常");
                 }

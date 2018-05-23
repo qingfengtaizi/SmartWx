@@ -18,15 +18,29 @@
  */
 package com.wxmp.wxcms.ctrl;
 
+import java.io.File;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSONObject;
 import com.wxmp.core.common.BaseCtrl;
+import com.wxmp.core.exception.WxErrorException;
 import com.wxmp.core.util.AjaxResult;
+import com.wxmp.core.util.PropertiesUtil;
+import com.wxmp.wxapi.process.MediaApi;
+import com.wxmp.wxapi.process.MpAccount;
+import com.wxmp.wxapi.process.WxApiClient;
+import com.wxmp.wxapi.process.WxMemoryCacheClient;
 import com.wxmp.wxcms.domain.MediaFiles;
 import com.wxmp.wxcms.service.MediaFileService;
 /**
@@ -41,12 +55,145 @@ public class MediaFilesCtrl extends BaseCtrl {
 	@Autowired
 	private MediaFileService mediaFileService;
 	
-	
+	/**
+	 * 分页展示
+	 * @param searchEntity
+	 * @return
+	 */
     @RequestMapping(value = "/list")
     @ResponseBody
     public AjaxResult list(MediaFiles searchEntity) {
         List<MediaFiles> pageList = mediaFileService.getMediaListByPage(searchEntity);
         return getResult(searchEntity, pageList);
     }
+    /**
+     * 添加视频素材
+     * @param mediaFile
+     * @return
+     * @throws WxErrorException
+     */
+    @RequestMapping(value = "/addVideo")
+    @ResponseBody
+    public AjaxResult addVideo(MediaFiles mediaFile) throws WxErrorException{
+    	MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();
+    	String accessToken = WxApiClient.getAccessToken(mpAccount);
+    	Map<String,String> params=new HashMap<>();
+    	JSONObject json=new JSONObject();
+    	json.put("title", mediaFile.getTitle());
+    	json.put("introduction", mediaFile.getIntroduction());
+    	params.put("description", json.toJSONString());
+    	JSONObject result = MediaApi.addMateria(accessToken, "video", mediaFile.getUrl(), params);
+    	mediaFile.setMediaId(result.getString("media_id"));
+    	mediaFile.setMediaType("video");
+    	mediaFile.setCreateTime(new Date(System.currentTimeMillis()));
+    	mediaFile.setUpdateTime(new Date(System.currentTimeMillis()));
+    	mediaFileService.add(mediaFile);
+    	return AjaxResult.saveSuccess();
+    }
+    /**
+     *  删除素材（微信端和本地数据库）
+     * @param mediaId
+     * @return
+     * @throws WxErrorException
+     */
+    @ResponseBody
+	@RequestMapping("delMediaFile")
+    public AjaxResult delMediaFile(String mediaId) throws WxErrorException{
+    	MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();
+    	String accessToken = WxApiClient.getAccessToken(mpAccount);
+    	MediaApi.delMaterial(accessToken, mediaId);
+    	mediaFileService.deleteByMediaId(mediaId);
+    	return AjaxResult.deleteSuccess();
+    }
     
+    /**
+     *  上传素材到本地
+     * @param file
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+	@RequestMapping("uploadFile")
+	public AjaxResult uploadFile(MultipartFile file) throws Exception {
+		//原文件名称
+		String trueName = file.getOriginalFilename();
+		//文件后缀名
+		String ext = FilenameUtils.getExtension(trueName);
+
+		//系统生成的文件名
+		String fileName = file.getOriginalFilename();
+		fileName = System.currentTimeMillis() + new Random().nextInt(10000) + "." + ext;
+		//文件上传路径
+		String resURL = PropertiesUtil.getString("res.upload.url").toString();
+		String filePath = request.getSession().getServletContext().getRealPath("/");
+
+		//读取配置文上传件的路径
+		if (PropertiesUtil.getString("res.upload.path") != null) {
+			filePath = PropertiesUtil.getString("res.upload.path").toString() + fileName;
+		} else {
+			filePath = filePath + "/upload/" + fileName;
+		}
+
+		File saveFile = new File(filePath);
+
+		if (!saveFile.exists()) {
+			saveFile.mkdirs();
+		}
+		file.transferTo(saveFile);
+		//构造返回参数
+		Map<String, Object> mapData = new HashMap();
+		mapData.put("src", resURL + fileName);//文件url
+		mapData.put("url", filePath);//文件绝对路径url
+		mapData.put("title", fileName);//图片名称，这个会显示在输入框里
+		
+		return AjaxResult.success(mapData);
+    }
+    /**
+     *  添加语音素材
+     * @param file
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+	@RequestMapping("addVoice")
+	public AjaxResult addVoice(MultipartFile file) throws Exception {
+		//原文件名称
+		String trueName = file.getOriginalFilename();
+		//文件后缀名
+		String ext = FilenameUtils.getExtension(trueName);
+
+		//系统生成的文件名
+		String fileName = file.getOriginalFilename();
+		fileName = System.currentTimeMillis() + new Random().nextInt(10000) + "." + ext;
+		//文件上传路径
+		String resURL = PropertiesUtil.getString("res.upload.url").toString();
+		String filePath = request.getSession().getServletContext().getRealPath("/");
+
+		//读取配置文上传件的路径
+		if (PropertiesUtil.getString("res.upload.path") != null) {
+			filePath = PropertiesUtil.getString("res.upload.path").toString() + fileName;
+		} else {
+			filePath = filePath + "/upload/" + fileName;
+		}
+
+		File saveFile = new File(filePath);
+
+		if (!saveFile.exists()) {
+			saveFile.mkdirs();
+		}
+		file.transferTo(saveFile);
+		MediaFiles mediaFile =new MediaFiles();
+		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();
+    	String accessToken = WxApiClient.getAccessToken(mpAccount);
+    	JSONObject result = MediaApi.addMateria(accessToken, "voice", filePath,null );
+    	mediaFile.setUploadUrl(resURL + fileName);
+    	mediaFile.setUrl(filePath);
+    	mediaFile.setTitle(fileName);//用title保存文件名
+    	mediaFile.setMediaId(result.getString("media_id"));
+    	mediaFile.setMediaType("voice");
+    	mediaFile.setCreateTime(new Date(System.currentTimeMillis()));
+    	mediaFile.setUpdateTime(new Date(System.currentTimeMillis()));
+    	mediaFileService.add(mediaFile);
+		return AjaxResult.saveSuccess();
+    }
 }
