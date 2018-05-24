@@ -1,6 +1,10 @@
 <style>
-    .audiojs *{
+    .audiojs * {
         box-sizing: unset;
+    }
+    .audiojs{
+        display: inline-block;
+        vertical-align: top;
     }
 </style>
 <div class="fsh-rightPanel">
@@ -54,7 +58,6 @@
         var player = null;
 
 
-
         //    $("#audio_player")[0].src='http://www.w3school.com.cn/i/horse.ogg';
         //    $("#audio_player")[0].src='/views/test/test.m4a';
 
@@ -64,7 +67,7 @@
                 elem: '#list_table',
                 url: '/views/test/list.json',
                 align: "center",
-                done:function () {
+                done: function () {
                     console.log("done");
                     audiojs.createAll();
                 },
@@ -75,10 +78,9 @@
                     {field: 'createTime', title: '上传时间', width: 200, align: 'center',},
                     {
                         field: 'lock', title: '操作', align: 'center', templet: function (d) {
-                        return '<audio src="'+d.uploadUrl+'"></audio>';
-//                        return '<a class="font-danger" lay-event="play" href="javascript:;"><i class="iconfont icon-bofang"></i> 预览</a>'
-//                            + '<a class="font-danger" lay-event="" href="' + d.uploadUrl + '" download="' + d.uploadUrl.substring(d.uploadUrl.lastIndexOf('/') + 1) + '" ><i class="iconfont icon-icondownload"></i> 下载</a>'
-//                            + '<a class="font-primary" lay-event="del" href="javascript:;">删除</a>';
+                        return '<audio src="' + d.uploadUrl + '"></audio>'
+                            + '<a class="font-danger" lay-event="" href="' + d.uploadUrl + '" download="' + d.uploadUrl.substring(d.uploadUrl.lastIndexOf('/') + 1) + '" ><i class="iconfont icon-icondownload"></i> 下载</a>'
+                            + '<a class="font-primary" lay-event="del" href="javascript:;">删除</a>';
                     }, unresize: true, align: 'center'
                     }
                 ]],
@@ -105,8 +107,7 @@
 
         // 搜索
         $("#search").click(function () {
-
-            reloadTable(tableObj, "list_form");
+            reloadTable(tableObj);
         });
 
         //表格内部操作按钮监听
@@ -133,23 +134,5 @@
                 });
             }
         });
-
-
-//        var audioPlayer = {
-//            player: $("#audio_player")[0],
-//            play: function (src) {
-//                this.player.src = '/views/test/test.m4a';
-//                this.player.play();
-//            },
-//            pause:function () {
-//                this.player.paused();
-//            }
-//        };
-//
-//        function playAudio(src) {
-//            var player = $("#audio_player")[0];
-//
-//        }
-
     });
 </script>
