@@ -196,7 +196,7 @@
         $.each(fieldElem, function (_, item) {
             if (!item.name) return;
             if (/^checkbox|radio$/.test(item.type) && !item.checked) return;
-            field[item.name] = $(item).value;
+            field[item.name] = $(item).val();
         });
         return field;
     }

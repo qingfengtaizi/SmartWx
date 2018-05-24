@@ -73,5 +73,24 @@
                 }
             })
         }
+
+        // 删除
+        $("#image_wrap").on("click","button[event='del']",function () {
+            var id=$(this).parent().attr("data-id");
+            showConfirm("确认删除？",function () {
+                $.ajax({
+                    url: '/views/test/list.json',
+                    data: {id: id},
+                    success: function (result) {
+                        if (result.success) {
+                            layer.msg("操作成功");
+                            getlist1();
+                        } else {
+                            layer.msg("操作异常");
+                        }
+                    }
+                })
+            });
+        })
     });
 </script>

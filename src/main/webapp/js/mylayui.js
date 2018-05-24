@@ -358,6 +358,7 @@ function getTemplatePath(template) {
  */
 function reloadTable(tableObj, form) {
     if (typeof form == "undefined" || typeof form == "string") {
+        console.log()
         tableObj.reload({
             page: {
                 curr: 1

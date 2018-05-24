@@ -3,51 +3,11 @@
   "data": [
     {
       "id": 1,
-      "src": "/images/common/portrait.jpg"
+      "uploadUrl": "/views/test/test.m4a"
     },
     {
       "id": 1,
-      "src": "/images/common/portrait.jpg"
-    },
-    {
-      "id": 1,
-      "src": "/images/common/portrait.jpg"
-    },
-    {
-      "id": 1,
-      "src": "/images/common/portrait.jpg"
-    },
-    {
-      "id": 1,
-      "src": "/images/common/portrait.jpg"
-    },
-    {
-      "id": 1,
-      "src": "/images/common/portrait.jpg"
-    },
-    {
-      "id": 1,
-      "src": "/images/common/portrait.jpg"
-    },
-    {
-      "id": 1,
-      "src": "/images/common/portrait.jpg"
-    },
-    {
-      "id": 1,
-      "src": "/images/common/portrait.jpg"
-    },
-    {
-      "id": 1,
-      "src": "/images/common/portrait.jpg"
-    },
-    {
-      "id": 1,
-      "src": "/images/common/portrait.jpg"
-    },
-    {
-      "id": 1,
-      "src": "/images/common/portrait.jpg"
+      "uploadUrl": "http://www.w3school.com.cn/i/horse.ogg"
     }
   ],
   "page": {

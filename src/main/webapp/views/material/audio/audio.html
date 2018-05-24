@@ -1,3 +1,8 @@
+<style>
+    .audiojs *{
+        box-sizing: unset;
+    }
+</style>
 <div class="fsh-rightPanel">
     <div class="layui-anim layui-anim-upbit">
         <div class="layui-form-item wxmp-search" id="list_form">
@@ -14,25 +19,33 @@
                 <button class="layui-btn btn-primary" id="video_add">新增</button>
             </div>
         </div>
+        <div>
+
+        </div>
         <table id="list_table" class="layui-hide" lay-filter="mainList"></table>
     </div>
 </div>
 <script>
+    //    $("#audio_player")[0].src='http://www.w3school.com.cn/i/horse.ogg';
+    //    $("#audio_player")[0].src='/views/test/test.m4a';
+    //    $("#audio_player")[0].play();
+
     layui.use(['layer', 'table', "laydate"], function () {
         var layer = layui.layer;
         var table = layui.table;
         var laydate = layui.laydate;
 
+        var tableObj;
         //日期选择
         laydate.render({
             elem: '#video_time',
             range: true,
-            done: function(value, date, endDate){
-                if(value){
-                    $("#list_form input[name='start']").val(value.substring(0,10));
+            done: function (value, date, endDate) {
+                if (value) {
+                    $("#list_form input[name='start']").val(value.substring(0, 10));
                     $("#list_form input[name='end']").val(value.substring(13));
-                }else{
-                	$("#list_form input[name='start']").val("");
+                } else {
+                    $("#list_form input[name='start']").val("");
                     $("#list_form input[name='end']").val("");
                 }
             }
@@ -40,29 +53,38 @@
 
         var player = null;
 
-        util.loadCss("/js/plugin/video-js/video-js.css");
-        util.loadJs("/js/plugin/video-js/video.js", function () {
 
+
+        //    $("#audio_player")[0].src='http://www.w3school.com.cn/i/horse.ogg';
+        //    $("#audio_player")[0].src='/views/test/test.m4a';
+
+        util.loadJs("/js/plugin/audiojs/audio.min.js", function () {
+            tableObj = table.render({
+                id: 'list_table',
+                elem: '#list_table',
+                url: '/views/test/list.json',
+                align: "center",
+                done:function () {
+                    console.log("done");
+                    audiojs.createAll();
+                },
+                cols: [[
+                    {type: 'checkbox'},
+                    {type: 'numbers', title: '序号', width: 50},
+                    {field: 'title', title: '标题', width: 200, align: 'center',},
+                    {field: 'createTime', title: '上传时间', width: 200, align: 'center',},
+                    {
+                        field: 'lock', title: '操作', align: 'center', templet: function (d) {
+                        return '<audio src="'+d.uploadUrl+'"></audio>';
+//                        return '<a class="font-danger" lay-event="play" href="javascript:;"><i class="iconfont icon-bofang"></i> 预览</a>'
+//                            + '<a class="font-danger" lay-event="" href="' + d.uploadUrl + '" download="' + d.uploadUrl.substring(d.uploadUrl.lastIndexOf('/') + 1) + '" ><i class="iconfont icon-icondownload"></i> 下载</a>'
+//                            + '<a class="font-primary" lay-event="del" href="javascript:;">删除</a>';
+                    }, unresize: true, align: 'center'
+                    }
+                ]],
+            });
         });
-        var tableObj = table.render({
-            id: 'list_table',
-            elem: '#list_table',
-            url: '/mediaFile/list?mediaType=video',
-            align: "center",
-            cols: [[
-                {type: 'checkbox'},
-                {type: 'numbers', title: '序号', width: 50},
-                {field: 'title', title: '标题', width: 150, align: 'center',},
-                {field: 'createTime', title: '上传时间', align: 'center',},
-                {
-                    field: 'lock', title: '操作', width: 250, align: 'center', templet: function (d) {
-                    return '<a class="font-danger" lay-event="play" href="javascript:;"><i class="iconfont icon-bofang"></i> 预览</a>'
-                        + '<a class="font-danger" lay-event="" href="'+d.uploadUrl+'" download="'+d.uploadUrl.substring(d.uploadUrl.lastIndexOf('/')+1)+'" ><i class="iconfont icon-icondownload"></i> 下载</a>'
-                        + '<a class="font-primary" lay-event="del" href="javascript:;">删除</a>';
-                }, unresize: true, align: 'center'
-                }
-            ]],
-        });
+
 
         // 添加
         $("#video_add").click(function () {
@@ -84,7 +106,7 @@
         // 搜索
         $("#search").click(function () {
 
-            reloadTable(tableObj,"list_form");
+            reloadTable(tableObj, "list_form");
         });
 
         //表格内部操作按钮监听
@@ -112,36 +134,22 @@
             }
         });
 
-        window.popvideo = function (videoUrl) {
-            var $p = $("#player");
-            $p.length > 0 && $p.remove();
 
-            var TEMP_video =
-                '<div id="player" style="width:900px;height:600px;display:none;overflow: hidden">'
-                + '<video width="900" height="600" controls="controls" class="video-js" id="video">'
-                + '<source src="' + videoUrl + '">'
-                + '</video>'
-                + '</div>';
+//        var audioPlayer = {
+//            player: $("#audio_player")[0],
+//            play: function (src) {
+//                this.player.src = '/views/test/test.m4a';
+//                this.player.play();
+//            },
+//            pause:function () {
+//                this.player.paused();
+//            }
+//        };
+//
+//        function playAudio(src) {
+//            var player = $("#audio_player")[0];
+//
+//        }
 
-            $("body").append(template.render(TEMP_video));
-            var videoPlayer = videojs('video');
-            layer.open({
-                type: 1,
-                content: $("#player"),
-                anim: '1',
-                title: "视频",
-                area: '900px',
-                scrollbar: false,
-                skin: "",
-                shadeClose: true,
-                btn: 0,
-                success: function () {
-                    videoPlayer.play();
-                },
-                end: function () {
-                    videoPlayer.dispose()
-                }
-            });
-        }
     });
 </script>
