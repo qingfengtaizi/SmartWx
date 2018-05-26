@@ -50,7 +50,7 @@
 
     <!-- 根据媒体资源 -->
 	<delete id="deleteByMediaId" parameterType="java.lang.String" >
-		DELETE FROM wxcms_img_resource t WHERE t.media_id = #{mediaId}
+		DELETE FROM wxcms_img_resource WHERE media_id = #{value}
 	</delete>
 
 </mapper>

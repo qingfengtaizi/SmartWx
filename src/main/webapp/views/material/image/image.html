@@ -21,8 +21,11 @@
 
         var uploader = upload.render({
             elem: '#video_uploader',
-            url: '/managerImg/uploadImg',
-            size: 5120,
+            url: '/mediaFile/addMateria',
+            size: 2048,
+            accept:"images",
+            exts: 'bmp|BMP|png|PNG|jpeg|JPEG|jpg|JPG|gif|GIF',
+            data:{type:"image"},
             before: function(){
                 showLoading();
             },
@@ -79,12 +82,12 @@
             var id=$(this).parent().attr("data-id");
             showConfirm("确认删除？",function () {
                 $.ajax({
-                    url: '/views/test/list.json',
+                    url: '/managerImg/delMediaImg',
                     data: {id: id},
                     success: function (result) {
                         if (result.success) {
                             layer.msg("操作成功");
-                            getlist1();
+                            getImglist();
                         } else {
                             layer.msg("操作异常");
                         }

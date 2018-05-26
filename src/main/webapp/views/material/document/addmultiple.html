@@ -289,7 +289,11 @@
         //上传
         upload.render({
             elem: '#uploader',
-            url: '/managerImg/uploadImg',
+            url: '/mediaFile/addMateria',
+            data:{type:'thumb'},
+            size: 64,
+            accept:"images",
+            exts: 'JPG|jpg',
             before: function(){
                 showLoading();
             },

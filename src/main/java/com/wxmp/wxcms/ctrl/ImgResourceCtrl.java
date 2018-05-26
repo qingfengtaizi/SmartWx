@@ -62,7 +62,7 @@ public class ImgResourceCtrl extends BaseCtrl {
     }
 	
 	/**
-	 * 上传图片(需要同步微信用)
+	 * 上传图片(需要同步微信用)-抛弃
 	 * @return
 	 */
 	@ResponseBody
@@ -107,43 +107,37 @@ public class ImgResourceCtrl extends BaseCtrl {
 		file.transferTo(saveFile);
 
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
-		//添加永久图片
+		
+		String accessToken = WxApiClient.getAccessToken(mpAccount);
+		//添加永久图片--图文的封面应该为thumb
 		String materialType = MediaType.Image.toString();
 		//将图片同步到微信，返回mediaId
-		JSONObject imgResultObj = WxApiClient.addMaterial(filePath, materialType, mpAccount);
+		JSONObject imgResultObj = MediaApi.addMateria(accessToken, materialType, filePath, null);
+//		JSONObject imgResultObj = WxApiClient.addMaterial(filePath, materialType, mpAccount);
 
-		//上传图片的id
-		String imgMediaId = "";
-		String imgUrl = "";
-		if (imgResultObj != null && imgResultObj.containsKey("media_id")) {
-			//微信返回来的媒体素材id
-			imgMediaId = imgResultObj.getString("media_id");
-			//图片url
-			imgUrl = imgResultObj.getString("url");
+		//微信返回来的媒体素材id
+		String imgMediaId = imgResultObj.getString("media_id");
+		//图片url
+		String imgUrl = imgResultObj.getString("url");
 
-			ImgResource img = new ImgResource();
-			img.setName(fileName);
-			img.setSize((int) file.getSize());
-			img.setTrueName(trueName);
-			img.setType(ext);
-			img.setUrl(resURL + fileName);
-			img.setHttpUrl(imgUrl);
-			img.setMediaId(imgMediaId);
-			
-			String result = this.imgResourceService.addImg(img);
-			if (result != null) {
-				obj.put("url", result);
-				obj.put("imgMediaId", imgMediaId);
-			} else {
-				obj.put("url", null);
-				obj.put("imgMediaId", null);
-			}
-			return AjaxResult.success(obj);
+		ImgResource img = new ImgResource();
+		img.setName(fileName);
+		img.setSize((int) file.getSize());
+		img.setTrueName(trueName);
+		img.setType(ext);
+		img.setUrl(resURL + fileName);
+		img.setHttpUrl(imgUrl);
+		img.setMediaId(imgMediaId);
+		
+		String result = this.imgResourceService.addImg(img);
+		if (result != null) {
+			obj.put("url", result);
+			obj.put("imgMediaId", imgMediaId);
 		} else {
 			obj.put("url", null);
 			obj.put("imgMediaId", null);
-			return AjaxResult.failure();
 		}
+		return AjaxResult.success(obj);
 	}
 
 	/**

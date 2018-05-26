@@ -35,7 +35,8 @@
     //    $("#audio_player")[0].play();
 
     layui.use(['layer', 'table', "laydate"], function () {
-        var layer = layui.layer;
+    	var upload=layui.upload;
+    	var layer = layui.layer;
         var table = layui.table;
         var laydate = layui.laydate;
 
@@ -65,7 +66,7 @@
             tableObj = table.render({
                 id: 'list_table',
                 elem: '#list_table',
-                url: '/views/test/list.json',
+                url: '/mediaFile/list?mediaType=voice',
                 align: "center",
                 done: function () {
                     console.log("done");
@@ -89,20 +90,29 @@
 
 
         // 添加
-        $("#video_add").click(function () {
-            showDialog({
-                title: '添加',
-                template: 'add',
-                saveUrl: '/mediaFile/addVideo',
-                tableObj: tableObj,
-                beforeSubmit: function (data) {
-                    if (!data.uploadUrl) {
-                        layer.msg("请上传视频");
-                        return false;
-                    }
-                    return true;
+        var uploader = upload.render({
+            elem: '#video_add',
+            url: '/mediaFile/addMateria',
+            size: 2048,
+            data:{type:"voice"},
+            accept:"audio",
+            exts: 'mp3|MP3|wma|WMA|wav|WAV|amr|AMR',
+            before: function(){
+                showLoading();
+            },
+            done: function(res){
+                layer.closeAll('loading');
+                if(res.success){
+                    layer.msg("上传成功");
+                    reloadTable(tableObj);
+                }else{
+                    layer.msg("上传失败");
                 }
-            })
+            }
+            ,error: function(){
+                layer.closeAll('loading');
+                layer.msg("上传失败");
+            }
         });
 
         // 搜索

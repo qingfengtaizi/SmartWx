@@ -57,7 +57,7 @@ public class ImgResourceServiceImpl implements ImgResourceService {
 	@Override
 	public ImgResource getImg(String id) {
 		// TODO Auto-generated method stub
-		return null;
+		return imgResourceDao.getImgById(id);
 	}
 
 	@Override

@@ -41,11 +41,14 @@ import com.wxmp.wxapi.process.MediaApi;
 import com.wxmp.wxapi.process.MpAccount;
 import com.wxmp.wxapi.process.WxApiClient;
 import com.wxmp.wxapi.process.WxMemoryCacheClient;
+import com.wxmp.wxcms.domain.ImgResource;
 import com.wxmp.wxcms.domain.MediaFiles;
+import com.wxmp.wxcms.service.ImgResourceService;
 import com.wxmp.wxcms.service.MediaFileService;
 /**
  * 语音和视频控制器
  * @author nigualding
+ * 后面会把图片和语音上传合并到一个方法中。
  *
  */
 @Controller
@@ -54,6 +57,8 @@ public class MediaFilesCtrl extends BaseCtrl {
 
 	@Autowired
 	private MediaFileService mediaFileService;
+	@Autowired
+	private ImgResourceService imgResourceService;
 	
 	/**
 	 * 分页展示
@@ -107,7 +112,7 @@ public class MediaFilesCtrl extends BaseCtrl {
     }
     
     /**
-     *  上传素材到本地
+     *  上传素材文件到本地
      * @param file
      * @return
      * @throws Exception
@@ -149,15 +154,19 @@ public class MediaFilesCtrl extends BaseCtrl {
 		return AjaxResult.success(mapData);
     }
     /**
-     *  添加语音素材
+     *  添加语音\图片\缩略图素材
      * @param file
      * @return
      * @throws Exception
      */
     @ResponseBody
-	@RequestMapping("addVoice")
-	public AjaxResult addVoice(MultipartFile file) throws Exception {
-		//原文件名称
+	@RequestMapping("addMateria")
+	public AjaxResult addVoice(MultipartFile file,String type) throws Exception {
+    	JSONObject obj = new JSONObject();
+    	if (null == file) {
+			obj.put("message", "没有文件上传");
+		}
+    	//原文件名称
 		String trueName = file.getOriginalFilename();
 		//文件后缀名
 		String ext = FilenameUtils.getExtension(trueName);
@@ -182,18 +191,40 @@ public class MediaFilesCtrl extends BaseCtrl {
 			saveFile.mkdirs();
 		}
 		file.transferTo(saveFile);
-		MediaFiles mediaFile =new MediaFiles();
+		
+		
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();
     	String accessToken = WxApiClient.getAccessToken(mpAccount);
-    	JSONObject result = MediaApi.addMateria(accessToken, "voice", filePath,null );
-    	mediaFile.setUploadUrl(resURL + fileName);
-    	mediaFile.setUrl(filePath);
-    	mediaFile.setTitle(fileName);//用title保存文件名
-    	mediaFile.setMediaId(result.getString("media_id"));
-    	mediaFile.setMediaType("voice");
-    	mediaFile.setCreateTime(new Date(System.currentTimeMillis()));
-    	mediaFile.setUpdateTime(new Date(System.currentTimeMillis()));
-    	mediaFileService.add(mediaFile);
-		return AjaxResult.saveSuccess();
+    	JSONObject result = MediaApi.addMateria(accessToken, type, filePath,null );
+    	String mediaId = result.getString("media_id");
+    	//图片或者图文的缩略图
+    	if(type.equals("image")||type.equals("thumb")){
+    		//图片url
+    		String imgUrl = result.getString("url");
+    		ImgResource img = new ImgResource();
+    		img.setName(fileName);
+    		img.setSize((int) file.getSize());
+    		img.setTrueName(trueName);
+    		img.setType(type);//这里用来区分image和thumb
+    		img.setUrl(resURL + fileName);
+    		img.setHttpUrl(imgUrl);
+    		img.setMediaId(mediaId);
+    		
+    		String imgRes = this.imgResourceService.addImg(img);
+    		obj.put("url", imgRes);
+			obj.put("imgMediaId", mediaId);
+			return AjaxResult.success(obj);
+    	}else {//音频 voice
+	    	MediaFiles mediaFile =new MediaFiles();
+	    	mediaFile.setUploadUrl(resURL + fileName);
+	    	mediaFile.setUrl(filePath);
+	    	mediaFile.setTitle(fileName);//用title保存文件名
+	    	mediaFile.setMediaId(mediaId);
+	    	mediaFile.setMediaType(type);
+	    	mediaFile.setCreateTime(new Date(System.currentTimeMillis()));
+	    	mediaFile.setUpdateTime(new Date(System.currentTimeMillis()));
+	    	mediaFileService.add(mediaFile);
+			return AjaxResult.saveSuccess();
+    	}
     }
 }

@@ -7,7 +7,7 @@
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label"><i>*</i>上传<br>(推荐mp4)</label>
+            <label class="layui-form-label"><i>*</i>上传<br>(只支持mp4)</label>
             <div class="layui-input-block">
                 <input type="hidden" name="uploadUrl" id="add_path" value="">
                 <input type="hidden" name="url" id="add_url" value="">
@@ -32,8 +32,9 @@
         var uploader = upload.render({
             elem: '#uploader',
             url: '/mediaFile/uploadFile',
-            size: 20480,
-            exts:"mp4|ogg|webm",
+            size: 10240,
+            accept:"video",
+            exts:"mp4|MP4",
             before: function(){
                 showLoading();
             },

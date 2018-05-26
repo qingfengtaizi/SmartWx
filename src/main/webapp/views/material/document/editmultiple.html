@@ -325,7 +325,11 @@
         //上传
         upload.render({
             elem: '#uploader'
-            , url: '/managerImg/uploadImg'
+            , url: '/mediaFile/addMateria'
+              data:{type:'thumb'},//缩略图
+              size: 64,
+              accept:"images",
+              exts: 'JPG|jpg'
             , done: function (result) {
                 if (result.success == 1) {
                     $("#uploader").html("<img src='" + result.data.url + "' style='width: 150px;height: 150px;'/><p>点击重新上传，或将文件拖拽到此处</p>");
