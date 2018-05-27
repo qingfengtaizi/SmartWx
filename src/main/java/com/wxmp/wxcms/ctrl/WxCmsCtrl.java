@@ -250,7 +250,7 @@ public class WxCmsCtrl extends BaseCtrl {
 	
 	//获取永久素材
 	@RequestMapping(value = "/getMaterials")
-	public AjaxResult syncMaterials(MaterialArticle materialArticle) throws BusinessException{
+	public AjaxResult syncMaterials(MaterialArticle materialArticle) throws Exception{
 		List<MaterialArticle> materialList = new ArrayList<MaterialArticle>();
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		Material material = WxApiClient.syncBatchMaterial(MediaType.News, materialArticle.getPage(), materialArticle.getPageSize(),mpAccount);

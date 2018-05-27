@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.wxmp.core.exception.WxErrorException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -88,7 +89,7 @@ public class MsgNewsCtrl extends BaseCtrl {
      */
     @RequestMapping(value = "/sendNewsMaterial", method = RequestMethod.POST)
     @ResponseBody
-    public String sendNewsMaterial(String newsId, HttpServletRequest request) {
+    public String sendNewsMaterial(String newsId, HttpServletRequest request) throws WxErrorException {
         String code = "";
         MsgNews msgNews = entityService.getById(newsId);
         List<MsgNews> msgNewsList = new ArrayList<MsgNews>();
@@ -249,13 +250,11 @@ public class MsgNewsCtrl extends BaseCtrl {
      * @param rows
      * @param request
      * @return
-     * @throws IOException 
-     * @throws JsonMappingException 
-     * @throws JsonParseException 
+     * @throws Exception
      */
     @RequestMapping(value = "/addMoreNews", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxResult addMoreNews(String rows, HttpServletRequest request) throws JsonParseException, IOException {
+    public AjaxResult addMoreNews(String rows, HttpServletRequest request) throws Exception {
 
         String filePath = request.getSession().getServletContext().getRealPath("/");
 
@@ -392,7 +391,7 @@ public class MsgNewsCtrl extends BaseCtrl {
      */
     @RequestMapping(value = "/deleteMaterial", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxResult deleteMaterial(String id) {
+    public AjaxResult deleteMaterial(String id) throws WxErrorException {
         MsgNews news = entityService.getById(id);
         MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();// 获取缓存中的唯一账号
         // 添加多图文永久素材
@@ -433,7 +432,7 @@ public class MsgNewsCtrl extends BaseCtrl {
      */
     @RequestMapping(value = "/updateSingleNews", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxResult updateSingleNews(MsgNews msgNews, HttpServletRequest request) {
+    public AjaxResult updateSingleNews(MsgNews msgNews, HttpServletRequest request) throws WxErrorException {
         String filePath = request.getSession().getServletContext().getRealPath("/");
 
         String description = msgNews.getDescription();
@@ -536,7 +535,7 @@ public class MsgNewsCtrl extends BaseCtrl {
      */
     @RequestMapping(value = "/updateSubMoreNews", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxResult updateMoreNews(String rows, HttpServletRequest request) {
+    public AjaxResult updateMoreNews(String rows, HttpServletRequest request) throws WxErrorException {
         String filePath = request.getSession().getServletContext().getRealPath("/");
         MsgArticle article = (MsgArticle) JSONObject.parseObject(rows, MsgArticle.class);
         String description = article.getContent();

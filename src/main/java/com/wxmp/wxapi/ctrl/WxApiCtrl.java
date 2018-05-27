@@ -31,6 +31,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.wxmp.core.exception.WxErrorException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -142,7 +143,7 @@ public class WxApiCtrl extends BaseCtrl{
 	
 	//创建微信公众账号菜单
 	@RequestMapping(value = "/publishMenu")
-	public ModelAndView publishMenu() {
+	public ModelAndView publishMenu() throws WxErrorException  {
 		JSONObject rstObj = null;
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();
 		if(mpAccount != null){
@@ -171,7 +172,7 @@ public class WxApiCtrl extends BaseCtrl{
 	
 	//删除微信公众账号菜单
 	@RequestMapping(value = "/deleteMenu")
-	public ModelAndView deleteMenu(HttpServletRequest request) {
+	public ModelAndView deleteMenu(HttpServletRequest request) throws WxErrorException {
 		JSONObject rstObj = null;
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		if(mpAccount != null){
@@ -194,7 +195,7 @@ public class WxApiCtrl extends BaseCtrl{
 	//获取用户列表
 	@RequestMapping(value = "/syncAccountFansList")
 	@ResponseBody
-	public AjaxResult syncAccountFansList(){
+	public AjaxResult syncAccountFansList() throws WxErrorException {
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		if(mpAccount != null){
 			boolean flag = myService.syncAccountFansList(mpAccount);
@@ -208,7 +209,7 @@ public class WxApiCtrl extends BaseCtrl{
 	//根据用户的ID更新用户信息
 	@RequestMapping(value = "/syncAccountFans")
 	@ResponseBody
-	public AjaxResult syncAccountFans(String openId) {
+	public AjaxResult syncAccountFans(String openId) throws WxErrorException {
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		if (mpAccount != null) {
 			AccountFans fans = myService.syncAccountFans(openId, mpAccount, true);//同时更新数据库
@@ -221,7 +222,7 @@ public class WxApiCtrl extends BaseCtrl{
 	
 	//获取永久素材
 	@RequestMapping(value = "/syncMaterials")
-	public AjaxResult syncMaterials(MaterialArticle materialArticle) throws BusinessException {
+	public AjaxResult syncMaterials(MaterialArticle materialArticle) throws WxErrorException {
 		List<MaterialArticle> materialList = new ArrayList<MaterialArticle>();
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		Material material = WxApiClient.syncBatchMaterial(MediaType.News, materialArticle.getPage(), materialArticle.getPageSize(),mpAccount);
@@ -247,7 +248,7 @@ public class WxApiCtrl extends BaseCtrl{
 	
 	//上传图文素材
 	@RequestMapping(value = "/doUploadMaterial")
-	public  ModelAndView doUploadMaterial(MsgNews msgNews){
+	public  ModelAndView doUploadMaterial(MsgNews msgNews) throws WxErrorException {
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		String rstMsg = "上传图文消息素材";
 		List<MsgNews> msgNewsList = new ArrayList<MsgNews>();
@@ -267,7 +268,7 @@ public class WxApiCtrl extends BaseCtrl{
 	
 	//获取openid
 	@RequestMapping(value = "/oauthOpenid.html")
-	public ModelAndView oauthOpenid(HttpServletRequest request){
+	public ModelAndView oauthOpenid(HttpServletRequest request) throws WxErrorException {
 		log.info("-------------------------------------oauthOpenid-----<0>-------------------");
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		log.info("-------------------------------------oauthOpenid-----<1>-------------------mpAccount："+mpAccount.getAccount());
@@ -296,7 +297,7 @@ public class WxApiCtrl extends BaseCtrl{
 	 * @return
 	 */
 	@RequestMapping(value = "/createQrcode", method = RequestMethod.POST)
-	public ModelAndView createQrcode(HttpServletRequest request,Integer num){
+	public ModelAndView createQrcode(HttpServletRequest request,Integer num) throws WxErrorException {
 		ModelAndView mv = new ModelAndView("wxcms/qrcode");
 		mv.addObject("cur_nav", "qrcode");
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
@@ -311,7 +312,7 @@ public class WxApiCtrl extends BaseCtrl{
 	
 	//以根据openid群发文本消息为例
 	@RequestMapping(value = "/massSendTextMsg", method = RequestMethod.POST)
-	public void massSendTextMsg(HttpServletResponse response,String openid,String content){
+	public void massSendTextMsg(HttpServletResponse response,String openid,String content) throws WxErrorException {
 		content = "群发文本消息";
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		String rstMsg = "根据openid群发文本消息失败";
@@ -341,7 +342,7 @@ public class WxApiCtrl extends BaseCtrl{
 	 * @return
 	 */
 	@RequestMapping(value = "/sendCustomTextMsg", method = RequestMethod.POST)
-	public void sendCustomTextMsg(HttpServletRequest request,HttpServletResponse response,String openid){
+	public void sendCustomTextMsg(HttpServletRequest request,HttpServletResponse response,String openid) throws WxErrorException {
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		String content = "微信派官方测试客服消息";
 		JSONObject result = WxApiClient.sendCustomTextMessage(openid, content, mpAccount);
@@ -362,7 +363,7 @@ public class WxApiCtrl extends BaseCtrl{
 	 */
 	@RequestMapping(value = "/sendTemplateMessage", method = RequestMethod.POST)
 	@ResponseBody
-	public AjaxResult sendTemplateMessage(HttpServletRequest request, HttpServletResponse response, String openIds) {
+	public AjaxResult sendTemplateMessage(String openIds) throws WxErrorException  {
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		TemplateMessage tplMsg = new TemplateMessage();
 
@@ -395,7 +396,7 @@ public class WxApiCtrl extends BaseCtrl{
 	 */
 	@RequestMapping(value = "/jsTicket")
 	@ResponseBody
-	public String jsTicket(HttpServletRequest request, String url) {
+	public String jsTicket(HttpServletRequest request, String url) throws WxErrorException  {
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		String jsTicket = WxApiClient.getJSTicket(mpAccount);
 		WxSign sign = new WxSign(mpAccount.getAppid(),jsTicket,url);//sha1签名得到signature
@@ -497,7 +498,7 @@ public class WxApiCtrl extends BaseCtrl{
      */
 	@RequestMapping(value = "/sendTextMsgByOpenId", method = RequestMethod.POST)
 	@ResponseBody
-	public AjaxResult sendTextMsgByOpenId(String msgId, String openid) {
+	public AjaxResult sendTextMsgByOpenId(String msgId, String openid) throws WxErrorException  {
 		MsgText msgText = msgTextService.getById(msgId);
 		String content = msgText.getContent();
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
@@ -513,13 +514,13 @@ public class WxApiCtrl extends BaseCtrl{
 	/**
 	 * 客服接口-发送图文消息
 	 *
-	 * @param msgId
+	 * @param id
 	 * @param openid
 	 * @return
 	 */
 	@RequestMapping(value = "/sendNewsByOpenId", method = RequestMethod.POST)
 	@ResponseBody
-	public AjaxResult sendNewsByOpenId(String id, String openid) {
+	public AjaxResult sendNewsByOpenId(String id, String openid)  throws WxErrorException {
 		
 		MsgNews msgNews  = this.msgNewsService.getById(id);
 
@@ -541,7 +542,7 @@ public class WxApiCtrl extends BaseCtrl{
      */
 	@RequestMapping(value = "/batchSendText", method = RequestMethod.POST)
 	@ResponseBody
-	public String batchSendText(String textId,String openIds){
+	public String batchSendText(String textId,String openIds) throws WxErrorException {
 		String code = "1";
 		MsgText msgText = msgTextService.getById(textId);
 		String[] openIdAarry = {"0"};
@@ -570,7 +571,7 @@ public class WxApiCtrl extends BaseCtrl{
      */
 	@RequestMapping(value = "/massSendTextByOpenIds", method = RequestMethod.POST)
 	@ResponseBody
-	public String massSendTextByOpenIds(String textId,String openIds){
+	public String massSendTextByOpenIds(String textId,String openIds) throws WxErrorException {
 		String code = "0";
 		MsgText msgText = msgTextService.getById(textId);
 		//分隔字符串
@@ -603,7 +604,7 @@ public class WxApiCtrl extends BaseCtrl{
 	 */
 	@RequestMapping(value = "/massSendNewsByOpenIds", method = RequestMethod.POST)
 	@ResponseBody
-	public String massSendNewsByOpenIds(String newsId,String openIds){
+	public String massSendNewsByOpenIds(String newsId,String openIds) throws WxErrorException {
 		String code = "";
         MsgNews msgNews = this.msgNewsService.getById(newsId);
 		
@@ -642,7 +643,7 @@ public class WxApiCtrl extends BaseCtrl{
 	 */
 	@RequestMapping(value = "/sendMaterialByOpenIds", method = RequestMethod.POST)
 	@ResponseBody
-	public String sendMaterialByOpenIds(String mediaId,String openIds){
+	public String sendMaterialByOpenIds(String mediaId,String openIds) throws WxErrorException {
 		String code = "";
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		//分隔字符串
@@ -666,7 +667,7 @@ public class WxApiCtrl extends BaseCtrl{
 	//创建微信公众账号菜单
 	@RequestMapping(value = "/doPublishMenu")
 	@ResponseBody
-	public AjaxResult doPublishMenu() {
+	public AjaxResult doPublishMenu() throws WxErrorException  {
 		JSONObject rstObj = null;
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();
 		if(mpAccount != null){
@@ -693,7 +694,7 @@ public class WxApiCtrl extends BaseCtrl{
 	//删除微信公众账号菜单
 	@RequestMapping(value = "/deletePublicMenu")
 	@ResponseBody
-	public String deletePublicMenu(HttpServletRequest request) {
+	public String deletePublicMenu(HttpServletRequest request) throws WxErrorException  {
 		String code = "";
 		JSONObject rstObj = null;
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号

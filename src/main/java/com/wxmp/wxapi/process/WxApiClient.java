@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.wxmp.core.exception.WxErrorException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -47,21 +48,19 @@ import com.wxmp.wxcms.domain.MsgNews;
 public class WxApiClient {
 	
 	private static Logger logger=Logger.getLogger(WxApiClient.class);
+
 	//获取accessToken
-	public static String getAccessToken(MpAccount mpAccount){
+	public static String getAccessToken(MpAccount mpAccount) throws WxErrorException {
 		//获取唯一的accessToken，如果是多账号，请自行处理
 		AccessToken token = WxMemoryCacheClient.getAccessToken();
-		if(token != null && !token.isExpires()&& WxApi.getCallbackIp(token.getAccessToken())){//不为空，并且没有过期
+		if (token != null && !token.isExpires() && WxApi.getCallbackIp(token.getAccessToken())) {//不为空，并且没有过期
 			logger.info("服务器缓存 accessToken == " + token.toString());
 			return token.getAccessToken();
-		}else{
-			token = WxApi.getAccessToken(mpAccount.getAppid(),mpAccount.getAppsecret());
-			if(token != null){
-				if(token.getErrcode() != null){//获取失败
-					System.out.println("## getAccessToken Error = " + token.getErrmsg());
-				}else{
+		} else {
+			token = WxApi.getAccessToken(mpAccount.getAppid(), mpAccount.getAppsecret());
+			if (token != null) {
+				if (token.getErrcode() == null) {
 					WxMemoryCacheClient.addAccessToken(mpAccount.getAccount(), token);
-					logger.info("## accessToken == " + token.getAccessToken());
 					return token.getAccessToken();
 				}
 			}
@@ -70,7 +69,7 @@ public class WxApiClient {
 	}
 	
 	//获取jsTicket
-	public static String getJSTicket(MpAccount mpAccount){
+	public static String getJSTicket(MpAccount mpAccount) throws WxErrorException {
 		//获取唯一的JSTicket，如果是多账号，请自行处理
 		JSTicket jsTicket = WxMemoryCacheClient.getJSTicket();
 		if(jsTicket != null && !jsTicket.isExpires()){//不为空，并且没有过期
@@ -79,9 +78,7 @@ public class WxApiClient {
 			String token = getAccessToken(mpAccount);
 			jsTicket = WxApi.getJSTicket(token);
 			if(jsTicket != null){
-				if(jsTicket.getErrcode() != null){//获取失败
-					System.out.println("## getJSTicket Error = " + jsTicket.getErrmsg());
-				}else{
+				if(jsTicket.getErrcode() == null){
 					WxMemoryCacheClient.addJSTicket(mpAccount.getAccount(), jsTicket);
 					return jsTicket.getTicket();
 				}
@@ -125,28 +122,28 @@ public class WxApiClient {
 	}
 	
 	//发布菜单
-	public static JSONObject publishMenus(String menus,MpAccount mpAccount){
+	public static JSONObject publishMenus(String menus,MpAccount mpAccount) throws WxErrorException {
 		String accessToken = getAccessToken(mpAccount);
 		String url = WxApi.getMenuCreateUrl(accessToken);
 		return WxApi.httpsRequest(url, HttpMethod.POST, menus);
 	}
 	
 	//创建个性化菜单
-	public static JSONObject publishAddconditionalMenus(String menus,MpAccount mpAccount){
+	public static JSONObject publishAddconditionalMenus(String menus,MpAccount mpAccount) throws WxErrorException {
 		String accessToken = getAccessToken(mpAccount);
 		String url = WxApi.getMenuAddconditionalUrl(accessToken);
 		return WxApi.httpsRequest(url, HttpMethod.POST, menus);
 	}
 	
 	//删除菜单
-	public static JSONObject deleteMenu(MpAccount mpAccount){
+	public static JSONObject deleteMenu(MpAccount mpAccount) throws WxErrorException {
 		String accessToken = getAccessToken(mpAccount);
 		String url = WxApi.getMenuDeleteUrl(accessToken);
 		return WxApi.httpsRequest(url, HttpMethod.POST, null);
 	}
 	
 	//根据openId获取粉丝信息
-	public static AccountFans syncAccountFans(String openId,MpAccount mpAccount){
+	public static AccountFans syncAccountFans(String openId,MpAccount mpAccount) throws WxErrorException {
 		String accessToken = getAccessToken(mpAccount);
 		logger.info("获取用户信息接口accessToken："+accessToken);
 		String url = WxApi.getFansInfoUrl(accessToken, openId);
@@ -208,7 +205,7 @@ public class WxApiClient {
 	 * @param count 获取数量
 	 * @return
 	 */
-	public static Material syncBatchMaterial(MediaType mediaType, Integer offset, Integer count,MpAccount mpAccount){
+	public static Material syncBatchMaterial(MediaType mediaType, Integer offset, Integer count,MpAccount mpAccount) throws WxErrorException {
 		String accessToken = getAccessToken(mpAccount);
 		String url = WxApi.getBatchMaterialUrl(accessToken);
 		JSONObject bodyObj = new JSONObject();
@@ -266,7 +263,7 @@ public class WxApiClient {
 	}
 	
 	//上传图文消息
-	public static JSONObject uploadNews(List<MsgNews> msgNewsList,MpAccount mpAccount){
+	public static JSONObject uploadNews(List<MsgNews> msgNewsList,MpAccount mpAccount) throws WxErrorException {
 		JSONObject rstObj = new JSONObject();
 		String accessToken = getAccessToken(mpAccount);
 		try{
@@ -320,7 +317,7 @@ public class WxApiClient {
 	 * @param mpAccount
 	 * @return
 	 */
-	public static JSONObject massSendByOpenIds(List<String> openids,String mediaId,MsgType msgType,MpAccount mpAccount){
+	public static JSONObject massSendByOpenIds(List<String> openids,String mediaId,MsgType msgType,MpAccount mpAccount) throws WxErrorException {
 		if(openids != null && openids.size() > 0){
 			JSONObject postObj = new JSONObject();
 			JSONObject media = new JSONObject();
@@ -341,7 +338,7 @@ public class WxApiClient {
 	 * @param mpAccount
 	 * @return
 	 */
-	public static JSONObject massSendTextByOpenIds(List<String> openids,String content, MpAccount mpAccount){
+	public static JSONObject massSendTextByOpenIds(List<String> openids,String content, MpAccount mpAccount) throws WxErrorException {
 		if(openids != null && openids.size() > 0){
 			if(openids.size() == 1){//根据openId群发，size至少为2
 				openids.add("1");
@@ -365,7 +362,7 @@ public class WxApiClient {
 	 * @param content 消息内容
 	 * @return
 	 */
-	public static JSONObject sendCustomTextMessage(String openid,String content,MpAccount mpAccount){
+	public static JSONObject sendCustomTextMessage(String openid,String content,MpAccount mpAccount) throws WxErrorException {
 		if(!StringUtils.isBlank(openid) && !StringUtils.isBlank(content)){
 			String accessToken = getAccessToken(mpAccount);
 			content = WxMessageBuilder.prepareCustomText(openid, content);
@@ -380,7 +377,7 @@ public class WxApiClient {
 	 * @param mpAccount 消息内容
 	 * @return
 	 */
-	public static JSONObject sendTemplateMessage(TemplateMessage tplMsg,MpAccount mpAccount){
+	public static JSONObject sendTemplateMessage(TemplateMessage tplMsg,MpAccount mpAccount) throws WxErrorException {
 		if(tplMsg != null){
 			String accessToken = getAccessToken(mpAccount);
 			return WxApi.httpsRequest(WxApi.getSendTemplateMessageUrl(accessToken), HttpMethod.POST, tplMsg.toString());
@@ -394,7 +391,7 @@ public class WxApiClient {
 	 * @param scene 临时二维码时为32位非0整型，永久二维码时最大值为100000（目前参数只支持1--100000)
 	 * @return
 	 */
-	public static byte[] createQRCode(Integer expireSecodes, Integer scene, MpAccount mpAccount){
+	public static byte[] createQRCode(Integer expireSecodes, Integer scene, MpAccount mpAccount) throws WxErrorException {
 		if(scene != null){
 			String accessToken = getAccessToken(mpAccount);
 			String postBody = WxApi.getQrcodeJson(expireSecodes, scene);
@@ -411,7 +408,7 @@ public class WxApiClient {
 	}
 	
 	//创建永久字符串二维码
-	public static byte[] createQRCodeLimit(String qrcodeStr, MpAccount mpAccount){
+	public static byte[] createQRCodeLimit(String qrcodeStr, MpAccount mpAccount) throws WxErrorException {
 		if(!StringUtils.isBlank(qrcodeStr)){
 			String accessToken = getAccessToken(mpAccount);
 			String postBody = WxApi.getQrcodeLimitJson(qrcodeStr);
@@ -468,7 +465,7 @@ public class WxApiClient {
 	}
 		
 	//上传永久图片
-	public static JSONObject uploadMaterialImg(String filePath,MpAccount mpAccount){
+	public static JSONObject uploadMaterialImg(String filePath,MpAccount mpAccount) throws WxErrorException {
 		JSONObject rstObj = new JSONObject();
 		String accessToken = getAccessToken(mpAccount);
 		try{
@@ -484,7 +481,7 @@ public class WxApiClient {
 	}
 	
 	//新增微信永久素材
-	public static JSONObject addMaterial(String filePath,String materialType,MpAccount mpAccount){
+	public static JSONObject addMaterial(String filePath,String materialType,MpAccount mpAccount) throws WxErrorException {
 		JSONObject rstObj = new JSONObject();
 		String accessToken = getAccessToken(mpAccount);
 		try{
@@ -507,7 +504,7 @@ public class WxApiClient {
 	 * @param mpAccount
 	 * @return
 	 */
-	public static JSONObject getMaterial(String media_id, MpAccount mpAccount){
+	public static JSONObject getMaterial(String media_id, MpAccount mpAccount) throws WxErrorException {
 			JSONObject postObj = new JSONObject();
 			postObj.put("media_id", media_id);
 			String accessToken = getAccessToken(mpAccount);
@@ -523,7 +520,7 @@ public class WxApiClient {
 	 * @param mpAccount
 	 * @return
 	 */
-    public static JSONObject deleteMaterial(String media_id, MpAccount mpAccount) {
+    public static JSONObject deleteMaterial(String media_id, MpAccount mpAccount)  throws WxErrorException {
         JSONObject postObj = new JSONObject();
         postObj.put("media_id", media_id);
         String accessToken = getAccessToken(mpAccount);
@@ -531,7 +528,7 @@ public class WxApiClient {
     }
 	
 	//新增永久图文素材
-	public static JSONObject addNewsMaterial(List<MsgNews> msgNewsList,String mediaId,MpAccount mpAccount){
+	public static JSONObject addNewsMaterial(List<MsgNews> msgNewsList,String mediaId,MpAccount mpAccount) throws WxErrorException {
 		JSONObject rstObj = new JSONObject();
 		String accessToken = getAccessToken(mpAccount);
 		try{
@@ -579,8 +576,8 @@ public class WxApiClient {
 	
 	
 	//修改永久图文素材
-	public static JSONObject updateNewsMaterial(List<MsgNews> msgNewsList,int index,
-			String mediaId,MpAccount mpAccount){
+	public static JSONObject updateNewsMaterial(List<MsgNews> msgNewsList, int index,
+			String mediaId,MpAccount mpAccount) throws WxErrorException {
 			JSONObject rstObj = new JSONObject();
 			String accessToken = getAccessToken(mpAccount);
 			try{
@@ -629,7 +626,7 @@ public class WxApiClient {
 			return rstObj;
 	}
 	public static JSONObject updateNewsMaterial2(JSONObject jsonObj,int index,
-			String mediaId,MpAccount mpAccount){
+			String mediaId,MpAccount mpAccount) throws WxErrorException {
 			JSONObject rstObj = new JSONObject();
 			String accessToken = getAccessToken(mpAccount);
 			try{
@@ -648,7 +645,7 @@ public class WxApiClient {
 	
 	
 	//新增多图文永久素材
-	public static JSONObject addMoreNewsMaterial(List<MsgNews> msgNewsList,MpAccount mpAccount){
+	public static JSONObject addMoreNewsMaterial(List<MsgNews> msgNewsList,MpAccount mpAccount) throws WxErrorException {
 		JSONObject rstObj = new JSONObject();
 		String accessToken = getAccessToken(mpAccount);
 		try{
@@ -694,7 +691,7 @@ public class WxApiClient {
 		return rstObj;
 	}
 	//新增多图文永久素材
-	public static JSONObject addMoreNewsMaterial2(JSONArray arryarticles,MpAccount mpAccount){
+	public static JSONObject addMoreNewsMaterial2(JSONArray arryarticles,MpAccount mpAccount) throws WxErrorException {
 		JSONObject rstObj = new JSONObject();
 		String accessToken = getAccessToken(mpAccount);
 		try{
@@ -713,7 +710,7 @@ public class WxApiClient {
 	 * @param mpAccount 消息内容
 	 * @return
 	 */
-	public static JSONObject sendCustomNews(String openid,MsgNews msgNews,MpAccount mpAccount){
+	public static JSONObject sendCustomNews(String openid,MsgNews msgNews,MpAccount mpAccount) throws WxErrorException {
 		String content = "";
 		if(!StringUtils.isBlank(openid)){
 			String accessToken = getAccessToken(mpAccount);

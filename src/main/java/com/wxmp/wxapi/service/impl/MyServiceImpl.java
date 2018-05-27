@@ -23,6 +23,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.wxmp.core.exception.WxErrorException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -84,7 +85,7 @@ public class MyServiceImpl implements MyService {
      * @param msgRequest : 接收到的消息
      * @param mpAccount ： appId
      */
-    public String processMsg(MsgRequest msgRequest, MpAccount mpAccount) {
+    public String processMsg(MsgRequest msgRequest, MpAccount mpAccount)  throws WxErrorException {
         String msgtype = msgRequest.getMsgType();// 接收到的消息类型
         String respXml = null;// 返回的内容；
         if (msgtype.equals(MsgType.Text.toString())) {
@@ -129,7 +130,7 @@ public class MyServiceImpl implements MyService {
     }
 
     // 处理事件消息
-    private String processEventMsg(MsgRequest msgRequest, MpAccount mpAccount) {
+    private String processEventMsg(MsgRequest msgRequest, MpAccount mpAccount) throws WxErrorException {
         String key = msgRequest.getEventKey();
         if (MsgType.SUBSCRIBE.toString().equals(msgRequest.getEvent())) {// 订阅消息
             logger.info("关注者openId----------" + msgRequest.getFromUserName());
@@ -195,7 +196,7 @@ public class MyServiceImpl implements MyService {
     }
 
     // 发布菜单
-    public JSONObject publishMenu(MpAccount mpAccount) {
+    public JSONObject publishMenu(MpAccount mpAccount) throws WxErrorException {
         // 获取数据库菜单
         List<AccountMenu> menus = menuDao.listWxMenus(new AccountMenu());
         Matchrule matchrule = new Matchrule();
@@ -220,7 +221,7 @@ public class MyServiceImpl implements MyService {
     }
 
     // 删除菜单
-    public JSONObject deleteMenu(MpAccount mpAccount) {
+    public JSONObject deleteMenu(MpAccount mpAccount)  throws WxErrorException {
         JSONObject rstObj = WxApiClient.deleteMenu(mpAccount);
         if (rstObj != null && rstObj.getIntValue("errcode") == 0) {// 成功，更新菜单组
             menuGroupDao.updateMenuGroupDisable();
@@ -229,7 +230,7 @@ public class MyServiceImpl implements MyService {
     }
 
     // 获取用户列表
-    public boolean syncAccountFansList(MpAccount mpAccount) {
+    public boolean syncAccountFansList(MpAccount mpAccount) throws WxErrorException  {
         String nextOpenId = null;
         AccountFans lastFans = fansDao.getLastOpenId();
         if (lastFans != null) {
@@ -239,7 +240,7 @@ public class MyServiceImpl implements MyService {
     }
 
     // 同步粉丝列表(开发者在这里可以使用递归处理)
-    private boolean doSyncAccountFansList(String nextOpenId, MpAccount mpAccount) {
+    private boolean doSyncAccountFansList(String nextOpenId, MpAccount mpAccount) throws WxErrorException  {
         String url = WxApi.getFansListUrl(WxApiClient.getAccessToken(mpAccount), nextOpenId);
         logger.info("同步粉丝入参消息如下:" + url);
         JSONObject jsonObject = WxApi.httpsRequest(url, HttpMethod.POST, null);
@@ -267,7 +268,7 @@ public class MyServiceImpl implements MyService {
     }
 
     // 获取用户信息接口 - 必须是开通了认证服务，否则微信平台没有开放此功能
-    public AccountFans syncAccountFans(String openId, MpAccount mpAccount, boolean merge) {
+    public AccountFans syncAccountFans(String openId, MpAccount mpAccount, boolean merge) throws WxErrorException {
         AccountFans fans = WxApiClient.syncAccountFans(openId, mpAccount);
         if (merge && null != fans) {
             AccountFans tmpFans = fansDao.getByOpenId(openId);
@@ -282,7 +283,7 @@ public class MyServiceImpl implements MyService {
     }
 
     // 根据openid 获取粉丝，如果没有，同步粉丝
-    public AccountFans getFansByOpenId(String openId, MpAccount mpAccount) {
+    public AccountFans getFansByOpenId(String openId, MpAccount mpAccount) throws WxErrorException {
         AccountFans fans = fansDao.getByOpenId(openId);
         if (fans == null) {// 如果没有，添加
             fans = WxApiClient.syncAccountFans(openId, mpAccount);

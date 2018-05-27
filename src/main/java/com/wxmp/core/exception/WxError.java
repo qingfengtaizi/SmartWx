@@ -45,6 +45,10 @@ public class WxError implements Serializable {
     return error;
   }
 
+  public static WxError fromJson(JSONObject jsonObject) {
+    WxError error = WxError.newBuilder().setErrorCode(jsonObject.getInteger("errorCode")).setErrorMsg(jsonObject.getString("errorMsg")).build();
+    return error;
+  }
   public static Builder newBuilder() {
     return new Builder();
   }

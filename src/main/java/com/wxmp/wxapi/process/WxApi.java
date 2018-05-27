@@ -45,6 +45,8 @@ import javax.net.ssl.TrustManager;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.wxmp.core.common.Identities;
+import com.wxmp.core.exception.WxError;
+import com.wxmp.core.exception.WxErrorException;
 import com.wxmp.core.util.MyTrustManager;
 
 /**
@@ -274,7 +276,7 @@ public class WxApi {
     }
 
     // 获取接口访问凭证
-    public static AccessToken getAccessToken(String appId, String appSecret) {
+    public static AccessToken getAccessToken(String appId, String appSecret) throws WxErrorException{
         AccessToken token = null;
         String tockenUrl = WxApi.getTokenUrl(appId, appSecret);
         JSONObject jsonObject = httpsRequest(tockenUrl, HttpMethod.GET, null);
@@ -287,8 +289,7 @@ public class WxApi {
                 token = null;// 获取token失败
             }
         } else if (null != jsonObject) {
-            token = new AccessToken();
-            token.setErrcode(jsonObject.getIntValue("errcode"));
+            throw new WxErrorException(WxError.fromJson(jsonObject));
         }
         return token;
     }
