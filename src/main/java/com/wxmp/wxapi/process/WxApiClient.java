@@ -88,7 +88,7 @@ public class WxApiClient {
 	}
 	
 	//获取OAuthAccessToken
-	public static OAuthAccessToken getOAuthAccessToken(MpAccount mpAccount,String code){
+	public static OAuthAccessToken getOAuthAccessToken(MpAccount mpAccount,String code) throws WxErrorException {
 		//获取唯一的accessToken，如果是多账号，请自行处理
 		OAuthAccessToken token = WxMemoryCacheClient.getOAuthAccessToken();
 		if(token != null && !token.isExpires()){//不为空，并且没有过期
@@ -109,7 +109,7 @@ public class WxApiClient {
 	}
 	
 	//获取openId
-	public static String getOAuthOpenId(MpAccount mpAccount,String code){
+	public static String getOAuthOpenId(MpAccount mpAccount,String code) throws WxErrorException {
 		OAuthAccessToken token = WxApi.getOAuthAccessToken(mpAccount.getAppid(),mpAccount.getAppsecret(),code);
 		if(token != null){
 			if(token.getErrcode() != null){//获取失败

@@ -276,18 +276,14 @@ public class WxApi {
     }
 
     // 获取接口访问凭证
-    public static AccessToken getAccessToken(String appId, String appSecret) throws WxErrorException{
+    public static AccessToken getAccessToken(String appId, String appSecret) throws WxErrorException {
         AccessToken token = null;
         String tockenUrl = WxApi.getTokenUrl(appId, appSecret);
         JSONObject jsonObject = httpsRequest(tockenUrl, HttpMethod.GET, null);
         if (null != jsonObject && !jsonObject.containsKey("errcode")) {
-            try {
-                token = new AccessToken();
-                token.setAccessToken(jsonObject.getString("access_token"));
-                token.setExpiresIn(jsonObject.getIntValue("expires_in"));
-            } catch (JSONException e) {
-                token = null;// 获取token失败
-            }
+            token = new AccessToken();
+            token.setAccessToken(jsonObject.getString("access_token"));
+            token.setExpiresIn(jsonObject.getIntValue("expires_in"));
         } else if (null != jsonObject) {
             throw new WxErrorException(WxError.fromJson(jsonObject));
         }
@@ -305,7 +301,7 @@ public class WxApi {
     }
 
     // 获取js ticket
-    public static JSTicket getJSTicket(String token) {
+    public static JSTicket getJSTicket(String token) throws WxErrorException{
         JSTicket jsTicket = null;
         String jsTicketUrl = WxApi.getJsApiTicketUrl(token);
         JSONObject jsonObject = httpsRequest(jsTicketUrl, HttpMethod.GET, null);
@@ -318,14 +314,13 @@ public class WxApi {
                 jsTicket = null;// 获取token失败
             }
         } else if (null != jsonObject) {
-            jsTicket = new JSTicket();
-            jsTicket.setErrcode(jsonObject.getIntValue("errcode"));
+            throw new WxErrorException(WxError.fromJson(jsonObject));
         }
         return jsTicket;
     }
 
     // 获取OAuth2.0 Token
-    public static OAuthAccessToken getOAuthAccessToken(String appId, String appSecret, String code) {
+    public static OAuthAccessToken getOAuthAccessToken(String appId, String appSecret, String code) throws WxErrorException{
         OAuthAccessToken token = null;
         String tockenUrl = getOAuthTokenUrl(appId, appSecret, code);
         JSONObject jsonObject = httpsRequest(tockenUrl, HttpMethod.GET, null);
@@ -340,8 +335,7 @@ public class WxApi {
                 token = null;// 获取token失败
             }
         } else if (null != jsonObject) {
-            token = new OAuthAccessToken();
-            token.setErrcode(jsonObject.getIntValue("errcode"));
+            throw new WxErrorException(WxError.fromJson(jsonObject));
         }
         return token;
     }
@@ -415,7 +409,6 @@ public class WxApi {
             return null;
         } catch (Exception e) {
             String error = String.format("上传媒体文件失败：%s", e);
-            System.out.println(error);
         }
         return null;
     }

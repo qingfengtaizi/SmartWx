@@ -520,7 +520,7 @@ public class WxApiCtrl extends BaseCtrl{
 	 */
 	@RequestMapping(value = "/sendNewsByOpenId", method = RequestMethod.POST)
 	@ResponseBody
-	public AjaxResult sendNewsByOpenId(String id, String openid)  throws WxErrorException {
+	public AjaxResult sendNewsByOpenId(String id, String openid) throws WxErrorException {
 		
 		MsgNews msgNews  = this.msgNewsService.getById(id);
 
