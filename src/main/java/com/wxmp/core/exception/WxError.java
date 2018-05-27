@@ -42,11 +42,13 @@ public class WxError implements Serializable {
 
   public static WxError fromJson(String json) {
 	WxError error = JSONObject.parseObject(json, WxError.class);
+  error.setJson(json);
     return error;
   }
 
   public static WxError fromJson(JSONObject jsonObject) {
     WxError error = WxError.newBuilder().setErrorCode(jsonObject.getInteger("errorCode")).setErrorMsg(jsonObject.getString("errorMsg")).build();
+    
     return error;
   }
   public static Builder newBuilder() {
