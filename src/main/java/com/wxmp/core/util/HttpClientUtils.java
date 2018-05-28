@@ -54,6 +54,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import com.google.common.collect.ImmutableMap;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -353,13 +354,18 @@ public class HttpClientUtils {
             SSLContext sslContext) {
         HttpPost httpPost = new HttpPost(httpUrl);// 创建httpPost
         MultipartEntityBuilder meBuilder = MultipartEntityBuilder.create();
-        for (Map.Entry<String, String> m : maps.entrySet()) {
-            meBuilder.addPart(m.getKey(), new StringBody(m.getValue(), ContentType.TEXT_PLAIN));
+        if (null != maps) {
+            for (Map.Entry<String, String> m : maps.entrySet()) {
+                meBuilder.addPart(m.getKey(), new StringBody(m.getValue(), ContentType.TEXT_PLAIN));
+            }
         }
-        for (Map.Entry<String, File> m : fileMap.entrySet()) {
-            FileBody fileBody = new FileBody(m.getValue());
-            meBuilder.addPart(m.getKey(), fileBody);
+        if (null != fileMap) {
+            for (Map.Entry<String, File> m : fileMap.entrySet()) {
+                FileBody fileBody = new FileBody(m.getValue());
+                meBuilder.addPart(m.getKey(), fileBody);
+            }
         }
+
         HttpEntity reqEntity = meBuilder.build();
         httpPost.setEntity(reqEntity);
         return sendHttpPost(httpPost, sslContext);
