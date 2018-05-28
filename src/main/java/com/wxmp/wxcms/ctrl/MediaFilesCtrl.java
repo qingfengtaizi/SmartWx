@@ -37,7 +37,7 @@ import com.wxmp.core.common.BaseCtrl;
 import com.wxmp.core.exception.WxErrorException;
 import com.wxmp.core.util.AjaxResult;
 import com.wxmp.core.util.PropertiesUtil;
-import com.wxmp.wxapi.process.MediaApi;
+import com.wxmp.wxapi.process.WxApi;
 import com.wxmp.wxapi.process.MpAccount;
 import com.wxmp.wxapi.process.WxApiClient;
 import com.wxmp.wxapi.process.WxMemoryCacheClient;
@@ -87,7 +87,7 @@ public class MediaFilesCtrl extends BaseCtrl {
     	json.put("title", mediaFile.getTitle());
     	json.put("introduction", mediaFile.getIntroduction());
     	params.put("description", json.toJSONString());
-    	JSONObject result = MediaApi.addMateria(accessToken, "video", mediaFile.getUrl(), params);
+    	JSONObject result = WxApi.addMateria(accessToken, "video", mediaFile.getUrl(), params);
     	mediaFile.setMediaId(result.getString("media_id"));
     	mediaFile.setMediaType("video");
     	mediaFile.setCreateTime(new Date(System.currentTimeMillis()));
@@ -104,9 +104,7 @@ public class MediaFilesCtrl extends BaseCtrl {
     @ResponseBody
 	@RequestMapping("delMediaFile")
     public AjaxResult delMediaFile(String mediaId) throws WxErrorException{
-    	MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();
-    	String accessToken = WxApiClient.getAccessToken(mpAccount);
-    	MediaApi.delMaterial(accessToken, mediaId);
+		WxApiClient.deleteMaterial(mediaId,WxMemoryCacheClient.getMpAccount());
     	mediaFileService.deleteByMediaId(mediaId);
     	return AjaxResult.deleteSuccess();
     }
@@ -195,7 +193,7 @@ public class MediaFilesCtrl extends BaseCtrl {
 		
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();
     	String accessToken = WxApiClient.getAccessToken(mpAccount);
-    	JSONObject result = MediaApi.addMateria(accessToken, type, filePath,null );
+    	JSONObject result = WxApi.addMateria(accessToken, type, filePath,null );
     	String mediaId = result.getString("media_id");
     	//图片或者图文的缩略图
     	if(type.equals("image")||type.equals("thumb")){

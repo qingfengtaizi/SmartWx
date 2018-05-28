@@ -53,6 +53,7 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -269,6 +270,20 @@ public class HttpClientUtils {
     }
 
     /**
+     * 发送 post请求（带文件）
+     *
+     * @param httpUrl
+     *            地址
+     * @param file
+     *            附件,名称和File对应
+     * @param maps
+     *            参数
+     */
+    public static String sendHttpPost(String httpUrl, File file, Map<String, String> maps) {
+        return sendHttpPost(httpUrl,  ImmutableMap.of( "files", file), maps, null);
+    }
+
+    /**
      * 发送 post请求（带文件）,默认 files 名称数组.
      * 
      * @param httpUrl
@@ -364,7 +379,7 @@ public class HttpClientUtils {
      * 发送Post请求
      * 
      * @param httpPost
-     * @param sslContext
+     * @param sslConext
      *            ssl证书信息
      * @return
      */
@@ -412,7 +427,7 @@ public class HttpClientUtils {
      * 发送 get请求
      * 
      * @param httpUrl
-     * @param sslContext
+     * @param sslConext
      *            ssl证书信息
      */
     public static String sendHttpGet(String httpUrl, SSLContext sslConext) {
@@ -423,7 +438,7 @@ public class HttpClientUtils {
     /**
      * 发送Get请求
      * 
-     * @param httpPost
+     * @param httpGet
      * @return
      */
     public static String sendHttpGet(HttpGet httpGet) {
@@ -433,8 +448,8 @@ public class HttpClientUtils {
     /**
      * 发送Get请求
      * 
-     * @param httpPost
-     * @param sslContext
+     * @param httpGet
+     * @param sslConext
      *            ssl证书信息
      * @return
      */
@@ -625,492 +640,492 @@ public class HttpClientUtils {
         sslContext.init(null, tm, new SecureRandom());
         return sslContext.getSocketFactory();
 	}
-    /**
-     * 普通请求
-     * @param path
-     * @param method
-     * @param body
-     * @return
-     */
-    public static String httpsRequestToString(String path, String method, String body) {
-        if(StringUtils.isBlank(path)||StringUtils.isBlank(method)){
-            return null;
-        }
-        String response = null;
-        InputStream inputStream = null;
-        InputStreamReader inputStreamReader = null;
-        BufferedReader bufferedReader = null;
-        HttpsURLConnection conn = null;
-        OutputStream outputStream=null;
-        try {
-            URL url = new URL(path);
-            conn = (HttpsURLConnection) url.openConnection();
-            //主机信任
-            conn.setHostnameVerifier(new ReHostnameVerifier());
-            conn.setSSLSocketFactory(getFactory());
-
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.setUseCaches(false);
-            conn.setRequestMethod(method);
-            // 设置请求头信息
- 			conn.setRequestProperty("Connection", "Keep-Alive");    
- 			conn.setRequestProperty("Charset", "UTF-8");
- 			// 设置边界    
- 		    String BOUNDARY = "----------" + System.currentTimeMillis();    
- 		    conn.setRequestProperty("Content-Type", "application/json; boundary="+ BOUNDARY);
- 		    // 打开到此 URL 引用的资源的通信链接（如果尚未建立这样的连接）。
- 		    conn.connect();
- 		    if (null != body) {
-                outputStream = conn.getOutputStream();
-                // 注意编码格式
-                outputStream.write(body.getBytes("UTF-8"));
-                outputStream.flush();
-            }
-
-            if(conn.getResponseCode() == conn.HTTP_OK){
-            	
-            	inputStream = conn.getInputStream();
-            	inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-            	bufferedReader = new BufferedReader(inputStreamReader);
-            	String str = null;
-            	StringBuffer buffer = new StringBuffer();
-            	while ((str = bufferedReader.readLine()) != null) {
-            		buffer.append(str);
-            	}
-            	response = buffer.toString();
-            }
-        } catch (IOException e) {
-        	logger.error(e.getMessage(), e);
-     	   //这里可以抛出异常，比说自定义的微信异常
-        } catch (GeneralSecurityException e) {
-        	logger.error(e.getMessage(), e);
-     	   //这里可以抛出异常，比说自定义的微信异常
-        }finally{
-            if(conn!=null){
-                conn.disconnect();
-            }
-            try {
-         	   if(outputStream!=null){
-         		   outputStream.close();
-         	   }
- 	           	if(bufferedReader!=null){
- 	           		bufferedReader.close();
- 	           	}
- 	           	if(inputStreamReader!=null){
- 	           		inputStreamReader.close();
- 	           	}
- 	           	if(inputStream!=null){
- 	           		inputStream.close();
- 	           	}
-                
-            } catch (IOException e) {
-            	logger.error(e.getMessage(), e);
-            }
-        }
-        return response;
-    }
-    /**
-     * 文件上传（速度快）
-     * @param path
-     * @param method
-     * @param file
-     * @return
-     */
-    public static String httpsRequestToUpload(String path, String method,File file){
-       	if(StringUtils.isBlank(path)||StringUtils.isBlank(method)||!file.exists()){
-               return null;
-           }
-           String response = null;
-           InputStream inputStream = null;
-           InputStreamReader inputStreamReader = null;
-           BufferedReader bufferedReader = null;
-           HttpsURLConnection conn = null;
-           OutputStream out=null;
-           DataInputStream in =null;
-           try {
-               
-               URL url = new URL(path);
-               conn = (HttpsURLConnection) url.openConnection();
-               //主机信任
-               conn.setHostnameVerifier(new ReHostnameVerifier());
-               conn.setSSLSocketFactory(getFactory());
-
-               conn.setDoOutput(true);
-               conn.setDoInput(true);
-               conn.setUseCaches(false);
-               conn.setRequestMethod(method);
-               
-               //设置连接主机超时（单位：毫秒）
-               conn.setConnectTimeout(30000); 
-               //设置从主机读取数据超时（单位：毫秒）
-               conn.setReadTimeout(30000);
-               
-               // 设置请求头信息
-    			conn.setRequestProperty("Connection", "Keep-Alive"); 
-    			conn.setRequestProperty("Cache-Control", "no-cache");
-    			conn.setRequestProperty("Charset", "UTF-8");
-    			// 设置边界    
-    		    String BOUNDARY = "----------" + System.currentTimeMillis();    
-    		    conn.setRequestProperty("Content-Type", "multipart/form-data; boundary="+ BOUNDARY);
-    		    // 打开到此 URL 引用的资源的通信链接（如果尚未建立这样的连接）。
-    		    conn.connect();
-    		    // 请求正文信息    
-    	   	    // 第一部分：    
-    	   	    StringBuilder sb = new StringBuilder();    
-    	   	    sb.append("--"); // 必须多两道线    
-    	   	    sb.append(BOUNDARY);    
-    	   	    sb.append("\r\n");    
-    	   	    sb.append("Content-Disposition: form-data;name=\"media\";filename=\""+ file.getName() + "\"\r\n");    
-    	   	    sb.append("Content-Type:application/octet-stream\r\n\r\n");
-    		     byte[] head = sb.toString().getBytes("UTF-8"); 
-    		     // 获得输出流    
-    		     out = new DataOutputStream(conn.getOutputStream());    
-    		     // 输出表头    
-    		     out.write(head); 
-    		     
-    		     // 文件写入流开始=》    
-    		     // 把文件已流文件的方式 推入到url中    
-    		     in = new DataInputStream(new FileInputStream(file));    
-    		     int bytes = 0;    
-    		     byte[] bufferOut = new byte[1024];    
-    		     while ((bytes = in.read(bufferOut)) != -1) {    
-    		    	 out.write(bufferOut, 0, bytes);    
-    		     }    
-    		     // 结尾部分    
-    		     byte[] foot = ("\r\n--" + BOUNDARY + "--\r\n").getBytes();// 定义最后数据分隔线    
-    		     out.write(foot);    
-    		     out.flush();    
-    		     // 文件写入流结束《=  
-    		     
-    		     if(conn.getResponseCode() == conn.HTTP_OK){
-    		    	 inputStream = conn.getInputStream();
-    		    	 inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-    		    	 bufferedReader = new BufferedReader(inputStreamReader);
-    		    	 String str = null;
-    		    	 StringBuffer buffer = new StringBuffer();
-    		    	 while ((str = bufferedReader.readLine()) != null) {
-    		    		 buffer.append(str);
-    		    	 }
-    		    	 response = buffer.toString();
-    		     }
-           } catch (IOException e) {
-        	   logger.error(e.getMessage(), e);
-        	   //这里可以抛出异常，比说自定义的微信异常
-           } catch (GeneralSecurityException e) {
-        	   logger.error(e.getMessage(), e);
-        	   //这里可以抛出异常，比说自定义的微信异常
-           }finally{
-               if(conn!=null){
-                   conn.disconnect();
-               }
-               try {
-            	   if(out!=null){
-            		   out.close();
-            	   }
-            	   if(in!=null){
-            		   in.close();
-            	   }
-    	           	if(bufferedReader!=null){
-    	           		bufferedReader.close();
-    	           	}
-    	           	if(inputStreamReader!=null){
-    	           		inputStreamReader.close();
-    	           	}
-    	           	if(inputStream!=null){
-    	           		inputStream.close();
-    	           	}
-               } catch (IOException e) {
-               }
-           }
-           return response;
-       }
-    /**
-     *  文件上传（速度快）
-     * @param path
-     * @param method
-     * @param file
-     * @param params
-     * @return
-     */
-    public static String httpsRequestToUpload(String path, String method,File file,Map<String,String> params){
-	   	
- 	   if(StringUtils.isBlank(path)||StringUtils.isBlank(method)||!file.exists()){
- 	           return null;
- 	       }
-        String response = null;
-        InputStream inputStream = null;
-        InputStreamReader inputStreamReader = null;
-        BufferedReader bufferedReader = null;
-        HttpsURLConnection conn = null;
-        OutputStream out =null;
-        DataInputStream in =null;
-        try {
-            
-            URL url = new URL(path);
-            conn = (HttpsURLConnection) url.openConnection();
-            //主机信任
-            conn.setHostnameVerifier(new ReHostnameVerifier());
-            conn.setSSLSocketFactory(getFactory());
-
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.setUseCaches(false);
-            conn.setRequestMethod(method);
-            
-            //设置连接主机超时（单位：毫秒）
-            conn.setConnectTimeout(30000); 
-            //设置从主机读取数据超时（单位：毫秒）
-            conn.setReadTimeout(30000);
-            
-            // 设置请求头信息
- 			conn.setRequestProperty("Connection", "Keep-Alive");    
- 			conn.setRequestProperty("Cache-Control", "no-cache");
- 			conn.setRequestProperty("Charset", "UTF-8"); 
- 			// 设置边界    
- 		    String BOUNDARY = "----------" + System.currentTimeMillis();    
- 		    conn.setRequestProperty("Content-Type", "multipart/form-data; charset=UTF-8 boundary="+ BOUNDARY);
- 		    // 打开到此 URL 引用的资源的通信链接（如果尚未建立这样的连接）。
- 		    conn.connect();
- 		    // 请求正文信息    
- 	   	    // 第一部分：    
- 	   	    StringBuilder sb = new StringBuilder();    
- 	   	    sb.append("--"); // 必须多两道线    
- 	   	    sb.append(BOUNDARY);    
- 	   	    sb.append("\r\n");    
- 	   	    sb.append("Content-Disposition: form-data;name=\"media\";filename=\""+ file.getName() + "\"\r\n");    
- 	   	    sb.append("Content-Type:application/octet-stream\r\n\r\n");
- 		     byte[] head = sb.toString().getBytes("UTF-8"); 
- 		     // 获得输出流    
- 		     out = new DataOutputStream(conn.getOutputStream());    
- 		     // 输出表头    
- 		     out.write(head); 
- 		     // 文件写入流开始=》    
- 		     // 把文件已流文件的方式 推入到url中    
- 		     in = new DataInputStream(new FileInputStream(file));    
- 		     int bytes = 0;    
- 		     byte[] bufferOut = new byte[1024];    
- 		     while ((bytes = in.read(bufferOut)) != -1) {    
- 		    	 out.write(bufferOut, 0, bytes);    
- 		     }    
- 		     // 文件写入流结束《= 
- 		     if(params!=null){
- 		    	//添加param参数
- 	 		     for (Map.Entry<String, String> entry : params.entrySet()) {  
- 	 	    	   String key = entry.getKey().toString();  
- 	 	    	   String value = entry.getValue().toString();  
- 	 	    	   sb = new StringBuilder();
- 	 	    	   sb.append("--"); // 必须多两道线    
- 	 	    	   sb.append(BOUNDARY);    
- 	 	    	   sb.append("\r\n");    
- 	 	    	   sb.append("Content-Disposition: form-data;name=\""+key+"\";\r\n\r\n"); 
- 	 	    	   sb.append(value);
- 	 	    	   byte[] paramb = sb.toString().getBytes("UTF-8");
- 	 	    	   out.write(paramb);
- 	 		     } 
- 		     }
- 		     
- 		     // 结尾部分    
- 		     byte[] foot = ("\r\n--" + BOUNDARY + "--\r\n\r\n").getBytes();// 定义最后数据分隔线    
- 		     out.write(foot);    
- 		     out.flush();    
- 		     if(conn.getResponseCode() == conn.HTTP_OK){
- 		    	 inputStream = conn.getInputStream();
- 		    	 inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
- 		    	 bufferedReader = new BufferedReader(inputStreamReader);
- 		    	 String str = null;
- 		    	 StringBuffer buffer = new StringBuffer();
- 		    	 while ((str = bufferedReader.readLine()) != null) {
- 		    		 buffer.append(str);
- 		    	 }
- 		    	 response = buffer.toString();
- 		     }
-        } catch (IOException e) {
-        	logger.error(e.getMessage(), e);
-     	   //这里可以抛出异常，比说自定义的微信异常
-        } catch (GeneralSecurityException e) {
-        	logger.error(e.getMessage(), e);
-     	   //这里可以抛出异常，比说自定义的微信异常
-        }finally{
-
-            try {
-         	   if(out!=null){
-         		   out.close();
-         	   }
-         	   if(in!=null){
-         		   in.close();
-         	   }
- 	           	if(bufferedReader!=null){
- 	           		bufferedReader.close();
- 	           	}
- 	           	if(inputStreamReader!=null){
- 	           		inputStreamReader.close();
- 	           	}
- 	           	if(inputStream!=null){
- 	           		inputStream.close();
- 	           	}
-            } catch (IOException e) {
-            }
-            if(conn!=null){
-                conn.disconnect();
-            }
-        }
-        return response;
-    }
-    /**
-     * 文件下载 -使用object返回是为了判断返回数据类型
-     * @param path
-     * @param method
-     * @param param
-     * @param storageDir
-     * @return
-     */
-    public static Object httpsRequestToDownload(String path, String method,String param,String storageDir){
-	   	if(StringUtils.isBlank(path)||StringUtils.isBlank(method)){
-	           return null;
-	       }
-   		File file = null;
-   		OutputStream outputStream=null;
-       BufferedInputStream inputStream = null;
-       InputStream ips = null;
-       InputStreamReader inputStreamReader = null;
-       BufferedReader bufferedReader = null;
-       HttpsURLConnection conn = null;
-       OutputStream out =null;
-       try {
-           
-           URL url = new URL(path);
-           conn = (HttpsURLConnection) url.openConnection();
-           //主机信任
-           conn.setHostnameVerifier(new ReHostnameVerifier());
-           conn.setSSLSocketFactory(getFactory());
-
-           conn.setDoOutput(true);
-           conn.setDoInput(true);
-           conn.setUseCaches(false);
-           conn.setRequestMethod(method);
-           //设置连接主机超时（单位：毫秒）
-           conn.setConnectTimeout(30000); 
-           //设置从主机读取数据超时（单位：毫秒）
-           conn.setReadTimeout(30000);
-           
-           // 设置请求头信息
-			conn.setRequestProperty("Connection", "Keep-Alive"); 
-			conn.setRequestProperty("Cache-Control", "no-cache");
-			conn.setRequestProperty("Charset", "UTF-8");
-			// 设置边界    
-		    String BOUNDARY = "----------" + System.currentTimeMillis();    
-		    conn.setRequestProperty("Content-Type", "multipart/form-data; boundary="+ BOUNDARY);
-		    // 打开到此 URL 引用的资源的通信链接（如果尚未建立这样的连接）。
-		    conn.connect();
-		    if (StringUtils.isNotBlank(param)) {
-                outputStream = conn.getOutputStream();
-                outputStream.write(param.getBytes("UTF-8"));
-                outputStream.flush();
-            }
-		    
-		    logger.info("Content-Length: " + conn.getContentLength());
-		    logger.info("Headers: "+conn.getHeaderFields().toString());
-		    // 文件大小
-		    int fileLength = conn.getContentLength();
-		  
-		    //获取传输数据类型Content-Type
-		    String outype=conn.getContentType();
-		    
-		    if(StringUtils.isBlank(outype)||(outype.indexOf("text/plain")==-1&&outype.indexOf("application/json")==-1)){
-		    	
-		    	String disposition=conn.getHeaderField("Content-disposition");
-		    	
-		    	// 文件名
-		    	String fileName = forFileName(disposition);
-		    	
-		    	//文件路径
-		    	String filePath = storageDir + File.separatorChar + fileName;
-		    	
-		    	if (null == storageDir) {
-		    	Calendar now = Calendar.getInstance(); 
-		    	int year = now.get(Calendar.YEAR);
-		    	int month = now.get(Calendar.MONTH + 1);
-		    	int day = now.get(Calendar.DAY_OF_MONTH);
-		    	filePath = storDir + File.separatorChar
-		    			+ year + File.separatorChar
-		    			+ month + File.separatorChar
-		    			+ day + File.separatorChar
-		    			+ fileName;
-		    	}
-		    	
-		    	file = new File(filePath);
-		    	if (!file.getParentFile().exists()) {
-		    		file.getParentFile().mkdirs();
-		    	}
-		    	if(conn.getResponseCode() == conn.HTTP_OK){
-		    		inputStream = new BufferedInputStream(conn.getInputStream());
-		    		out = new FileOutputStream(file);
-		    		int size = 0;
-		    		int len = 0;
-		    		byte[] buf = new byte[1024];
-		    		while ((size = inputStream.read(buf)) != -1) {
-		    			len += size;
-		    			out.write(buf, 0, size);
-		    			// 打印下载百分比
-		    			System.err.println("下载了-------> " 
-							    			+ len * 100 / fileLength 
-							    			+"%\n");
-		    		}
-		    		out.flush();
-		    	}
-		    }else{
-			     if(conn.getResponseCode() == conn.HTTP_OK){
-			    	 ips = conn.getInputStream();
-			    	 inputStreamReader = new InputStreamReader(ips, "UTF-8");
-			    	 bufferedReader = new BufferedReader(inputStreamReader);
-			    	 String str = null;
-			    	 StringBuffer buffer = new StringBuffer();
-			    	 while ((str = bufferedReader.readLine()) != null) {
-			    		 buffer.append(str);
-			    	 }
-			    	 //如果下载文件失败，就要把错误信息抛出去throw
-			    	 System.err.println("upload err => "+buffer.toString());
-			    	 return buffer.toString();
-			     }
-		    }
-       } catch (IOException e) {
-    	   logger.error(e.getMessage(), e);
-    	   //这里可以抛出异常，比说自定义的微信异常
-       } catch (GeneralSecurityException e) {
-    	   logger.error(e.getMessage(), e);
-    	   //这里可以抛出异常，比说自定义的微信异常
-       }finally{
-          
-           try {
-        	   if(outputStream!=null){
-        		   outputStream.close();
-        	   }
-        	   if(out!=null){
-        		   out.close();
-        	   }
-	           	if(inputStream!=null){
-	           		inputStream.close();
-	           	}
-	           	
-	           	if(bufferedReader!=null){
-	           		bufferedReader.close();
-	           	}
-	           	if(inputStreamReader!=null){
-	           		inputStreamReader.close();
-	           	}
-	           	if(ips!=null){
-	           		ips.close();
-	           	}
-           } catch (IOException e) {
-        	   logger.error(e.getMessage(), e);
-           }
-           if(conn!=null){
-               conn.disconnect();
-           }
-       }
-   	return file;
-   }
+//    /**
+//     * 普通请求
+//     * @param path
+//     * @param method
+//     * @param body
+//     * @return
+//     */
+//    public static String httpsRequestToString(String path, String method, String body) {
+//        if(StringUtils.isBlank(path)||StringUtils.isBlank(method)){
+//            return null;
+//        }
+//        String response = null;
+//        InputStream inputStream = null;
+//        InputStreamReader inputStreamReader = null;
+//        BufferedReader bufferedReader = null;
+//        HttpsURLConnection conn = null;
+//        OutputStream outputStream=null;
+//        try {
+//            URL url = new URL(path);
+//            conn = (HttpsURLConnection) url.openConnection();
+//            //主机信任
+//            conn.setHostnameVerifier(new ReHostnameVerifier());
+//            conn.setSSLSocketFactory(getFactory());
+//
+//            conn.setDoOutput(true);
+//            conn.setDoInput(true);
+//            conn.setUseCaches(false);
+//            conn.setRequestMethod(method);
+//            // 设置请求头信息
+// 			conn.setRequestProperty("Connection", "Keep-Alive");
+// 			conn.setRequestProperty("Charset", "UTF-8");
+// 			// 设置边界
+// 		    String BOUNDARY = "----------" + System.currentTimeMillis();
+// 		    conn.setRequestProperty("Content-Type", "application/json; boundary="+ BOUNDARY);
+// 		    // 打开到此 URL 引用的资源的通信链接（如果尚未建立这样的连接）。
+// 		    conn.connect();
+// 		    if (null != body) {
+//                outputStream = conn.getOutputStream();
+//                // 注意编码格式
+//                outputStream.write(body.getBytes("UTF-8"));
+//                outputStream.flush();
+//            }
+//
+//            if(conn.getResponseCode() == conn.HTTP_OK){
+//
+//            	inputStream = conn.getInputStream();
+//            	inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+//            	bufferedReader = new BufferedReader(inputStreamReader);
+//            	String str = null;
+//            	StringBuffer buffer = new StringBuffer();
+//            	while ((str = bufferedReader.readLine()) != null) {
+//            		buffer.append(str);
+//            	}
+//            	response = buffer.toString();
+//            }
+//        } catch (IOException e) {
+//        	logger.error(e.getMessage(), e);
+//     	   //这里可以抛出异常，比说自定义的微信异常
+//        } catch (GeneralSecurityException e) {
+//        	logger.error(e.getMessage(), e);
+//     	   //这里可以抛出异常，比说自定义的微信异常
+//        }finally{
+//            if(conn!=null){
+//                conn.disconnect();
+//            }
+//            try {
+//         	   if(outputStream!=null){
+//         		   outputStream.close();
+//         	   }
+// 	           	if(bufferedReader!=null){
+// 	           		bufferedReader.close();
+// 	           	}
+// 	           	if(inputStreamReader!=null){
+// 	           		inputStreamReader.close();
+// 	           	}
+// 	           	if(inputStream!=null){
+// 	           		inputStream.close();
+// 	           	}
+//
+//            } catch (IOException e) {
+//            	logger.error(e.getMessage(), e);
+//            }
+//        }
+//        return response;
+//    }
+//    /**
+//     * 文件上传（速度快）
+//     * @param path
+//     * @param method
+//     * @param file
+//     * @return
+//     */
+//    public static String httpsRequestToUpload(String path, String method,File file){
+//       	if(StringUtils.isBlank(path)||StringUtils.isBlank(method)||!file.exists()){
+//               return null;
+//           }
+//           String response = null;
+//           InputStream inputStream = null;
+//           InputStreamReader inputStreamReader = null;
+//           BufferedReader bufferedReader = null;
+//           HttpsURLConnection conn = null;
+//           OutputStream out=null;
+//           DataInputStream in =null;
+//           try {
+//
+//               URL url = new URL(path);
+//               conn = (HttpsURLConnection) url.openConnection();
+//               //主机信任
+//               conn.setHostnameVerifier(new ReHostnameVerifier());
+//               conn.setSSLSocketFactory(getFactory());
+//
+//               conn.setDoOutput(true);
+//               conn.setDoInput(true);
+//               conn.setUseCaches(false);
+//               conn.setRequestMethod(method);
+//
+//               //设置连接主机超时（单位：毫秒）
+//               conn.setConnectTimeout(30000);
+//               //设置从主机读取数据超时（单位：毫秒）
+//               conn.setReadTimeout(30000);
+//
+//               // 设置请求头信息
+//    			conn.setRequestProperty("Connection", "Keep-Alive");
+//    			conn.setRequestProperty("Cache-Control", "no-cache");
+//    			conn.setRequestProperty("Charset", "UTF-8");
+//    			// 设置边界
+//    		    String BOUNDARY = "----------" + System.currentTimeMillis();
+//    		    conn.setRequestProperty("Content-Type", "multipart/form-data; boundary="+ BOUNDARY);
+//    		    // 打开到此 URL 引用的资源的通信链接（如果尚未建立这样的连接）。
+//    		    conn.connect();
+//    		    // 请求正文信息
+//    	   	    // 第一部分：
+//    	   	    StringBuilder sb = new StringBuilder();
+//    	   	    sb.append("--"); // 必须多两道线
+//    	   	    sb.append(BOUNDARY);
+//    	   	    sb.append("\r\n");
+//    	   	    sb.append("Content-Disposition: form-data;name=\"media\";filename=\""+ file.getName() + "\"\r\n");
+//    	   	    sb.append("Content-Type:application/octet-stream\r\n\r\n");
+//    		     byte[] head = sb.toString().getBytes("UTF-8");
+//    		     // 获得输出流
+//    		     out = new DataOutputStream(conn.getOutputStream());
+//    		     // 输出表头
+//    		     out.write(head);
+//
+//    		     // 文件写入流开始=》
+//    		     // 把文件已流文件的方式 推入到url中
+//    		     in = new DataInputStream(new FileInputStream(file));
+//    		     int bytes = 0;
+//    		     byte[] bufferOut = new byte[1024];
+//    		     while ((bytes = in.read(bufferOut)) != -1) {
+//    		    	 out.write(bufferOut, 0, bytes);
+//    		     }
+//    		     // 结尾部分
+//    		     byte[] foot = ("\r\n--" + BOUNDARY + "--\r\n").getBytes();// 定义最后数据分隔线
+//    		     out.write(foot);
+//    		     out.flush();
+//    		     // 文件写入流结束《=
+//
+//    		     if(conn.getResponseCode() == conn.HTTP_OK){
+//    		    	 inputStream = conn.getInputStream();
+//    		    	 inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+//    		    	 bufferedReader = new BufferedReader(inputStreamReader);
+//    		    	 String str = null;
+//    		    	 StringBuffer buffer = new StringBuffer();
+//    		    	 while ((str = bufferedReader.readLine()) != null) {
+//    		    		 buffer.append(str);
+//    		    	 }
+//    		    	 response = buffer.toString();
+//    		     }
+//           } catch (IOException e) {
+//        	   logger.error(e.getMessage(), e);
+//        	   //这里可以抛出异常，比说自定义的微信异常
+//           } catch (GeneralSecurityException e) {
+//        	   logger.error(e.getMessage(), e);
+//        	   //这里可以抛出异常，比说自定义的微信异常
+//           }finally{
+//               if(conn!=null){
+//                   conn.disconnect();
+//               }
+//               try {
+//            	   if(out!=null){
+//            		   out.close();
+//            	   }
+//            	   if(in!=null){
+//            		   in.close();
+//            	   }
+//    	           	if(bufferedReader!=null){
+//    	           		bufferedReader.close();
+//    	           	}
+//    	           	if(inputStreamReader!=null){
+//    	           		inputStreamReader.close();
+//    	           	}
+//    	           	if(inputStream!=null){
+//    	           		inputStream.close();
+//    	           	}
+//               } catch (IOException e) {
+//               }
+//           }
+//           return response;
+//       }
+//    /**
+//     *  文件上传（速度快）
+//     * @param path
+//     * @param method
+//     * @param file
+//     * @param params
+//     * @return
+//     */
+//    public static String httpsRequestToUpload(String path, String method,File file,Map<String,String> params){
+//
+// 	   if(StringUtils.isBlank(path)||StringUtils.isBlank(method)||!file.exists()){
+// 	           return null;
+// 	       }
+//        String response = null;
+//        InputStream inputStream = null;
+//        InputStreamReader inputStreamReader = null;
+//        BufferedReader bufferedReader = null;
+//        HttpsURLConnection conn = null;
+//        OutputStream out =null;
+//        DataInputStream in =null;
+//        try {
+//
+//            URL url = new URL(path);
+//            conn = (HttpsURLConnection) url.openConnection();
+//            //主机信任
+//            conn.setHostnameVerifier(new ReHostnameVerifier());
+//            conn.setSSLSocketFactory(getFactory());
+//
+//            conn.setDoOutput(true);
+//            conn.setDoInput(true);
+//            conn.setUseCaches(false);
+//            conn.setRequestMethod(method);
+//
+//            //设置连接主机超时（单位：毫秒）
+//            conn.setConnectTimeout(30000);
+//            //设置从主机读取数据超时（单位：毫秒）
+//            conn.setReadTimeout(30000);
+//
+//            // 设置请求头信息
+// 			conn.setRequestProperty("Connection", "Keep-Alive");
+// 			conn.setRequestProperty("Cache-Control", "no-cache");
+// 			conn.setRequestProperty("Charset", "UTF-8");
+// 			// 设置边界
+// 		    String BOUNDARY = "----------" + System.currentTimeMillis();
+// 		    conn.setRequestProperty("Content-Type", "multipart/form-data; charset=UTF-8 boundary="+ BOUNDARY);
+// 		    // 打开到此 URL 引用的资源的通信链接（如果尚未建立这样的连接）。
+// 		    conn.connect();
+// 		    // 请求正文信息
+// 	   	    // 第一部分：
+// 	   	    StringBuilder sb = new StringBuilder();
+// 	   	    sb.append("--"); // 必须多两道线
+// 	   	    sb.append(BOUNDARY);
+// 	   	    sb.append("\r\n");
+// 	   	    sb.append("Content-Disposition: form-data;name=\"media\";filename=\""+ file.getName() + "\"\r\n");
+// 	   	    sb.append("Content-Type:application/octet-stream\r\n\r\n");
+// 		     byte[] head = sb.toString().getBytes("UTF-8");
+// 		     // 获得输出流
+// 		     out = new DataOutputStream(conn.getOutputStream());
+// 		     // 输出表头
+// 		     out.write(head);
+// 		     // 文件写入流开始=》
+// 		     // 把文件已流文件的方式 推入到url中
+// 		     in = new DataInputStream(new FileInputStream(file));
+// 		     int bytes = 0;
+// 		     byte[] bufferOut = new byte[1024];
+// 		     while ((bytes = in.read(bufferOut)) != -1) {
+// 		    	 out.write(bufferOut, 0, bytes);
+// 		     }
+// 		     // 文件写入流结束《=
+// 		     if(params!=null){
+// 		    	//添加param参数
+// 	 		     for (Map.Entry<String, String> entry : params.entrySet()) {
+// 	 	    	   String key = entry.getKey().toString();
+// 	 	    	   String value = entry.getValue().toString();
+// 	 	    	   sb = new StringBuilder();
+// 	 	    	   sb.append("--"); // 必须多两道线
+// 	 	    	   sb.append(BOUNDARY);
+// 	 	    	   sb.append("\r\n");
+// 	 	    	   sb.append("Content-Disposition: form-data;name=\""+key+"\";\r\n\r\n");
+// 	 	    	   sb.append(value);
+// 	 	    	   byte[] paramb = sb.toString().getBytes("UTF-8");
+// 	 	    	   out.write(paramb);
+// 	 		     }
+// 		     }
+//
+// 		     // 结尾部分
+// 		     byte[] foot = ("\r\n--" + BOUNDARY + "--\r\n\r\n").getBytes();// 定义最后数据分隔线
+// 		     out.write(foot);
+// 		     out.flush();
+// 		     if(conn.getResponseCode() == conn.HTTP_OK){
+// 		    	 inputStream = conn.getInputStream();
+// 		    	 inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+// 		    	 bufferedReader = new BufferedReader(inputStreamReader);
+// 		    	 String str = null;
+// 		    	 StringBuffer buffer = new StringBuffer();
+// 		    	 while ((str = bufferedReader.readLine()) != null) {
+// 		    		 buffer.append(str);
+// 		    	 }
+// 		    	 response = buffer.toString();
+// 		     }
+//        } catch (IOException e) {
+//        	logger.error(e.getMessage(), e);
+//     	   //这里可以抛出异常，比说自定义的微信异常
+//        } catch (GeneralSecurityException e) {
+//        	logger.error(e.getMessage(), e);
+//     	   //这里可以抛出异常，比说自定义的微信异常
+//        }finally{
+//
+//            try {
+//         	   if(out!=null){
+//         		   out.close();
+//         	   }
+//         	   if(in!=null){
+//         		   in.close();
+//         	   }
+// 	           	if(bufferedReader!=null){
+// 	           		bufferedReader.close();
+// 	           	}
+// 	           	if(inputStreamReader!=null){
+// 	           		inputStreamReader.close();
+// 	           	}
+// 	           	if(inputStream!=null){
+// 	           		inputStream.close();
+// 	           	}
+//            } catch (IOException e) {
+//            }
+//            if(conn!=null){
+//                conn.disconnect();
+//            }
+//        }
+//        return response;
+//    }
+//    /**
+//     * 文件下载 -使用object返回是为了判断返回数据类型
+//     * @param path
+//     * @param method
+//     * @param param
+//     * @param storageDir
+//     * @return
+//     */
+//    public static Object httpsRequestToDownload(String path, String method,String param,String storageDir){
+//	   	if(StringUtils.isBlank(path)||StringUtils.isBlank(method)){
+//	           return null;
+//	       }
+//   		File file = null;
+//   		OutputStream outputStream=null;
+//       BufferedInputStream inputStream = null;
+//       InputStream ips = null;
+//       InputStreamReader inputStreamReader = null;
+//       BufferedReader bufferedReader = null;
+//       HttpsURLConnection conn = null;
+//       OutputStream out =null;
+//       try {
+//
+//           URL url = new URL(path);
+//           conn = (HttpsURLConnection) url.openConnection();
+//           //主机信任
+//           conn.setHostnameVerifier(new ReHostnameVerifier());
+//           conn.setSSLSocketFactory(getFactory());
+//
+//           conn.setDoOutput(true);
+//           conn.setDoInput(true);
+//           conn.setUseCaches(false);
+//           conn.setRequestMethod(method);
+//           //设置连接主机超时（单位：毫秒）
+//           conn.setConnectTimeout(30000);
+//           //设置从主机读取数据超时（单位：毫秒）
+//           conn.setReadTimeout(30000);
+//
+//           // 设置请求头信息
+//			conn.setRequestProperty("Connection", "Keep-Alive");
+//			conn.setRequestProperty("Cache-Control", "no-cache");
+//			conn.setRequestProperty("Charset", "UTF-8");
+//			// 设置边界
+//		    String BOUNDARY = "----------" + System.currentTimeMillis();
+//		    conn.setRequestProperty("Content-Type", "multipart/form-data; boundary="+ BOUNDARY);
+//		    // 打开到此 URL 引用的资源的通信链接（如果尚未建立这样的连接）。
+//		    conn.connect();
+//		    if (StringUtils.isNotBlank(param)) {
+//                outputStream = conn.getOutputStream();
+//                outputStream.write(param.getBytes("UTF-8"));
+//                outputStream.flush();
+//            }
+//
+//		    logger.info("Content-Length: " + conn.getContentLength());
+//		    logger.info("Headers: "+conn.getHeaderFields().toString());
+//		    // 文件大小
+//		    int fileLength = conn.getContentLength();
+//
+//		    //获取传输数据类型Content-Type
+//		    String outype=conn.getContentType();
+//
+//		    if(StringUtils.isBlank(outype)||(outype.indexOf("text/plain")==-1&&outype.indexOf("application/json")==-1)){
+//
+//		    	String disposition=conn.getHeaderField("Content-disposition");
+//
+//		    	// 文件名
+//		    	String fileName = forFileName(disposition);
+//
+//		    	//文件路径
+//		    	String filePath = storageDir + File.separatorChar + fileName;
+//
+//		    	if (null == storageDir) {
+//		    	Calendar now = Calendar.getInstance();
+//		    	int year = now.get(Calendar.YEAR);
+//		    	int month = now.get(Calendar.MONTH + 1);
+//		    	int day = now.get(Calendar.DAY_OF_MONTH);
+//		    	filePath = storDir + File.separatorChar
+//		    			+ year + File.separatorChar
+//		    			+ month + File.separatorChar
+//		    			+ day + File.separatorChar
+//		    			+ fileName;
+//		    	}
+//
+//		    	file = new File(filePath);
+//		    	if (!file.getParentFile().exists()) {
+//		    		file.getParentFile().mkdirs();
+//		    	}
+//		    	if(conn.getResponseCode() == conn.HTTP_OK){
+//		    		inputStream = new BufferedInputStream(conn.getInputStream());
+//		    		out = new FileOutputStream(file);
+//		    		int size = 0;
+//		    		int len = 0;
+//		    		byte[] buf = new byte[1024];
+//		    		while ((size = inputStream.read(buf)) != -1) {
+//		    			len += size;
+//		    			out.write(buf, 0, size);
+//		    			// 打印下载百分比
+//		    			System.err.println("下载了-------> "
+//							    			+ len * 100 / fileLength
+//							    			+"%\n");
+//		    		}
+//		    		out.flush();
+//		    	}
+//		    }else{
+//			     if(conn.getResponseCode() == conn.HTTP_OK){
+//			    	 ips = conn.getInputStream();
+//			    	 inputStreamReader = new InputStreamReader(ips, "UTF-8");
+//			    	 bufferedReader = new BufferedReader(inputStreamReader);
+//			    	 String str = null;
+//			    	 StringBuffer buffer = new StringBuffer();
+//			    	 while ((str = bufferedReader.readLine()) != null) {
+//			    		 buffer.append(str);
+//			    	 }
+//			    	 //如果下载文件失败，就要把错误信息抛出去throw
+//			    	 System.err.println("upload err => "+buffer.toString());
+//			    	 return buffer.toString();
+//			     }
+//		    }
+//       } catch (IOException e) {
+//    	   logger.error(e.getMessage(), e);
+//    	   //这里可以抛出异常，比说自定义的微信异常
+//       } catch (GeneralSecurityException e) {
+//    	   logger.error(e.getMessage(), e);
+//    	   //这里可以抛出异常，比说自定义的微信异常
+//       }finally{
+//
+//           try {
+//        	   if(outputStream!=null){
+//        		   outputStream.close();
+//        	   }
+//        	   if(out!=null){
+//        		   out.close();
+//        	   }
+//	           	if(inputStream!=null){
+//	           		inputStream.close();
+//	           	}
+//
+//	           	if(bufferedReader!=null){
+//	           		bufferedReader.close();
+//	           	}
+//	           	if(inputStreamReader!=null){
+//	           		inputStreamReader.close();
+//	           	}
+//	           	if(ips!=null){
+//	           		ips.close();
+//	           	}
+//           } catch (IOException e) {
+//        	   logger.error(e.getMessage(), e);
+//           }
+//           if(conn!=null){
+//               conn.disconnect();
+//           }
+//       }
+//   	return file;
+//   }
     /**
      * 获取文件名
      * @param disposition

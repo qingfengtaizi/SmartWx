@@ -393,9 +393,8 @@ public class MsgNewsCtrl extends BaseCtrl {
     @ResponseBody
     public AjaxResult deleteMaterial(String id) throws WxErrorException {
         MsgNews news = entityService.getById(id);
-        MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();// 获取缓存中的唯一账号
         // 添加多图文永久素材
-        JSONObject jsonObject = WxApiClient.deleteMaterial(news.getMediaId(), mpAccount);
+        JSONObject jsonObject = WxApiClient.deleteMaterial(news.getMediaId(), WxMemoryCacheClient.getMpAccount());
 
         if (null != jsonObject && jsonObject.containsKey("errcode") && jsonObject.getIntValue("errcode") == 0) {
 

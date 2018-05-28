@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import com.wxmp.wxapi.process.*;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,11 +37,6 @@ import com.wxmp.core.common.BaseCtrl;
 import com.wxmp.core.util.AjaxResult;
 import com.wxmp.core.util.ImgTypeUtil;
 import com.wxmp.core.util.PropertiesUtil;
-import com.wxmp.wxapi.process.MediaApi;
-import com.wxmp.wxapi.process.MediaType;
-import com.wxmp.wxapi.process.MpAccount;
-import com.wxmp.wxapi.process.WxApiClient;
-import com.wxmp.wxapi.process.WxMemoryCacheClient;
 import com.wxmp.wxcms.domain.ImgResource;
 import com.wxmp.wxcms.service.ImgResourceService;
 
@@ -112,7 +108,7 @@ public class ImgResourceCtrl extends BaseCtrl {
 		//添加永久图片--图文的封面应该为thumb
 		String materialType = MediaType.Image.toString();
 		//将图片同步到微信，返回mediaId
-		JSONObject imgResultObj = MediaApi.addMateria(accessToken, materialType, filePath, null);
+		JSONObject imgResultObj = WxApi.addMateria(accessToken, materialType, filePath, null);
 //		JSONObject imgResultObj = WxApiClient.addMaterial(filePath, materialType, mpAccount);
 
 		//微信返回来的媒体素材id
@@ -194,9 +190,7 @@ public class ImgResourceCtrl extends BaseCtrl {
 	@RequestMapping("delMediaImg")
 	public AjaxResult delMediaImg(String id)throws Exception {
 		ImgResource img = imgResourceService.getImg(id);
-		 MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();
-		 String accessToken = WxApiClient.getAccessToken(mpAccount);
-		MediaApi.delMaterial(accessToken, img.getMediaId());
+        WxApiClient.deleteMaterial(img.getMediaId(), WxMemoryCacheClient.getMpAccount());
 		imgResourceService.delImg(id);
 		return AjaxResult.deleteSuccess();
 	}
