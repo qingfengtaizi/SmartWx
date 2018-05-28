@@ -281,7 +281,7 @@ public class HttpClientUtils {
      *            参数
      */
     public static String sendHttpPost(String httpUrl, File file, Map<String, String> maps) {
-        return sendHttpPost(httpUrl,  ImmutableMap.of( "files", file), maps, null);
+        return sendHttpPost(httpUrl,  ImmutableMap.of( "media", file), maps, null);
     }
 
     /**
@@ -331,7 +331,7 @@ public class HttpClientUtils {
 
         if (fileLists==null||fileLists.isEmpty()) {
             for (File file : fileLists) {
-                fileMap.put("files", file);
+                fileMap.put("media", file);
             }
         }
 

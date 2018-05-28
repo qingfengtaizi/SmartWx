@@ -159,7 +159,7 @@ public class MediaFilesCtrl extends BaseCtrl {
      */
     @ResponseBody
 	@RequestMapping("addMateria")
-	public AjaxResult addVoice(MultipartFile file,String type) throws Exception {
+	public AjaxResult addMateria(MultipartFile file,String type) throws Exception {
     	JSONObject obj = new JSONObject();
     	if (null == file) {
 			obj.put("message", "没有文件上传");
