@@ -79,7 +79,7 @@
                                         <div class="clickbox is-click" style="display: none;">
                                             <input type="hidden" name="key" id="key" value=""/>
                                             <span class="create-click"><a href="javascript:void(0);"
-                                                                          id="select-resources"><i
+                                                                          id="select-resources" style="margin-top: 30px;"><i
                                                     class="weixin-icon big-add-gray"></i><strong>选择现有资源</strong></a></span>
                                             <span class="create-click" style="display: none;"><a
                                                     href="javascript:void(0);" id="add-resources"><i
@@ -433,7 +433,7 @@
             });
             $("#menu-container").on('click', "#menuSave", function () {
                 var menus = getMenuList();
-                $.ajax({
+                ajax({
                     url: '/accountmenu/save',
                     data: {"menus": JSON.stringify(menus)},
                     success: function (result) {
@@ -446,7 +446,7 @@
                 });
             });
             $("#menu-container").on('click', "#menuSyn", function () {
-                $.ajax({
+                ajax({
                     url: '/wxapi/doPublishMenu',
                     data: {},
                     success: function (result) {

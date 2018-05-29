@@ -1,0 +1,148 @@
+<style>
+    .audiojs * {
+        box-sizing: unset;
+    }
+    .audiojs{
+        display: inline-block;
+        vertical-align: top;
+    }
+</style>
+<div class="fsh-rightPanel">
+    <div class="layui-anim layui-anim-upbit">
+        <div class="layui-form-item wxmp-search" id="list_form">
+            <input type="hidden" name="start">
+            <input type="hidden" name="end">
+            <div class="layui-inline" style="width: 250px">
+                <input type="text" class="layui-input" id="video_time" placeholder="选择上传日期">
+                <i class="iconfont icon-rili"></i>
+            </div>
+            <div class="layui-inline">
+                <button class="layui-btn btn-primary" id="search">搜索</button>
+            </div>
+            <div class="layui-inline right">
+                <button class="layui-btn btn-primary" id="video_add">新增</button>
+            </div>
+        </div>
+        <div>
+
+        </div>
+        <table id="list_table" class="layui-hide" lay-filter="mainList"></table>
+    </div>
+</div>
+<script>
+    //    $("#audio_player")[0].src='http://www.w3school.com.cn/i/horse.ogg';
+    //    $("#audio_player")[0].src='/views/test/test.m4a';
+    //    $("#audio_player")[0].play();
+
+    layui.use(['layer', 'table', "laydate"], function () {
+    	var upload=layui.upload;
+    	var layer = layui.layer;
+        var table = layui.table;
+        var laydate = layui.laydate;
+
+        var tableObj;
+        //日期选择
+        laydate.render({
+            elem: '#video_time',
+            range: true,
+            done: function (value, date, endDate) {
+                if (value) {
+                    $("#list_form input[name='start']").val(value.substring(0, 10));
+                    $("#list_form input[name='end']").val(value.substring(13));
+                } else {
+                    $("#list_form input[name='start']").val("");
+                    $("#list_form input[name='end']").val("");
+                }
+            }
+        });
+
+        var player = null;
+
+
+        //    $("#audio_player")[0].src='http://www.w3school.com.cn/i/horse.ogg';
+        //    $("#audio_player")[0].src='/views/test/test.m4a';
+
+        util.loadJs("/js/plugin/audiojs/audio.min.js", function () {
+            tableObj = table.render({
+                id: 'list_table',
+                elem: '#list_table',
+                url: '/mediaFile/list?mediaType=voice',
+                align: "center",
+                done: function () {
+                    console.log("done");
+                    audiojs.createAll();
+                },
+                cols: [[
+                    {type: 'checkbox'},
+                    {type: 'numbers', title: '序号', width: 50},
+                    {field: 'title', title: '标题', width: 200, align: 'center',},
+                    {field: 'createTime', title: '上传时间', width: 200, align: 'center',},
+                    {
+                        field: 'lock', title: '操作', align: 'center', templet: function (d) {
+                        return '<audio src="' + d.uploadUrl + '"></audio>'
+                            + '<a class="font-danger" lay-event="" href="' + d.uploadUrl + '" download="' + d.uploadUrl.substring(d.uploadUrl.lastIndexOf('/') + 1) + '" ><i class="iconfont icon-icondownload"></i> 下载</a>'
+                            + '<a class="font-primary" lay-event="del" href="javascript:;">删除</a>';
+                    }, unresize: true, align: 'center'
+                    }
+                ]],
+            });
+        });
+
+
+        // 添加
+        var uploader = upload.render({
+            elem: '#video_add',
+            url: '/mediaFile/addMateria',
+            size: 2048,
+            data:{type:"voice"},
+            accept:"audio",
+            exts: 'mp3|MP3|wma|WMA|wav|WAV|amr|AMR',
+            before: function(){
+                showLoading();
+            },
+            done: function(res){
+                layer.closeAll('loading');
+                if(res.success){
+                    layer.msg("上传成功");
+                    reloadTable(tableObj);
+                }else{
+                    layer.msg("上传失败");
+                }
+            }
+            ,error: function(){
+                layer.closeAll('loading');
+                layer.msg("上传失败");
+            }
+        });
+
+        // 搜索
+        $("#search").click(function () {
+            reloadTable(tableObj);
+        });
+
+        //表格内部操作按钮监听
+        table.on('tool(mainList)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+
+            if (layEvent === 'play') {
+                popvideo(data.uploadUrl);
+            } else if (layEvent === 'del') {
+                showConfirm("确认删除？", function () {
+                    $.ajax({
+                        url: '/mediaFile/delMediaFile',
+                        data: {mediaId: data.mediaId},
+                        success: function (result) {
+                            if (result.success) {
+                                layer.msg("操作成功");
+                                reloadTable(tableObj);
+                            } else {
+                                layer.msg("操作异常");
+                            }
+                        }
+                    })
+                });
+            }
+        });
+    });
+</script>

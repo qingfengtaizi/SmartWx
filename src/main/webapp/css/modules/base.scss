@@ -31,10 +31,6 @@
   }
 }
 
-@mixin base() {
-
-}
-
 //浮动;
 @mixin fl {
   float: left;
@@ -70,6 +66,10 @@
     clear: both;
   }
 }
+@mixin clearfix() {
+  @include clear-before();
+  @include clear-after();
+}
 
 @mixin border() {
   border: 1px solid $border-default;
@@ -95,7 +95,7 @@
 }
 
 //css3过渡;
-@mixin tran($name:all,$time:2s) {
+@mixin tran($name:all,$time:300ms) {
   -webkit-transition: $name $time; /* Safari 和 Chrome */
   -moz-transition: $name $time; /* Firefox 4 */
   -ms-transition: $name $time; /* IE */
@@ -189,6 +189,9 @@ $browser: null;
   }
   .clear-after {
     @include clear-after()
+  }
+  .clearfix{
+    @include clearfix()
   }
   .ellipsis {
     @include ellipsis()

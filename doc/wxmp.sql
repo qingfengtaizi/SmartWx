@@ -1,9 +1,8 @@
 /*
 SQLyog Ultimate v11.24 (32 bit)
-MySQL - 5.7.21 : Database - wxmp
+MySQL - 5.7.18 : Database - wxmp
 *********************************************************************
-*/
-
+*/
 
 /*!40101 SET NAMES utf8 */;
 
@@ -15,7 +14,7 @@ MySQL - 5.7.21 : Database - wxmp
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 CREATE DATABASE /*!32312 IF NOT EXISTS*/`wxmp` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
-USE `wxmp`;
+USE `wxmp2`;
 
 /*Table structure for table `sys_config` */
 
@@ -70,9 +69,7 @@ CREATE TABLE `wxcms_account` (
   `msg_count` int(11) DEFAULT '1',
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8;
-
-/*Data for the table `wxcms_account` */
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `wxcms_account_fans` */
 
@@ -96,9 +93,7 @@ CREATE TABLE `wxcms_account_fans` (
   `account` varchar(100) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=294 DEFAULT CHARSET=utf8;
-
-/*Data for the table `wxcms_account_fans` */
+) ENGINE=InnoDB AUTO_INCREMENT=339 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `wxcms_account_menu` */
 
@@ -119,9 +114,7 @@ CREATE TABLE `wxcms_account_menu` (
   `account` varchar(100) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=596 DEFAULT CHARSET=utf8;
-
-/*Data for the table `wxcms_account_menu` */
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Table structure for table `wxcms_account_menu_group` */
 
@@ -133,9 +126,7 @@ CREATE TABLE `wxcms_account_menu_group` (
   `enable` int(11) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
-
-/*Data for the table `wxcms_account_menu_group` */
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Table structure for table `wxcms_article` */
 
@@ -157,9 +148,7 @@ CREATE TABLE `wxcms_article` (
   `pic_url` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`ar_id`),
   KEY `news_id` (`news_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8;
-
-/*Data for the table `wxcms_article` */
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `wxcms_img_resource` */
 
@@ -177,10 +166,9 @@ CREATE TABLE `wxcms_img_resource` (
   `create_time` datetime NOT NULL,
   `update_time` datetime NOT NULL,
   `flag` int(1) NOT NULL,
+  `account` varchar(100) DEFAULT NULL COMMENT '微信账号',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-/*Data for the table `wxcms_img_resource` */
 
 /*Table structure for table `wxcms_login_info` */
 
@@ -203,8 +191,6 @@ CREATE TABLE `wxcms_login_info` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='登录信息表';
 
-/*Data for the table `wxcms_login_info` */
-
 /*Table structure for table `wxcms_media_files` */
 
 DROP TABLE IF EXISTS `wxcms_media_files`;
@@ -220,10 +206,10 @@ CREATE TABLE `wxcms_media_files` (
   `rmk` varchar(500) DEFAULT NULL COMMENT '备注_预留',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `account` varchar(100) DEFAULT NULL COMMENT '微信号',
+  `base_id` int(11) DEFAULT NULL COMMENT '关联base表',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=213 DEFAULT CHARSET=utf8;
-
-/*Data for the table `wxcms_media_files` */
+) ENGINE=InnoDB AUTO_INCREMENT=210 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `wxcms_msg_base` */
 
@@ -239,9 +225,7 @@ CREATE TABLE `wxcms_msg_base` (
   `favour_count` int(11) unsigned zerofill DEFAULT '00000000000',
   `create_time` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=143 DEFAULT CHARSET=utf8;
-
-/*Data for the table `wxcms_msg_base` */
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `wxcms_msg_news` */
 
@@ -250,7 +234,7 @@ DROP TABLE IF EXISTS `wxcms_msg_news`;
 CREATE TABLE `wxcms_msg_news` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `mult_type` varchar(5) DEFAULT NULL COMMENT '单图文多图文类型',
-  `title` varchar(255) DEFAULT NULL,
+  `title` varchar(30) DEFAULT NULL,
   `author` varchar(255) DEFAULT NULL,
   `brief` varchar(255) DEFAULT NULL,
   `description` longtext,
@@ -265,9 +249,7 @@ CREATE TABLE `wxcms_msg_news` (
   `account` varchar(100) DEFAULT NULL,
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8;
-
-/*Data for the table `wxcms_msg_news` */
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `wxcms_msg_news_combin` */
 
@@ -279,8 +261,6 @@ CREATE TABLE `wxcms_msg_news_combin` (
   `msg_news_id` int(11) NOT NULL,
   PRIMARY KEY (`id`,`main_id`,`msg_news_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-/*Data for the table `wxcms_msg_news_combin` */
 
 /*Table structure for table `wxcms_msg_text` */
 
@@ -294,9 +274,7 @@ CREATE TABLE `wxcms_msg_text` (
   `account` varchar(100) DEFAULT NULL,
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8;
-
-/*Data for the table `wxcms_msg_text` */
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `wxcms_tpl_msg_text` */
 
@@ -305,16 +283,14 @@ DROP TABLE IF EXISTS `wxcms_tpl_msg_text`;
 CREATE TABLE `wxcms_tpl_msg_text` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tpl_id` varchar(50) DEFAULT NULL,
-  `title` varchar(200) DEFAULT NULL,
+  `title` varchar(30) DEFAULT NULL,
   `content` longtext,
   `wx_tpl` varchar(200) DEFAULT NULL,
   `base_id` int(11) NOT NULL,
   `account` varchar(100) DEFAULT NULL,
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
-
-/*Data for the table `wxcms_tpl_msg_text` */
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

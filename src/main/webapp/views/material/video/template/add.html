@@ -1,0 +1,63 @@
+·<div class="fsh-pop">
+    <div id="add_form" class="layui-form">
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label"><i>*</i>标题</label>
+            <div class="layui-input-block">
+                <input name="title" maxlength="20" lay-verify="required" placeholder="请输入标题" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label"><i>*</i>上传<br>(只支持mp4)</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="uploadUrl" id="add_path" value="">
+                <input type="hidden" name="url" id="add_url" value="">
+                <div class="layui-upload-drag" id="uploader">
+                    <i class="layui-icon"></i>
+                    <p>点击上传，或将文件拖拽到此处</p>
+                </div>
+                <button ></button>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label"><i>*</i>描述</label>
+            <div class="layui-input-block">
+                <textarea class="layui-textarea" name="introduction" id="" maxlength="150" lay-verify="required" placeholder="请输入描述"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['layer',"upload"], function () {
+        var upload = layui.upload;
+        var uploader = upload.render({
+            elem: '#uploader',
+            url: '/mediaFile/uploadFile',
+            size: 10240,
+            accept:"video",
+            exts:"mp4|MP4",
+            before: function(){
+                showLoading();
+            },
+            done: function(result){
+                if (result.success) {
+                    layer.closeAll('loading');
+                    $("#uploader").html("<i class='iconfont icon-bofang' data-src='"+result.data.src+"'></i><p>点击播放预览，点击空白处或将文件拖拽到此处重新上传</p>");
+                    $("#add_path").val(result.data.src);
+                    $("#add_url").val(result.data.url);
+                } else {
+                    layer.msg(result.msg || "上传接口异常");
+                }
+            },
+            error: function(){
+                layer.closeAll('loading');
+                layer.msg(result.msg || "上传接口异常");
+            }
+        });
+
+        // 播放
+        $("#uploader").on("click",".icon-bofang",function () {
+            popvideo($(this).attr("data-src"));
+            return false
+        });
+    })
+</script>

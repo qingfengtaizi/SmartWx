@@ -1,0 +1,136 @@
+<div class="fsh-rightPanel">
+    <div class="layui-anim layui-anim-upbit">
+        <div class="layui-form-item wxmp-search" id="list_form" style="">
+            <input type="hidden" name="start" id="start">
+            <input type="hidden" name="end" id="end">
+            <div class="layui-inline" style="width: 250px">
+                <input type="text" class="layui-input" id="image_time" placeholder="选择上传日期">
+                <i class="iconfont icon-rili"></i>
+            </div>
+            <div class="layui-inline">
+                <button class="layui-btn btn-primary" id="search">搜索</button>
+            </div>
+            <div class="layui-inline right">
+                <button class="layui-btn btn-primary" id="video_uploader">新增</button>
+            </div>
+        </div>
+        <div id="image_wrap">
+            <ul class="wxmp-list-image"></ul>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['layer',"upload","laydate"], function () {
+        var upload=layui.upload;
+        var laydate = layui.laydate;
+
+        //日期选择
+        laydate.render({
+            elem: '#image_time',
+            range: true,
+            done: function(value, date, endDate){
+                if(value){
+                    $("#list_form input[name='start']").val(value.substring(0,10));
+                    $("#list_form input[name='end']").val(value.substring(13));
+                }else{
+                    $("#list_form input[name='start']").val("");
+                    $("#list_form input[name='end']").val("");
+                }
+            }
+        });
+
+        var viewer=null;
+        util.loadCss("/js/plugin/viewerjs/viewer.min.css");
+        util.loadJs("/js/plugin/viewerjs/viewer.min.js",function () {
+            getImglist();
+        });
+
+        var uploader = upload.render({
+            elem: '#video_uploader',
+            url: '/mediaFile/addMateria',
+            size: 2048,
+            accept:"images",
+            exts: 'bmp|BMP|png|PNG|jpeg|JPEG|jpg|JPG|gif|GIF',
+            data:{type:"image"},
+            before: function(){
+                showLoading();
+            },
+            done: function(res){
+                layer.closeAll('loading');
+                if(res.success){
+                    layer.msg("上传成功");
+                    getImglist();
+                }else{
+                    layer.msg("上传失败");
+                }
+            }
+            ,error: function(){
+                layer.closeAll('loading');
+                layer.msg("上传失败");
+            }
+        });
+
+        function getImglist(param) {
+            var data={page:1};
+            if (param && param.page) {
+                data.page = param.page;
+            }
+            if($("#start").val() && $("#end").val()){
+                data.start=$("#start").val();
+                data.end=$("#end").val();
+            }
+            data.pageSize=15;
+            $.ajax({
+                url: '/managerImg/list',
+                data: data,
+                success: function (result) {
+                    if (result.success && result.page && result.page.total > 0) {
+                        //渲染列表
+                        renderHtml({
+                            targetId: 'image_wrap',
+                            template: "list",
+                            htmlData: result,
+                            callBack: function () {
+                                if (result.page.total > 15) {
+                                    initPage(result.page, getImglist);
+                                    viewer=viewer?viewer.update():new Viewer($("#image_wrap")[0]);
+                                }
+                            }
+                        });
+                    } else {
+                        showEmpty($("#image_wrap"));
+                    }
+                },
+                error: function () {
+                    showEmpty($("#image_wrap"));
+                }
+            })
+        }
+
+        // 删除
+        $("#image_wrap").on("click","button[event='del']",function () {
+            var id=$(this).parent().attr("data-id");
+            showConfirm("确认删除？",function () {
+                $.ajax({
+                    url: '/managerImg/delMediaImg',
+                    data: {id: id},
+                    success: function (result) {
+                        if (result.success) {
+                            layer.msg("操作成功");
+                            getImglist();
+                        } else {
+                            layer.msg("操作异常");
+                        }
+                    }
+                })
+            });
+        });
+
+        // 搜索
+        $("#search").click(function () {
+            getImglist();
+        });
+    });
+
+
+</script>

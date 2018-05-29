@@ -1,0 +1,146 @@
+<div class="fsh-rightPanel">
+    <div class="layui-anim layui-anim-upbit">
+        <div class="layui-form-item wxmp-search" id="list_form">
+            <input type="hidden" name="start">
+            <input type="hidden" name="end">
+            <div class="layui-inline" style="width: 250px">
+                <input type="text" class="layui-input" id="video_time" placeholder="选择上传日期">
+                <i class="iconfont icon-rili"></i>
+            </div>
+            <div class="layui-inline">
+                <button class="layui-btn btn-primary" id="search">搜索</button>
+            </div>
+            <div class="layui-inline right">
+                <button class="layui-btn btn-primary" id="video_add">新增</button>
+            </div>
+        </div>
+        <table id="list_table" class="layui-hide" lay-filter="mainList"></table>
+    </div>
+</div>
+<script>
+    layui.use(['layer', 'table', "laydate"], function () {
+        var layer = layui.layer;
+        var table = layui.table;
+        var laydate = layui.laydate;
+
+        //日期选择
+        laydate.render({
+            elem: '#video_time',
+            range: true,
+            done: function(value, date, endDate){
+                if(value){
+                    $("#list_form input[name='start']").val(value.substring(0,10));
+                    $("#list_form input[name='end']").val(value.substring(13));
+                }else{
+                	$("#list_form input[name='start']").val("");
+                    $("#list_form input[name='end']").val("");
+                }
+            }
+        });
+
+        var player = null;
+
+        util.loadCss("/js/plugin/video-js/video-js.css");
+        util.loadJs("/js/plugin/video-js/video.js", function () {
+
+        });
+        var tableObj = table.render({
+            id: 'list_table',
+            elem: '#list_table',
+            url: '/mediaFile/list?mediaType=video',
+            align: "center",
+            cols: [[
+                {type: 'checkbox'},
+                {type: 'numbers', title: '序号', width: 50},
+                {field: 'title', title: '标题', width: 150, align: 'center',},
+                {field: 'createTime', title: '上传时间', align: 'center',},
+                {
+                    field: 'lock', title: '操作', width: 250, align: 'center', templet: function (d) {
+                    return '<a class="font-danger" lay-event="play" href="javascript:;"><i class="iconfont icon-bofang"></i> 预览</a>'
+                        + '<a class="font-danger" lay-event="" href="'+d.uploadUrl+'" download="'+d.uploadUrl.substring(d.uploadUrl.lastIndexOf('/')+1)+'" ><i class="iconfont icon-icondownload"></i> 下载</a>'
+                        + '<a class="font-primary" lay-event="del" href="javascript:;">删除</a>';
+                }, unresize: true, align: 'center'
+                }
+            ]],
+        });
+
+        // 添加
+        $("#video_add").click(function () {
+            showDialog({
+                title: '添加',
+                template: 'add',
+                saveUrl: '/mediaFile/addVideo',
+                tableObj: tableObj,
+                beforeSubmit: function (data) {
+                    if (!data.uploadUrl) {
+                        layer.msg("请上传视频");
+                        return false;
+                    }
+                    return true;
+                }
+            })
+        });
+
+        // 搜索
+        $("#search").click(function () {
+            reloadTable(tableObj);
+        });
+
+        //表格内部操作按钮监听
+        table.on('tool(mainList)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+
+            if (layEvent === 'play') {
+                popvideo(data.uploadUrl);
+            } else if (layEvent === 'del') {
+                showConfirm("确认删除？", function () {
+                    $.ajax({
+                        url: '/mediaFile/delMediaFile',
+                        data: {mediaId: data.mediaId},
+                        success: function (result) {
+                            if (result.success) {
+                                layer.msg("操作成功");
+                                reloadTable(tableObj);
+                            } else {
+                                layer.msg("操作异常");
+                            }
+                        }
+                    })
+                });
+            }
+        });
+
+        window.popvideo = function (videoUrl) {
+            var $p = $("#player");
+            $p.length > 0 && $p.remove();
+
+            var TEMP_video =
+                '<div id="player" style="width:900px;height:600px;display:none;overflow: hidden">'
+                + '<video width="900" height="600" controls="controls" class="video-js" id="video">'
+                + '<source src="' + videoUrl + '">'
+                + '</video>'
+                + '</div>';
+
+            $("body").append(template.render(TEMP_video));
+            var videoPlayer = videojs('video');
+            layer.open({
+                type: 1,
+                content: $("#player"),
+                anim: '1',
+                title: "视频",
+                area: '900px',
+                scrollbar: false,
+                skin: "",
+                shadeClose: true,
+                btn: 0,
+                success: function () {
+                    videoPlayer.play();
+                },
+                end: function () {
+                    videoPlayer.dispose()
+                }
+            });
+        }
+    });
+</script>

@@ -1,0 +1,27 @@
+<ul class="wxmp-list-justify media-list">
+    <%for(var i=0;i< data.length;i++){%>
+    <li class="item">
+        <a href="<%=data[i].articles[0].url%>" target="_blank">
+            <img src="<%=data[i].articles[0].picUrl%>" alt="" class="main">
+        </a>
+        <div class="content">
+            <h3 class="ellipsis"><%=data[i].title%></h3>
+            <div class="doc clear-after">
+                <a href="#"><img src="<%=data[i].articles[1].picUrl%>" alt=""></a>
+                <p class="ellipsis"><a href="<%=data[i].articles[1].url%>" target="_blank"><%=data[i].articles[1].title%></a></p>
+            </div>
+            <%if(data[i].articles.length>2){%>
+            <p class="more">
+                <i class="iconfont icon-gengduo"></i>更多<%=data[i].articles.length-2%>条未展示
+            </p>
+            <%}%>
+        </div>
+        <div class="btn-group" data-id="<%=data[i].id%>">
+            <button class="layui-btn btn-primary-reversal" event="edit">编辑</button>
+            <button class="layui-btn btn-danger-reversal" event="mass">群发</button>
+            <button class="layui-btn btn-danger-reversal" event="del">删除</button>
+        </div>
+    </li>
+    <%}%>
+</ul>
+<div id='pagination' class="pagination"></div>

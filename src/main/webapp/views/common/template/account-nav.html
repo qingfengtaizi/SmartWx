@@ -1,0 +1,11 @@
+<a href="javascript:;">
+    <%if(data){%>
+    <span><%=data.correct%></span>
+    <%}%>
+</a>
+<dl class="layui-nav-child">
+    <%if(data) {for(var i=0;i < data.list.length ; i++){%>
+    <dd><a href="javascript:changeCount('<%=data.list[i].id%>');"><%=data.list[i].name%></a></dd>
+    <%}}%>
+    <dd><a href="/views/index.html#/index/addaccount/add"><i class="iconfont icon-add"></i>添加公众号</a></dd>
+</dl>

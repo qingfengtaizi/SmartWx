@@ -1,15 +1,25 @@
-/**
- * Copyright &copy; 2017-2018 <a href="http://www.webcsn.com">webcsn</a> All rights reserved.
+/*
+ * FileName：MyService.java 
+ * <p>
+ * Copyright (c) 2017-2020, <a href="http://www.webcsn.com">hermit (794890569@qq.com)</a>.
+ * <p>
+ * Licensed under the GNU General Public License, Version 3 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.gnu.org/licenses/gpl-3.0.html
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  *
- * @author hermit
- * @date 2018-04-17 10:54:58
  */
 package com.wxmp.wxapi.service;
 
-import net.sf.json.JSONObject;
-
-import java.util.Map;
-
+import com.alibaba.fastjson.JSONObject;
+import com.wxmp.core.exception.WxErrorException;
 import com.wxmp.wxapi.process.MpAccount;
 import com.wxmp.wxapi.vo.MsgRequest;
 import com.wxmp.wxcms.domain.AccountFans;
@@ -20,24 +30,21 @@ import com.wxmp.wxcms.domain.AccountFans;
 public interface MyService {
 	
 	//消息处理
-	public String processMsg(MsgRequest msgRequest,MpAccount mpAccount);
+	public String processMsg(MsgRequest msgRequest,MpAccount mpAccount) throws WxErrorException;
 
 	//发布菜单
-	public JSONObject publishMenu(MpAccount mpAccount);
+	public JSONObject publishMenu(MpAccount mpAccount) throws WxErrorException ;
 	
 	//删除菜单
-	public JSONObject deleteMenu(MpAccount mpAccount);
+	public JSONObject deleteMenu(MpAccount mpAccount) throws WxErrorException ;
 	
 	//获取用户列表
-	public boolean syncAccountFansList(MpAccount mpAccount);
+	public boolean syncAccountFansList(MpAccount mpAccount) throws WxErrorException ;
 	
 	//获取单个用户信息
-	public AccountFans syncAccountFans(String openId, MpAccount mpAccount, boolean merge);
+	public AccountFans syncAccountFans(String openId, MpAccount mpAccount, boolean merge) throws WxErrorException ;
 	
 	//根据openid 获取粉丝，如果没有，同步粉丝
-	public AccountFans getFansByOpenId(String openid,MpAccount mpAccount);
+	public AccountFans getFansByOpenId(String openid,MpAccount mpAccount) throws WxErrorException ;
 	
 }
-
-
-

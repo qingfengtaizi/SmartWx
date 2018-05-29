@@ -18,7 +18,7 @@ layui.use(['form', 'layer'], function () {
             layer.msg('请输入密码');
             return;
         }
-        $.ajax({
+        ajax({
             url: '/user/login',
             type: 'POST',
             dataType: 'json',
@@ -29,13 +29,13 @@ layui.use(['form', 'layer'], function () {
             success: function (result) {
                 if (result.success) {
                     if ($('#remember').is(':checked')) {
-                        localStorage.setItem('remember', name);
+                        localStorage.setItem('username', username);
                         localStorage.setItem('password', password);
                     } else {
-                        localStorage.clear('remember');
+                        localStorage.clear('username');
                         localStorage.clear('password');
                     }
-                    localStorage.setItem('username', result.data?result.data:"管理员");
+                    localStorage.setItem('nickname', result.data?result.data:"管理员");
                     window.location.href = "/views/index.html";
                 }else{
                     layer.msg(result.msg || "登录失败");
@@ -49,9 +49,9 @@ layui.use(['form', 'layer'], function () {
 });
 
 //判断是否存在过用户
-if (localStorage.getItem('remember')) {
+if (localStorage.getItem('username')) {
     $("#remember").attr("checked", true);
-    $("#username").val(localStorage.getItem('remember'));
+    $("#username").val(localStorage.getItem('username'));
     $("#password").val(localStorage.getItem('password'))
 }
 //百度统计

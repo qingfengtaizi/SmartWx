@@ -22,7 +22,6 @@
   }
 }
 
-
 .layui-form{
   .tips{
     color: #FF5722;
@@ -38,6 +37,7 @@
 .layui-tab-content{
   padding: 0;
 }
+
 .layui-text{
   ol{
     padding: 5px 0 5px 15px;
@@ -46,4 +46,8 @@
       list-style-type: decimal;
     }
   }
+}
+
+.layui-upload-drag{
+  padding: 15px;
 }
