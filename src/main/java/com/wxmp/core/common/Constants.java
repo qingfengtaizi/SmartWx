@@ -33,8 +33,8 @@ public class Constants {
 	public static final Integer IMG_FLAG0 = 0;
 	public static final Integer IMG_FLAG1 = 1;
 	public static final String SYSTEM_NAME = "SmartWx";
-	public static final String SYSTEM_VERSION = "2.0.0";
-	public static final String SYSTEM_UPDATE_TIME = "2018-04-19";
+	public static final String SYSTEM_VERSION = "2.0.2";
+	public static final String SYSTEM_UPDATE_TIME = "2018-05-29";
 
 	/**
 	 * Token加密密钥
