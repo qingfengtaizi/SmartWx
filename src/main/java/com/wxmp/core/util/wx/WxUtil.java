@@ -169,4 +169,16 @@ public class WxUtil {
         obj.put("list", arr);
         return obj;
     }
+
+	/**
+	 * 判断是否微信返回错误
+	 * @param jsonObject
+	 * @return
+	 */
+	public static boolean isWxError(JSONObject jsonObject) {
+        if (null == jsonObject || jsonObject.containsKey("errcode")) {
+            return true;
+        }
+        return false;
+    }
 }
