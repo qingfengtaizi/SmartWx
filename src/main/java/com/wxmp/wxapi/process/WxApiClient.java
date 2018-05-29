@@ -61,6 +61,8 @@ public class WxApiClient {
                 if (token.getErrcode() == null) {
                     WxMemoryCacheClient.addAccessToken(mpAccount.getAccount(), token);
                     return token.getAccessToken();
+                } else {
+                    throw new WxErrorException(WxError.newBuilder().setErrorCode(token.getErrcode()).setErrorMsg(token.getErrmsg()).build());
                 }
             }
             return null;
@@ -81,6 +83,8 @@ public class WxApiClient {
                 if (jsTicket.getErrcode() == null) {
                     WxMemoryCacheClient.addJSTicket(mpAccount.getAccount(), jsTicket);
                     return jsTicket.getTicket();
+                }else{
+                    throw new WxErrorException(WxError.newBuilder().setErrorCode(jsTicket.getErrcode()).setErrorMsg(jsTicket.getErrmsg()).build());
                 }
             }
             return null;
@@ -115,7 +119,7 @@ public class WxApiClient {
         OAuthAccessToken token = WxApi.getOAuthAccessToken(mpAccount.getAppid(), mpAccount.getAppsecret(), code);
         if (token != null) {
             if (token.getErrcode() != null) {// 获取失败
-                System.out.println("## getOAuthAccessToken Error = " + token.getErrmsg());
+                throw new WxErrorException(WxError.newBuilder().setErrorCode(-1).setErrorMsg(token.getErrmsg()).build());
             } else {
                 return token.getOpenid();
             }
@@ -234,8 +238,7 @@ public class WxApiClient {
         try {
             JSONObject jsonObj = WxApi.httpsRequest(url, "POST", body);
             if (jsonObj.containsKey("errcode")) {// 获取素材失败
-                System.out.println(ErrCode.errMsg(jsonObj.getIntValue("errcode")));
-                return null;
+                throw new WxErrorException(WxError.fromJson(jsonObj));
             } else {
                 Material material = new Material();
                 material.setTotalCount(jsonObj.getIntValue("total_count"));

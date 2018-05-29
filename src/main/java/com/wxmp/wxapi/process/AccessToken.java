@@ -94,7 +94,6 @@ public class AccessToken implements Serializable{
 	}
 	public static void main(String[] args) {
 		long now = CalendarUtil.getTimeInSeconds();
-		System.out.println(now - 1486111337 - 10);
 	}
 	
 	

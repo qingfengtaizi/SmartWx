@@ -278,7 +278,6 @@ public class WxCmsCtrl extends BaseCtrl {
 	public void saveFile(MultipartFile file,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		 String fileName = file.getOriginalFilename();  
 		 String ext = FilenameUtils.getExtension(fileName);
-		 System.out.println(System.currentTimeMillis());
 		 fileName = System.currentTimeMillis()+new Random().nextInt(10000)+"."+ext;
 		 
 		 String filePath = request.getSession().getServletContext().getRealPath("/")+"upload\\"+fileName;  

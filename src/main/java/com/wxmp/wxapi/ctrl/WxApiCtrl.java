@@ -98,7 +98,6 @@ public class WxApiCtrl extends BaseCtrl{
 	public @ResponseBody String doGet(HttpServletRequest request,@PathVariable String account) {
 		//如果是多账号，根据url中的account参数获取对应的MpAccount处理即可
 		
-		System.out.println("-------------------------------------------------------");
 		Set<String> keySet = request.getParameterMap().keySet();
 		Iterator<String> iterator = keySet.iterator();
         while(iterator.hasNext()){  
@@ -248,7 +247,7 @@ public class WxApiCtrl extends BaseCtrl{
 	
 	//上传图文素材
 	@RequestMapping(value = "/doUploadMaterial")
-	public  ModelAndView doUploadMaterial(MsgNews msgNews) throws WxErrorException {
+	public  ModelAndView doUploadMaterial(MsgNews msgNews) throws Exception {
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		String rstMsg = "上传图文消息素材";
 		List<MsgNews> msgNewsList = new ArrayList<MsgNews>();

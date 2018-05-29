@@ -524,7 +524,6 @@ public class WxApi {
             reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String line = null;
             while ((line = reader.readLine()) != null) {
-                // System.out.println(line);
                 buffer.append(line);
             }
             if (result == null) {

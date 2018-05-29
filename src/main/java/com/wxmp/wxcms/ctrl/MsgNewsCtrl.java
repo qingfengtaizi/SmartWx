@@ -89,7 +89,7 @@ public class MsgNewsCtrl extends BaseCtrl {
      */
     @RequestMapping(value = "/sendNewsMaterial", method = RequestMethod.POST)
     @ResponseBody
-    public String sendNewsMaterial(String newsId, HttpServletRequest request) throws WxErrorException {
+    public String sendNewsMaterial(String newsId, HttpServletRequest request) throws Exception {
         String code = "";
         MsgNews msgNews = entityService.getById(newsId);
         List<MsgNews> msgNewsList = new ArrayList<MsgNews>();
@@ -431,7 +431,7 @@ public class MsgNewsCtrl extends BaseCtrl {
      */
     @RequestMapping(value = "/updateSingleNews", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxResult updateSingleNews(MsgNews msgNews, HttpServletRequest request) throws WxErrorException {
+    public AjaxResult updateSingleNews(MsgNews msgNews, HttpServletRequest request) throws Exception {
         String filePath = request.getSession().getServletContext().getRealPath("/");
 
         String description = msgNews.getDescription();
@@ -534,7 +534,7 @@ public class MsgNewsCtrl extends BaseCtrl {
      */
     @RequestMapping(value = "/updateSubMoreNews", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxResult updateMoreNews(String rows, HttpServletRequest request) throws WxErrorException {
+    public AjaxResult updateMoreNews(String rows, HttpServletRequest request) throws Exception {
         String filePath = request.getSession().getServletContext().getRealPath("/");
         MsgArticle article = (MsgArticle) JSONObject.parseObject(rows, MsgArticle.class);
         String description = article.getContent();

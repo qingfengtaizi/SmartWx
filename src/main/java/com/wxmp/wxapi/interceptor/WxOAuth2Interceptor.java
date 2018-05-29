@@ -103,7 +103,6 @@ public class WxOAuth2Interceptor extends HandlerInterceptorAdapter {
 				return false;
 			}
 		}else{
-			System.out.println("#### WxOAuth2Interceptor Session : openid = " + openid);
 			return true;
 		}
 		HttpUtil.redirectUrl(request, response, "/error/101.html");
