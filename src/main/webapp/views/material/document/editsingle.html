@@ -84,9 +84,9 @@
 <script>
     layui.use(['layedit', "upload", "form"], function () {
         var layedit = layui.layedit;
-        var $ = layui.$;
         var upload = layui.upload;
         var form = layui.form;
+        var $ = layui.$;
         // 设置富文本上传接口
         layedit.set({
             uploadImage: {
@@ -167,18 +167,18 @@
 
         //上传
         upload.render({
-            elem: '#uploader'
-            , url: '/mediaFile/addMateria'
-              data:{type:'thumb'},//缩略图
-              size: 64,
-              accept:"images",
-              exts: 'JPG|jpg'
-            , done: function (result) {
+            elem: '#uploader',
+            url: '/mediaFile/addMateria',
+            data: {type: 'thumb'},//缩略图
+            size: 64,
+            accept: "images",
+            exts: 'JPG|jpg',
+            done: function (result) {
                 if (result.success == 1) {
                     $("#uploader").html("<img src='" + result.data.url + "' style='width: 150px;height: 150px;'/><p>点击重新上传，或将文件拖拽到此处</p>");
                     $("#add_picpath").val(result.data.url);
                     $("#add_thumbMediaId").val(result.data.imgMediaId);
-                    $(".wxmp-doclist .main img").attr("src",result.data.url);
+                    $(".wxmp-doclist .main img").attr("src", result.data.url);
                 } else {
                     layer.msg("上传接口异常");
                 }

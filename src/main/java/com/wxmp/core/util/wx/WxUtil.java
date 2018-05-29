@@ -176,7 +176,7 @@ public class WxUtil {
 	 * @return
 	 */
 	public static boolean isWxError(JSONObject jsonObject) {
-        if (null == jsonObject || jsonObject.containsKey("errcode")) {
+        if (null == jsonObject || jsonObject.getIntValue("errcode") != 0) {
             return true;
         }
         return false;

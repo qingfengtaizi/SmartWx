@@ -471,7 +471,6 @@ public class WxApi {
             try {
                 throw new IOException("文件不存在");
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
