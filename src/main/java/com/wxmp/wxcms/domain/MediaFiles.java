@@ -23,6 +23,7 @@ import com.wxmp.core.page.Page;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -48,8 +49,11 @@ public class MediaFiles extends Page implements Serializable {
    	private Date createTime;
    	private Date updateTime;
    	private Long baseId;//消息主表id
-   	
+
+	@Transient
 	private String start;
+	@Transient
 	private String end;
+	@Transient
 	private String url;//文件绝对路径
 }

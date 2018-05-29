@@ -56,7 +56,6 @@ public class ImgResourceServiceImpl implements ImgResourceService {
 	
 	@Override
 	public ImgResource getImg(String id) {
-		// TODO Auto-generated method stub
 		return imgResourceDao.getImgById(id);
 	}
 
@@ -81,26 +80,22 @@ public class ImgResourceServiceImpl implements ImgResourceService {
 
 	@Override
 	public List<ImgResource> getImgListByPage(ImgResource entity) {
-		// TODO Auto-generated method stub
 		return imgResourceDao.getImgListByPage(entity);
 	}
 	
 	@Override
 	public boolean removeOtherToImg(String otherId) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 
 	@Override
 	public boolean updateImgFlag(String id, Integer flag) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean delImg(String id) {
-		// TODO Auto-generated method stub
 		ImgResource img = imgResourceDao.getImgById(id);
 //		MsgBase base = new MsgBase();
 //		base.setId(img.);

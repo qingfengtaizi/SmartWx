@@ -21,6 +21,7 @@ package com.wxmp.wxcms.domain;
 import com.wxmp.core.page.Page;
 import lombok.Data;
 
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -82,5 +83,10 @@ public class ImgResource extends Page implements Serializable {
 	 * 图片状态字段：0.未引用 ，1.已被引用
 	 */
 	private Integer flag;
+
+	@Transient
+	private String start;
+	@Transient
+	private String end;
 
 }

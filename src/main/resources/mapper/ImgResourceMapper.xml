@@ -4,19 +4,24 @@
 <mapper namespace="com.wxmp.wxcms.mapper.ImgResourceDao">
     
     
-	<select id="getImgListByPage" parameterType="com.wxmp.wxcms.domain.ImgResource" 
-	resultType="com.wxmp.wxcms.domain.ImgResource">
+	<select id="getImgListByPage" parameterType="com.wxmp.wxcms.domain.ImgResource" resultType="com.wxmp.wxcms.domain.ImgResource">
 		SELECT * FROM wxcms_img_resource t
 		<where>
-			1=1
 			<if test="account != null">
-				and t.account = #{account}
+				t.account = #{account}
+			</if>
+			<if test="start!=null and start!='' and end!=null and end!=''">
+				and (t.create_time
+				between
+				str_to_date(#{start}, '%Y-%m-%d')
+				and
+				str_to_date(#{end}, '%Y-%m-%d'))
 			</if>
 		</where>
 		ORDER BY t.create_time desc
 	</select>
-	<select id="getImgById" parameterType="java.lang.String" 
-	resultType="com.wxmp.wxcms.domain.ImgResource">
+
+	<select id="getImgById" parameterType="java.lang.String" resultType="com.wxmp.wxcms.domain.ImgResource">
 		SELECT * FROM wxcms_img_resource WHERE ID = #{id}
 	</select>
     

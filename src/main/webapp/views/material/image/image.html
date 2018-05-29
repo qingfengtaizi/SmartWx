@@ -1,6 +1,15 @@
 <div class="fsh-rightPanel">
     <div class="layui-anim layui-anim-upbit">
         <div class="layui-form-item wxmp-search" id="list_form" style="">
+            <input type="hidden" name="start" id="start">
+            <input type="hidden" name="end" id="end">
+            <div class="layui-inline" style="width: 250px">
+                <input type="text" class="layui-input" id="image_time" placeholder="选择上传日期">
+                <i class="iconfont icon-rili"></i>
+            </div>
+            <div class="layui-inline">
+                <button class="layui-btn btn-primary" id="search">搜索</button>
+            </div>
             <div class="layui-inline right">
                 <button class="layui-btn btn-primary" id="video_uploader">新增</button>
             </div>
@@ -11,8 +20,25 @@
     </div>
 </div>
 <script>
-    layui.use(['layer',"upload"], function () {
+    layui.use(['layer',"upload","laydate"], function () {
         var upload=layui.upload;
+        var laydate = layui.laydate;
+
+        //日期选择
+        laydate.render({
+            elem: '#image_time',
+            range: true,
+            done: function(value, date, endDate){
+                if(value){
+                    $("#list_form input[name='start']").val(value.substring(0,10));
+                    $("#list_form input[name='end']").val(value.substring(13));
+                }else{
+                    $("#list_form input[name='start']").val("");
+                    $("#list_form input[name='end']").val("");
+                }
+            }
+        });
+
         var viewer=null;
         util.loadCss("/js/plugin/viewerjs/viewer.min.css");
         util.loadJs("/js/plugin/viewerjs/viewer.min.js",function () {
@@ -48,6 +74,10 @@
             var data={page:1};
             if (param && param.page) {
                 data.page = param.page;
+            }
+            if($("#start").val() && $("#end").val()){
+                data.start=$("#start").val();
+                data.end=$("#end").val();
             }
             data.pageSize=15;
             $.ajax({
@@ -94,6 +124,13 @@
                     }
                 })
             });
-        })
+        });
+
+        // 搜索
+        $("#search").click(function () {
+            getImglist();
+        });
     });
+
+
 </script>
