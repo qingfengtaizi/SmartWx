@@ -24,6 +24,5 @@
 		SET pwd = #{newpwd},
 		    update_time = #{updateTime} 
 		WHERE id = #{id} 
-		AND pwd = pwd
 	</update>
 </mapper>

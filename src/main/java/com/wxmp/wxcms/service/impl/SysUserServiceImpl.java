@@ -74,7 +74,6 @@ public class SysUserServiceImpl  implements SysUserService{
 			sysUserDao.updateLoginPwd(sysUser);
 			n = 1;
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 		return n;
 	}
