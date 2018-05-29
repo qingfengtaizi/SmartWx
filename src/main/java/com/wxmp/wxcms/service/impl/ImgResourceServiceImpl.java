@@ -18,7 +18,17 @@
  */
 package com.wxmp.wxcms.service.impl;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.wxmp.core.common.Constants;
+import com.wxmp.core.util.CommonUtil;
+import com.wxmp.wxapi.process.MediaType;
 import com.wxmp.wxcms.domain.ImgResource;
 import com.wxmp.wxcms.domain.MediaFiles;
 import com.wxmp.wxcms.domain.MsgBase;
@@ -26,16 +36,6 @@ import com.wxmp.wxcms.mapper.ImgResourceDao;
 import com.wxmp.wxcms.mapper.MediaFilesDao;
 import com.wxmp.wxcms.mapper.MsgBaseDao;
 import com.wxmp.wxcms.service.ImgResourceService;
-import com.wxmp.core.util.CommonUtil;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import static com.wxmp.core.util.DateUtilOld.COMMON_FULL;
-
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.Resource;
 
 /**
  *
@@ -68,10 +68,17 @@ public class ImgResourceServiceImpl implements ImgResourceService {
 		String id = CommonUtil.getUID();
 		img.setId(id);
 		imgResourceDao.add(img);
+
+		//添加base表
+		MsgBase base = new MsgBase();
+		base.setCreateTime(new Date());
+		base.setMsgtype(MediaType.Image.name());
+		baseDao.add(base);
 		//添加到素材表中
 		MediaFiles entity = new MediaFiles();
 		entity.setMediaId(img.getMediaId());
-		entity.setMediaType("image");
+		entity.setMediaType(MediaType.Image.name());
+		entity.setBaseId(base.getId());
 		entity.setCreateTime(new Date(System.currentTimeMillis()));
 		entity.setUpdateTime(new Date(System.currentTimeMillis()));
 		mediaFilesDao.add(entity);

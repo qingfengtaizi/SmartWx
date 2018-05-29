@@ -26,7 +26,6 @@ public class MediaFileServiceImpl implements MediaFileService {
 	
 	@Override
 	public void add(MediaFiles entity) {
-		// TODO Auto-generated method stub
 		MsgBase base = new MsgBase();
 		base.setCreateTime(new Date());
 		base.setMsgtype(entity.getMediaType());
@@ -39,7 +38,6 @@ public class MediaFileServiceImpl implements MediaFileService {
 
 	@Override
 	public void deleteByMediaId(String mediaId) {
-		// TODO Auto-generated method stub
 		MediaFiles media = mediaFilesDao.getFileByMediaId(mediaId);
 		MsgBase base = new MsgBase();
 		base.setId(media.getBaseId());
@@ -49,13 +47,11 @@ public class MediaFileServiceImpl implements MediaFileService {
 
 	@Override
 	public MediaFiles getFileByMediaId(String mediaId) {
-		// TODO Auto-generated method stub
 		return mediaFilesDao.getFileByMediaId(mediaId);
 	}
 
 	@Override
 	public List<MediaFiles> getMediaListByPage(MediaFiles entity) {
-		// TODO Auto-generated method stub
 		return mediaFilesDao.getMediaListByPage(entity);
 	}
 
