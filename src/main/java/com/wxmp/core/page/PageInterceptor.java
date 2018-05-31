@@ -18,12 +18,31 @@
  */
 package com.wxmp.core.page;
 
-import lombok.extern.slf4j.Slf4j;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.xml.bind.PropertyException;
+
 import org.apache.ibatis.executor.parameter.ParameterHandler;
+import org.apache.ibatis.executor.statement.RoutingStatementHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.plugin.*;
+import org.apache.ibatis.plugin.Interceptor;
+import org.apache.ibatis.plugin.Intercepts;
+import org.apache.ibatis.plugin.Invocation;
+import org.apache.ibatis.plugin.Plugin;
+import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
@@ -31,15 +50,10 @@ import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.defaults.DefaultSqlSession;
+import org.apache.ibatis.session.defaults.DefaultSqlSession.StrictMap;
 
-import javax.xml.bind.PropertyException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 通过拦截StatementHandler的prepare方法，重写sql语句实现物理分页
@@ -121,10 +135,32 @@ public class PageInterceptor implements Interceptor {
      * @param obj
      * @return
      */
-    private Page getParameterPage(MetaObject obj) {
-        Page page = new Page();
-        page.setPage(PageUtil.obj2Int(obj.getValue("delegate.boundSql.parameterObject.page")));
-        page.setPageSize(PageUtil.obj2Int(obj.getValue("delegate.boundSql.parameterObject.pageSize")));
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	private Page getParameterPage(MetaObject obj) {
+    	Page page = new Page();
+        //解决异常:  实体没有page属性：,在进行分页查询条件是List<String>集合时
+        RoutingStatementHandler originalObj =  (RoutingStatementHandler) obj.getOriginalObject();
+        BoundSql boundSql = originalObj.getBoundSql();
+        if(boundSql.getParameterObject().getClass() == DefaultSqlSession.StrictMap.class) {
+        	DefaultSqlSession.StrictMap parameterObject = (StrictMap<?>) boundSql.getParameterObject();
+            Set<Map.Entry> entrySet = parameterObject.entrySet();
+            Iterator<Entry> iterator = entrySet.iterator();
+            Page p = null;
+            while(iterator.hasNext()) {
+            	Entry entry = iterator.next();
+            	if("list".equals(entry.getKey().toString())) {
+            		List objList =(List) entry.getValue();
+            		p = (Page) objList.get(0);
+            		break;
+            	}
+            }
+            page.setPage(p.getPage());
+            page.setPageSize(p.getPageSize());
+        }else {
+        	page.setPage(PageUtil.obj2Int(obj.getValue("delegate.boundSql.parameterObject.page")));
+            page.setPageSize(PageUtil.obj2Int(obj.getValue("delegate.boundSql.parameterObject.pageSize")));
+        }
+        
         // page.setTotal(PageUtil.obj2Int(obj.getValue("delegate.boundSql.parameterObject.total")));
         // page.setTotalPage(PageUtil.obj2Int(obj.getValue("delegate.boundSql.parameterObject.totalPage")));
         // page.setPaging(obj.getValue("delegate.boundSql.parameterObject.paging").toString().equals("true") ? true : false);

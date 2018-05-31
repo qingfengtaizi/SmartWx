@@ -137,6 +137,19 @@ public class WxApi {
     // 修改永久图文url
     public static final String UPDATE_NEWS_MATERIAL = "https://api.weixin.qq.com/cgi-bin/material/update_news?access_token=%s";
 
+    //获取用户标签列表
+  	private static final String GET_USER_TAG = "https://api.weixin.qq.com/cgi-bin/tags/get?access_token=%s";
+  	
+  	//创建用户标签
+  	private static final String CREATE_USER_TAG = "https://api.weixin.qq.com/cgi-bin/tags/create?access_token=%s";
+  	
+  	//获取标签下粉丝列表
+  	private static final String GET_USER_LIST_BY_TAG="https://api.weixin.qq.com/cgi-bin/user/tag/get?access_token=%s";
+  	
+  	//删除用户标签
+  	private static final String DELETE_USER_TAG = "https://api.weixin.qq.com/cgi-bin/tags/delete?access_token=%s";
+  		
+    
     //素材文件后缀
     public static Map<String,String> type_fix= new HashMap<>();
     public static Map<String,String> media_fix= new HashMap<>();
@@ -205,7 +218,25 @@ public class WxApi {
     public static String getUploadNewsUrl(String token) {
         return String.format(UPLOAD_NEWS, token);
     }
-
+    //获取用户标签列表接口
+  	public static String getUserTagList(String token) {
+  		return String.format(GET_USER_TAG, token);
+  	}
+  	
+  	//获取创建用户标签接口
+  	public static String getCreateUserTag(String token) {
+  		return String.format(CREATE_USER_TAG, token);
+  	}
+  	
+  	//获取标签下粉丝列表
+  	public static String getUserListByTag(String token) {
+  		return String.format(GET_USER_LIST_BY_TAG, token);
+  	}
+  	
+    //获取删除用户标签接口
+  	public static String getDeleteUserTag(String token) {
+  		return String.format(DELETE_USER_TAG, token);
+  	}
     // 群发接口
     public static String getMassSendUrl(String token) {
         return String.format(MASS_SEND, token);
@@ -324,6 +355,7 @@ public class WxApi {
         AccessToken token = null;
         String tockenUrl = WxApi.getTokenUrl(appId, appSecret);
         JSONObject jsonObject = httpsRequest(tockenUrl, HttpMethod.GET, null);
+        
         if (null != jsonObject && !jsonObject.containsKey("errcode")) {
             token = new AccessToken();
             token.setAccessToken(jsonObject.getString("access_token"));

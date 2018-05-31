@@ -1,0 +1,37 @@
+<div class="fsh-pop">
+    <div id="add_form" class="layui-form">
+        <table id="fans" class="layui-hide" lay-filter="fans"></table>
+        <input type="hidden" name="fans">
+    </div>
+</div>
+<script>
+
+
+    layui.use(['layer', 'table'], function () {
+        var layer = layui.layer;
+        var table = layui.table;
+
+        var fansArr=[];
+        var tableObj = table.render({
+            id: 'fans',
+            elem: '#fans',
+            url: '/userTag/getUserListByTag',
+            where:{id:  <%=id%> },
+            align: "center",
+            cols: [[ //表头
+                {type: 'checkbox'},
+                {type: 'numbers', title: '序号',width:50},
+                {field: 'nicknameStr', title: '昵称', width: 150, align: 'center',},
+                {field: 'headimgurl', title: '头像', width: 80, align: 'center',templet:function (d) {
+                    return "<img class='fans-portrait' style='width:50px;height:50px;' src=" + d.headimgurl + " />"
+                }},
+                {field: 'gender', title: '性别', align: 'center',templet:function (d) {
+                    return d.gender == 1 ? '男' : '女';
+                }},
+                {field: 'city', title: '省/市', width: 150,align: 'center',templet:function (d) {
+                    return (d.province + '-' + d.city);
+            }}
+            ]],
+        });
+    });
+</script>
