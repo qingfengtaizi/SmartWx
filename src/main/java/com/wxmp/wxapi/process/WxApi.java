@@ -32,6 +32,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
@@ -47,6 +48,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.wxmp.core.common.Identities;
 import com.wxmp.core.exception.WxError;
 import com.wxmp.core.exception.WxErrorException;
+import com.wxmp.core.util.DateUtil;
 import com.wxmp.core.util.HttpClientUtils;
 import com.wxmp.core.util.MyTrustManager;
 
@@ -148,26 +150,157 @@ public class WxApi {
   	
   	//删除用户标签
   	private static final String DELETE_USER_TAG = "https://api.weixin.qq.com/cgi-bin/tags/delete?access_token=%s";
-  		
+  	
+  	/**
+  	 * ###群发相关接口
+  	 */
+  	/**
+  	 * 临时素材接口-上传视频-POST
+  	 */
+  	public static final String UPLOAD_VIDEO="https://api.weixin.qq.com/cgi-bin/media/uploadvideo?access_token=%s";
+  	
+  	/**
+  	 * 根据标签进行群发-POST
+  	 */
+    public static final String MASS_TAG="https://api.weixin.qq.com/cgi-bin/message/mass/sendall?access_token=%s";
     
+    /**
+     * 根据openid列表进行群发-POST
+     */
+    public static final String MASS_OPENID="https://api.weixin.qq.com/cgi-bin/message/mass/send?access_token=%s";
+    
+    /**
+     * 删除群发（图文和视频）-POST
+     */
+    public static final String MASS_DELETE="https://api.weixin.qq.com/cgi-bin/message/mass/delete?access_token=%s";
+   
+    /**
+     * 群发预览-POST
+     */
+    public static final String MASS_PREVIEW="https://api.weixin.qq.com/cgi-bin/message/mass/preview?access_token=%s";
+    
+    /**
+     * 查询群发消息发送状态-POST
+     */
+    public static final String MASS_STATUS="https://api.weixin.qq.com/cgi-bin/message/mass/get?access_token=%s";
+    
+    /**
+     * 获取群发速度-POST
+     */
+    public static final String MASS_SPEED_GET="https://api.weixin.qq.com/cgi-bin/message/mass/speed/get?access_token=%s";
+    
+    /**
+     * 设置群发速度-POST
+     */
+    public static final String MASS_SPEED_SET="https://api.weixin.qq.com/cgi-bin/message/mass/speed/set?access_token=%s";
+    
+    /**
+     * ###统计分析相关接口
+     */
+    /**
+     * 获取用户增减数据-7d-POST
+     */
+    public static final String GET_USER_SUMMARY="	https://api.weixin.qq.com/datacube/getusersummary?access_token=%s";
+    /**
+     * 获取累计用户数据-7d-POST
+     */
+    public static final String GET_USER_CUMULATE="	https://api.weixin.qq.com/datacube/getusercumulate?access_token=%s";
+    
+    /**
+     * 获取图文群发每日数据-1d-POST
+     */
+    public static final String GET_ARTICLE_SUMMARY="https://api.weixin.qq.com/datacube/getarticlesummary?access_token=%s";
+    /**
+     * 获取图文群发总数据-1d-POST
+     */
+    public static final String GET_ARTICLE_TOTAL="https://api.weixin.qq.com/datacube/getarticletotal?access_token=%s";
+    /**
+     * 获取图文统计数据-3d-POST
+     */
+    public static final String GET_ARTICLE_READ="https://api.weixin.qq.com/datacube/getuserread?access_token=%s";
+    /**
+     * 获取图文统计分时数据-1d-POST
+     */
+    public static final String GET_ARTICLE_READHOUR="https://api.weixin.qq.com/datacube/getuserreadhour?access_token=%s";
+    /**
+     * 获取图文分享转发数据-7d-POST
+     */
+    public static final String GET_ARTICLE_SHARE="https://api.weixin.qq.com/datacube/getusershare?access_token=%s";
+    /**
+     * 获取图文分享转发分时数据-1d-POST
+     */
+    public static final String GET_ARTICLE_SHAREHOUR="https://api.weixin.qq.com/datacube/getusersharehour?access_token=%s";
+    
+    /**
+     * 获取消息发送概况数据-7d-POST
+     */
+    public static final String GET_UPSTREAM_MSG="https://api.weixin.qq.com/datacube/getupstreammsg?access_token=%s";
+    /**
+     * 获取消息分送分时数据-1d-POST
+     */
+    public static final String GET_UPSTREAM_MSGHOUR="https://api.weixin.qq.com/datacube/getupstreammsghour?access_token=%s";
+    /**
+     * 获取消息发送周数据-30d-POST
+     */
+    public static final String GET_UPSTREAM_MSGWEEK="https://api.weixin.qq.com/datacube/getupstreammsgweek?access_token=%s";
+    /**
+     * 获取消息发送月数据-30d-POST
+     */
+    public static final String GET_UPSTREAM_MSGMONTH="https://api.weixin.qq.com/datacube/getupstreammsgmonth?access_token=%s";
+    /**
+     * 获取消息发送分布数据-15d-POST
+     */
+    public static final String GET_UPSTREAM_MSGDIST="https://api.weixin.qq.com/datacube/getupstreammsgdist?access_token=%s";
+    /**
+     * 获取消息发送分布周数据-30d-POST
+     */
+    public static final String GET_UPSTREAM_MSGDISTWEEK="https://api.weixin.qq.com/datacube/getupstreammsgdistweek?access_token=%s";
+    /**
+     * 获取消息发送分布月数据-30d-POST
+     */
+    public static final String GET_UPSTREAM_MSGDISTMONTH="https://api.weixin.qq.com/datacube/getupstreammsgdistmonth?access_token=%s";
+    
+    /**
+     * 获取接口分析数据-30d-POST
+     */
+    public static final String GET_INTERFACE_SUMMARY="https://api.weixin.qq.com/datacube/getinterfacesummary?access_token=%s";
+    /**
+     * 获取接口分析分时数据-1d-POST
+     */
+    public static final String GET_INTERFACE_SUMMARYHOUR="https://api.weixin.qq.com/datacube/getinterfacesummaryhour?access_token=%s";
+    
+
     //素材文件后缀
     public static Map<String,String> type_fix= new HashMap<>();
     public static Map<String,String> media_fix= new HashMap<>();
     //素材文件大小
     public static Map<String,Long> type_length= new HashMap<>();
+    //统计图表数据
+    public static Map<String,String[]> data_cube= new HashMap<>();
     static{
         type_fix.put("image","bmp|png|jpeg|jpg|gif");
         type_fix.put("voice","mp3|wma|wav|amr");
         type_fix.put("video","mp4");
         type_fix.put("thumb","jpg");
+        
         media_fix.put("image","png|jpeg|jpg|gif");
         media_fix.put("voice","mp3|amr");
         media_fix.put("video","mp4");
         media_fix.put("thumb","jpg");
+        
         type_length.put("image",new Long(2*1024*1024));
         type_length.put("voice",new Long(2*1024*1024));
         type_length.put("video",new Long(10*1024*1024));
         type_length.put("thumb",new Long(64*1024));
+        
+        data_cube.put("getusersummary", new String[]{"7",GET_USER_SUMMARY});
+        data_cube.put("getusercumulate", new String[]{"7",GET_USER_CUMULATE});
+        data_cube.put("getarticlesummary", new String[]{"1",GET_ARTICLE_SUMMARY});
+        data_cube.put("getarticletotal", new String[]{"1",GET_ARTICLE_TOTAL});
+        data_cube.put("getuserread", new String[]{"3",GET_ARTICLE_READ});
+        data_cube.put("getuserreadhour", new String[]{"1",GET_ARTICLE_READHOUR});
+        data_cube.put("getusershare", new String[]{"7",GET_ARTICLE_SHARE});
+        data_cube.put("getusersharehour", new String[]{"1",GET_ARTICLE_SHAREHOUR});
     }
 
     // 获取token接口
@@ -694,6 +827,141 @@ public class WxApi {
 
         return (File)obj;
     }
+    /**
+     * 
+     * @param accessToken
+     * @param dcu 统计方法选择
+     * @param start 开始时间
+     * @param end 结束时间
+     * @return
+     * @throws WxErrorException
+     */
+
+    public static JSONObject forDataCube(String accessToken,String dcu ,String start,String end) throws WxErrorException{
+    	
+    	String[] cube = data_cube.get(dcu);
+    	if(cube==null){
+    		throw new WxErrorException(WxError.newBuilder().setErrorCode(-7).setErrorMsg("无法获取统计方法").build());
+    	}
+    	String url=String.format(cube[1], accessToken);
+    	int days=0;
+    	try {
+    		days=DateUtil.dayDiff(start, end);
+		} catch (ParseException e) {
+			throw new WxErrorException(WxError.newBuilder().setErrorCode(-4).setErrorMsg("时间转化出错").build());
+		}
+    	//最大时间区间是n天
+    	if(days<=0||days>Integer.parseInt(cube[0])){
+    		throw new WxErrorException(WxError.newBuilder().setErrorCode(9001031).setErrorMsg("时间区间不合法").build());
+    	}
+    	JSONObject json=new JSONObject();
+    	json.put("begin_date", start);
+    	json.put("end_date", end);
+    	String result = HttpClientUtils.sendHttpPost(url, json.toJSONString());
+        WxError wxError = WxError.fromJson(result);
+        if(wxError.getErrorCode()!=0){
+            throw new WxErrorException(wxError);
+        }
+
+        return JSONObject.parseObject(result);
+    }
+    /**
+     * 用户增减数据
+     * @param accessToken 微信token
+     * @param start 开始时间
+     * @param end 结束时间
+     * @return
+     * @throws WxErrorException
+     */
+    public static JSONObject getUserSummary(String accessToken,String start,String end) throws WxErrorException{
+
+        return forDataCube(accessToken, "getusersummary", start, end);
+    }
+    /**
+     * 获取累计用户数据
+     * @param accessToken 微信token
+     * @param start 开始时间
+     * @param end 结束时间
+     * @return
+     * @throws WxErrorException
+     */
+    public static JSONObject getUserCumulate(String accessToken,String start,String end) throws WxErrorException{
+    	
+    	return forDataCube(accessToken, "getusercumulate", start, end);
+    }
+    /**
+     * 获取图文群发每日数据
+     * @param accessToken
+     * @param start
+     * @param end
+     * @return
+     * @throws WxErrorException
+     */
+    public static JSONObject getArticleSummary(String accessToken,String start,String end) throws WxErrorException{
+    	
+    	return forDataCube(accessToken, "getarticlesummary", start, end);
+    }
+    /**
+     * 获取图文群发总数据
+     * @param accessToken
+     * @param start
+     * @param end
+     * @return
+     * @throws WxErrorException
+     */
+    public static JSONObject getArticleTotal(String accessToken,String start,String end) throws WxErrorException{
+    	
+    	return forDataCube(accessToken, "getarticletotal", start, end);
+    }
+    /**
+     * 获取图文统计数据
+     * @param accessToken
+     * @param start
+     * @param end
+     * @return
+     * @throws WxErrorException
+     */
+    public static JSONObject getUserRead(String accessToken,String start,String end) throws WxErrorException{
+    	
+    	return forDataCube(accessToken, "getuserread", start, end);
+    }
+    /**
+     * 获取图文统计分时数据
+     * @param accessToken
+     * @param start
+     * @param end
+     * @return
+     * @throws WxErrorException
+     */
+    public static JSONObject getUserReadHour(String accessToken,String start,String end) throws WxErrorException{
+    	
+    	return forDataCube(accessToken, "getuserreadhour", start, end);
+    }
+    /**
+     * 获取图文分享转发数据
+     * @param accessToken
+     * @param start
+     * @param end
+     * @return
+     * @throws WxErrorException
+     */
+    public static JSONObject getUserShare(String accessToken,String start,String end) throws WxErrorException{
+    	
+    	return forDataCube(accessToken, "getusershare", start, end);
+    }
+    /**
+     * 获取图文分享转发分时数据
+     * @param accessToken
+     * @param start
+     * @param end
+     * @return
+     * @throws WxErrorException
+     */
+    public static JSONObject getUserShareHour(String accessToken,String start,String end) throws WxErrorException{
+    	
+    	return forDataCube(accessToken, "getusersharehour", start, end);
+    }
+    
     /**
      * 构造微信JSSDK支付参数，返回到页面
      */

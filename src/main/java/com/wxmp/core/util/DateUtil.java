@@ -34,6 +34,23 @@ public class DateUtil {
 	
 	private static final long ONE_DAY_MILL_SECS=1000*3600*24;
     
+	/**
+	 * 时间格式满足yyyy-MM-dd
+	 * 
+	 * @param start 开始时间
+	 * @param end 结束时间
+	 * @return
+	 * @throws ParseException 
+	 */
+	public static int dayDiff(String start,String end) throws ParseException{
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		long from = sdf.parse(start).getTime();  
+		long to = sdf.parse(end).getTime();
+		//获取天数差
+		int days = (int) ((to - from)/ONE_DAY_MILL_SECS); 
+		return days;
+	}
     // 将字符串日期 转换成 yyyy-MM-dd HH:mm:ss
     public static Date changeStrToDate(String dateStr) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -378,6 +395,9 @@ public class DateUtil {
 
     public static void main(String[] args) throws Exception{
 
+    	String start="2018-01-04";
+    	String end="2018-01-03";
+    	System.out.println(dayDiff(start, end));
 //        System.out.println(timestamp2Date("1480405849"));
     }
 
