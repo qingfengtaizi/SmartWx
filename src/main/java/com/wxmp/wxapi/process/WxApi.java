@@ -828,9 +828,11 @@ public class WxApi {
         return (File)obj;
     }
     /**
+     * 	获取数据的起始日期，start和end的差值需小于“最大时间跨度”
+     * （比如最大时间跨度为1时，start和end的差值只能为0，才能小于1），否则会报错
      * 
      * @param accessToken
-     * @param dcu 统计方法选择
+     * @param dcu 统计方法选择 (例如：getusersummary)
      * @param start 开始时间
      * @param end 结束时间
      * @return
@@ -850,8 +852,8 @@ public class WxApi {
 		} catch (ParseException e) {
 			throw new WxErrorException(WxError.newBuilder().setErrorCode(-4).setErrorMsg("时间转化出错").build());
 		}
-    	//最大时间区间是n天
-    	if(days<=0||days>Integer.parseInt(cube[0])){
+    	//最大时间跨度
+    	if(days<=0||days>=Integer.parseInt(cube[0])){
     		throw new WxErrorException(WxError.newBuilder().setErrorCode(9001031).setErrorMsg("时间区间不合法").build());
     	}
     	JSONObject json=new JSONObject();
@@ -867,10 +869,21 @@ public class WxApi {
     }
     /**
      * 用户增减数据
+     * {@link https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141082}
      * @param accessToken 微信token
      * @param start 开始时间
      * @param end 结束时间
-     * @return
+     * @return  
+     * { 
+     * 	"list": [ 
+     * 		  { 
+     * 		    "ref_date": "2014-12-07", //数据的日期
+     * 		    "user_source": 0, //用户的渠道，数值代表的含义如下： 0代表其他合计 1代表公众号搜索 17代表名片分享 30代表扫描二维码 43代表图文页右上角菜单 51代表支付后关注（在支付完成页） 57代表图文页内公众号名称 75代表公众号文章广告 78代表朋友圈广告
+     * 		    "new_user": 0, //新增的用户数量
+     * 		    "cancel_user": 0 //取消关注的用户数量，new_user减去cancel_user即为净增用户数量
+     * 		  }//后续还有ref_date在begin_date和end_date之间的数据
+     * 		    ]
+     * }
      * @throws WxErrorException
      */
     public static JSONObject getUserSummary(String accessToken,String start,String end) throws WxErrorException{
@@ -879,10 +892,19 @@ public class WxApi {
     }
     /**
      * 获取累计用户数据
+     * {@link https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141082}
      * @param accessToken 微信token
      * @param start 开始时间
      * @param end 结束时间
      * @return
+     * { 
+     *     "list": [ 
+     *         { 
+     *             "ref_date": "2014-12-07", //数据的日期
+     *             "cumulate_user": 1217056 //总用户量
+     *         }, //后续还有ref_date在begin_date和end_date之间的数据
+     *     ]
+     * }
      * @throws WxErrorException
      */
     public static JSONObject getUserCumulate(String accessToken,String start,String end) throws WxErrorException{
@@ -891,6 +913,7 @@ public class WxApi {
     }
     /**
      * 获取图文群发每日数据
+     * {@link https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141084}
      * @param accessToken
      * @param start
      * @param end
@@ -903,6 +926,7 @@ public class WxApi {
     }
     /**
      * 获取图文群发总数据
+     * {@link https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141084}
      * @param accessToken
      * @param start
      * @param end
@@ -915,6 +939,7 @@ public class WxApi {
     }
     /**
      * 获取图文统计数据
+     * {@link https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141084}
      * @param accessToken
      * @param start
      * @param end
@@ -927,6 +952,7 @@ public class WxApi {
     }
     /**
      * 获取图文统计分时数据
+     * {@link https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141084}
      * @param accessToken
      * @param start
      * @param end
@@ -939,6 +965,7 @@ public class WxApi {
     }
     /**
      * 获取图文分享转发数据
+     * {@link https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141084}
      * @param accessToken
      * @param start
      * @param end
@@ -951,6 +978,7 @@ public class WxApi {
     }
     /**
      * 获取图文分享转发分时数据
+     * {@link https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141084}
      * @param accessToken
      * @param start
      * @param end
