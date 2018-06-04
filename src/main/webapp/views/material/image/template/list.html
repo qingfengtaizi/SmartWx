@@ -1,0 +1,14 @@
+<ul class="wxmp-list-image">
+    <%for(var i=0;i< data.length;i++){%>
+    <li>
+        <div class="img-box">
+            <img src="<%=data[i].url%>" alt="" class="img-main">
+        </div>
+        <div class="btn-box" data-id="<%=data[i].id%>">
+            <button class="layui-btn" event="del"><i class="iconfont icon-delete"></i></button>
+            <a class="layui-btn" href="<%=data[i].url%>" event="del" download="<%=data[i].url.substring(data[i].url.lastIndexOf('/')+1)%>"><i class="iconfont icon-icondownload"></i></a>
+        </div>
+    </li>
+    <%}%>
+</ul>
+<div id='pagination' class="pagination"></div>

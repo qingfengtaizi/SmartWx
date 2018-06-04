@@ -1,0 +1,142 @@
+<div class="fsh-rightPanel">
+    <div class="layui-anim layui-anim-upbit">
+        <div class="layui-form-item wx-search" id="list_form">
+            <div class="layui-inline">
+                <input type="text" name="name" placeholder="请输入关键字" autocomplete="off" class="layui-input">
+            </div>
+            <button class="layui-btn btn-primary" id="search">搜索</button>
+            <div class="layui-inline right">
+                <button class="layui-btn btn-primary" onclick="jump('/material/document/addsingle')">添加单图文消息</button>
+                <button class="layui-btn btn-primary" onclick="jump('/material/document/addsingle')">添加多图文消息</button>
+                <button class="layui-btn btn-danger" id="msg_del">批量删除</button>
+            </div>
+        </div>
+        <table id="list_table" class="layui-hide" lay-filter="mainList"></table>
+    </div>
+</div>
+
+<script>
+    layui.use(['layer', 'table'], function () {
+        var layer = layui.layer;
+        var table = layui.table;
+        var tableObj = table.render({
+            id: 'list_table',
+            elem: '#list_table',
+            url: '/views/test/data/data.json',
+            align: "center",
+            cols: [[ //表头
+                {type: 'checkbox'},
+                {type:'numbers'},
+                {field: 'title', title: '标题', width: 150, align: 'center'},
+                {field: 'author', title: '作者', align: 'center'},
+                {field: 'brief', title: '简介', align: 'center'},
+                {
+                    field: 'lock', title: '操作', width: 150,align: 'center', templet: function (d) {
+                        return '<button class="layui-btn layui-btn-warm layui-btn-sm" lay-event="edit">修改</button>'+
+                            '<button class="layui-btn layui-btn-sm" lay-event="mass">群发</button>';
+
+                    }, unresize: true, align: 'center'
+                }
+            ]],
+        });
+        $("#search").click(function () {
+            reloadTable(tableObj);
+        });
+
+        // 添加
+        $("#msg_add").click(function () {
+            showDialog({
+                title: '添加',
+                template: 'add',
+                saveUrl: '/msgtext/updateText',
+                tableObj: tableObj
+            })
+        });
+
+        // 删除
+        $("#msg_del").click(function () {
+            var data = table.checkStatus('list_table').data;//已选中数据
+            if(data.length == 0){
+                layer.msg("至少选择一条");
+                return;
+            }
+            var arr = [];     //选中数组
+            for (var i = 0; i < data.length; i++) {
+                arr.push(data[i].id)
+            }
+
+            layer.confirm('确认删除？', {
+                icon: 7,
+                title: "提示",
+                btn: ['确认', '取消'] //按钮
+            }, function () {
+                $.ajax({
+                    url: '/msgtext/deleteById',
+                    data: {"providerId": arr.join(",")},
+                    success: function (result) {
+                        if (result.success) {
+                            layer.msg("删除成功");
+                            reloadTable(tableObj);
+                        }
+                    },
+                    error: function () {
+                        layer.msg("删除异常");
+                    }
+                })
+            }, function () {
+                layer.closeAll();
+            });
+        });
+
+
+        //表格内部操作按钮监听
+        table.on('tool(mainList)', function (obj) { //注：tool是工具条事件名，mainList是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值
+
+            if (layEvent === 'edit') {
+                showDialog({
+                    title: '修改',
+                    template: 'edit',
+                    saveUrl: '/busi/provider/updateprovider',
+                    tableObj: tableObj,
+                    htmlData: data,
+                })
+            }else if(layEvent === 'mass'){
+                showDialog({
+                    title: '群发'
+                    , template: 'mass'
+                    , tableObj: tableObj
+                    , yes:function () {
+                        var checkStatus = table.checkStatus('fans'); //test即为基础参数id对应的值
+                        var cdata=checkStatus.data;
+                        if(cdata.length<2){
+                            layer.msg("至少选择2个粉丝");
+                            return false;
+                        }
+                        var fans=[];
+                        for(var i=0;i<cdata.length;i++){
+                            fans.push(cdata[i].id);
+                        }
+                        $.ajax({
+                            url: '',
+                            data: {
+                                id:data.id,
+                                "fans": fans.join(",")
+                            },
+                            success: function (result) {
+                                if (result.success) {
+                                    layer.msg("群发成功");
+                                    reloadTable(tableObj);
+                                } else {
+                                    layer.msg("群发失败");
+                                }
+                            }
+                        })
+                    }
+                });
+            }
+        });
+
+    });
+</script>

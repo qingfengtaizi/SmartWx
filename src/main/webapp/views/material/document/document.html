@@ -1,0 +1,373 @@
+<div class="fsh-rightPanel">
+    <div class="layui-anim layui-anim-upbit">
+        <div class="layui-tab" style="min-width:1050px;" lay-filter="docType">
+            <ul class="layui-tab-title">
+                <li class="layui-this">多图文</li>
+                <li>单图文</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <!--搜索框-->
+                    <div class="layui-form-item wxmp-search" id="search_form1">
+                        <div class="layui-inline">
+                            <input type="text" name="title" placeholder="请输入关键字" autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-inline">
+                            <input type="text" class="layui-input laydate" name="start" id="start1">
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                        <span class="font-primary">-</span>
+                        <div class="layui-inline">
+                            <input type="text" class="layui-input laydate" name="end" id="end1">
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn btn-primary" id="search1">搜索</button>
+                        </div>
+
+
+                        <div class="layui-inline right">
+                            <button class="layui-btn btn-primary" onclick="jump('/material/document/addsingle')">添加单图文消息
+                            </button>
+                            <button class="layui-btn btn-primary" onclick="jump('/material/document/addmultiple')">添加多图文消息
+                            </button>
+                            <!--<button class="layui-btn btn-danger" id="msg_del">批量删除</button>-->
+                        </div>
+                    </div>
+                    <div id="list1">
+
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <!--搜索框-->
+                    <div class="layui-form-item wxmp-search" id="search_form2">
+                        <div class="layui-inline">
+                            <input type="text" name="title" placeholder="请输入关键字" autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-inline">
+                            <input type="text" class="layui-input laydate" id="start2" name="start">
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                        <span class="font-primary">-</span>
+                        <div class="layui-inline">
+                            <input type="text" class="layui-input laydate" id="end2" name="end">
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn btn-primary" id="search2">搜索</button>
+                        </div>
+
+
+
+                        <div class="layui-inline right">
+                            <button class="layui-btn btn-primary" onclick="jump('/material/document/addsingle')">添加单图文消息
+                            </button>
+                            <button class="layui-btn btn-primary" onclick="jump('/material/document/addmultiple')">添加多图文消息
+                            </button>
+                            <!--<button class="layui-btn btn-danger" id="msg_del">批量删除</button>-->
+                        </div>
+                    </div>
+                    <div id="list2">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(["laydate", "table", "layer"], function () {
+        var laydate = layui.laydate;
+        var layer = layui.layer;
+        var element = layui.element;
+
+        var typet = getHashParam().type;
+
+        // tab 切换
+        element.on('tab(docType)', function (data) {
+            if (data.index == 0) {
+                getlist1();//多图文
+            } else {
+                getlist2();//单图文
+            }
+        });
+
+        laydate.render({
+            elem: '#start1',
+            done: function (value, date, endDate) {
+                var end = $("#end1").val();
+                if (value && end && (new Date(end) - new Date(value)) <= 0) {
+                    $("#start1").val("");
+                    layer.msg("开始时间需小于结束时间");
+                }
+            }
+        });
+        laydate.render({
+            elem: '#end1',
+            done: function (value, date, endDate) {
+                var start = $("#start1").val();
+                if (value && start && (new Date(value) - new Date(start)) <= 0) {
+                    $("#end1").val("");
+                    layer.msg("结束时间需大于开始时间");
+                }
+            }
+        });
+        laydate.render({
+            elem: '#start2',
+            done: function (value, date, endDate) {
+                var end = $("#end2").val();
+                if (value && end && (new Date(end) - new Date(value)) <= 0) {
+                    $("#start2").val("");
+                    layer.msg("开始时间需小于结束时间");
+                }
+            }
+        });
+        laydate.render({
+            elem: '#end2',
+            done: function (value, date, endDate) {
+                var start = $("#start2").val();
+                if (value && start && (new Date(value) - new Date(start)) <= 0) {
+                    $("#end2").val("");
+                    layer.msg("结束时间需大于开始时间");
+                }
+            }
+        });
+
+
+        var params1 = {};
+        var params2 = {};
+
+        $("#search1").click(function () {
+            var data = util.getFormData("search_form1");
+            data.title = $.trim(data.title);
+            if (data.start && !data.end) {
+                layer.msg("请输入结束时间");
+                return false;
+
+            } else if (!data.start && data.end) {
+                layer.msg("请输入开始时间");
+                return false;
+            }
+            getlist1(data);
+        });
+        $("#search2").click(function () {
+            var data = util.getFormData("search_form2");
+            if (data.start && !data.end) {
+                layer.msg("请输入结束时间");
+                return false;
+
+            } else if (!data.start && data.end) {
+                layer.msg("请输入开始时间");
+                return false;
+            }
+            getlist2(data);
+        });
+
+        //多图文
+        function getlist1(params) {
+//            debugger
+            if (params && params.page) {
+                params1.page = params.page;
+            } else {
+                if (params) {
+                    params1.title = params.title;
+                    params1.start = params.start;
+                    params1.end = params.end;
+                }
+//                 params && (params1 = params);
+                params1.page = 1;
+                params1.pageSize = 12;
+            }
+            params1.multType = 2;
+            $.ajax({
+                url: '/msgnews/list',
+                data: params1,
+                success: function (result) {
+                    if (result.success && result.page && result.page.total > 0) {
+                        //渲染列表
+                        renderHtml({
+                            targetId: 'list1',
+                            template: "list-multiple",
+                            htmlData: result,
+                            callBack: function () {
+                                if (result.page.total > 12) {
+                                    //初始化分页
+                                    initPage(result.page, getlist1);
+                                }
+                            }
+                        });
+                    } else {
+                        $('#list1').html("<p class='nothing'>没有查询到相关数据！</p>");
+                    }
+                },
+                error: function () {
+                    $('#list1').html("<p class='nothing'>没有查询到相关数据！</p>");
+                }
+            })
+        }
+
+        //多图文操作
+        $("#list1").on("click", "button[event]", function () {
+            var event = $(this).attr("event");
+            var id = $(this).parent().attr("data-id");
+            if (event == "edit") {
+                jump("/material/document/editmultiple[id=" + id + "]");
+            } else if (event == "mass") {// 群发
+                showDialog({
+                    title: '群发'
+                    , template: '/views/common/template/fans-chose.html'
+                    , height: 600
+                    , yes: function (index) {
+                        if (GLOBAL.choosed.length == 0) {
+                            layer.msg("请选择1个粉丝");
+                            return false;
+                        }
+                        if (GLOBAL.choosed.length > 1) {
+                            layer.msg("只能选择1个粉丝");
+                            return false;
+                        }
+                        $.ajax({
+                            url: '/wxapi/sendNewsByOpenId',
+                            data: {
+                                id: id,
+                                openid: GLOBAL.choosed[0]
+                            },
+                            success: function (result) {
+                                if (result.success) {
+                                    layer.msg("群发成功");
+                                    layer.close(index);
+                                } else {
+                                    layer.msg("群发失败");
+                                }
+                            }
+                        })
+                    }
+                    , end: function () {
+                        GLOBAL.choosed = [];
+                    }
+                });
+            } else if (event == "del") {// 删除
+                showConfirm("确认删除？",function () {
+                    $.ajax({
+                        url: '/msgnews/deleteMaterial',
+                        data: {id: id},
+                        success: function (result) {
+                            if (result.success) {
+                                layer.msg("操作成功");
+                                getlist1();
+                            } else {
+                                layer.msg("操作异常");
+                            }
+                        }
+                    })
+                });
+            }
+        });
+
+
+        //单图文
+        function getlist2(params) {
+            if (params && params.page) {
+                params2.page = params.page;
+            } else {
+//                 params && (params2 = params);
+                if (params) {
+                    params2.title = params.title;
+                    params2.start = params.start;
+                    params2.end = params.end;
+                }
+                params2.page = 1;
+                params2.pageSize = 12;
+            }
+            params2.multType = 1;
+            $.ajax({
+                url: '/msgnews/list',
+                data: params2,
+                success: function (result) {
+                    if (result.success && result.page && result.page.total > 0) {
+                        //渲染列表
+                        renderHtml({
+                            targetId: 'list2',
+                            template: "list",
+                            htmlData: result,
+                            callBack: function () {
+                                if (result.page.total > 12) {
+                                    //初始化分页
+                                    initPage(result.page, getlist2, $("#pagination2"));
+                                }
+                            }
+                        });
+                    } else {
+                        $('#list2').html("<p class='nothing'>没有查询到相关数据！</p>");
+                    }
+                },
+                error: function () {
+                    $('#list2').html("<p class='nothing'>没有查询到相关数据！</p>");
+                }
+            })
+        }
+
+        //单图文操作
+        $("#list2").on("click", "button[event]", function () {
+            var event = $(this).attr("event");
+            var id = $(this).parent().attr("data-id");
+            if (event == "edit") {
+                jump("/material/document/editsingle[id=" + id + "]");
+            } else if (event == "mess") {
+                //群发
+                showDialog({
+                    title: '群发',
+                    template: '/views/common/template/fans-chose.html',
+                    yes: function (index) {
+                        var data = GLOBAL.choosed;
+                        if (data.length > 1) {
+                            layer.msg("只能选择1个粉丝");
+                            return false;
+                        }
+                        $.ajax({
+                            url: '/wxapi/sendNewsByOpenId',
+                            data: {
+                                id: id,
+                                "openid": data[0].openId
+                            },
+                            success: function (result) {
+                                if (result.success) {
+                                    layer.msg("群发成功");
+                                    layer.close(index);
+                                } else {
+                                    layer.msg("群发失败");
+                                }
+                            }
+                        });
+                    },
+                    end: function () {
+                        GLOBAL.choosed = [];
+                    }
+                });
+            } else if (event == "del") {
+                showConfirm("确认删除？", function () {
+                    $.ajax({
+                        url: '/msgnews/deleteMaterial',
+                        data: {id: id},
+                        success: function (result) {
+                            if (result.success) {
+                                layer.msg("操作成功");
+                                getlist2();
+                            } else {
+                                layer.msg("操作异常");
+                            }
+                        }
+                    })
+                });
+            }
+        });
+
+
+        if (typet == "single") {
+            $(".layui-tab-title li:last").trigger("click");
+        } else {
+            getlist1();
+        }
+    });
+</script>
+

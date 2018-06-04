@@ -1,5 +1,33 @@
+/*
+ * FileName：WxUtil.java 
+ * <p>
+ * Copyright (c) 2017-2020, <a href="http://www.webcsn.com">hermit (794890569@qq.com)</a>.
+ * <p>
+ * Licensed under the GNU General Public License, Version 3 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.gnu.org/licenses/gpl-3.0.html
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 package com.wxmp.core.util.wx;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.wxmp.core.common.Constants;
 import com.wxmp.core.spring.SpringContextHolder;
 import com.wxmp.wxapi.process.MsgType;
@@ -10,15 +38,6 @@ import com.wxmp.wxcms.domain.MsgNews;
 import com.wxmp.wxcms.domain.MsgText;
 import com.wxmp.wxcms.mapper.MsgNewsDao;
 import com.wxmp.wxcms.mapper.MsgTextDao;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class WxUtil {
 
@@ -31,40 +50,38 @@ public class WxUtil {
 	 * @param matchrule	个性化菜单配置
 	 * @return
 	 */
-    public static JSONObject prepareMenus(List<AccountMenu> menus, Matchrule matchrule) {
-        JSONObject root = new JSONObject();
-        if (!CollectionUtils.isEmpty(menus)) {
-            List<AccountMenu> parentAM = new ArrayList<AccountMenu>();
-            Map<Long, List<JSONObject>> subAm = new HashMap<Long, List<JSONObject>>();
-            for (AccountMenu m : menus) {
-                if (m.getParentId().intValue() == 0) {// 一级菜单
-                    parentAM.add(m);
-                } else {// 二级菜单
-                    if (subAm.get(m.getParentId()) == null) {
-                        subAm.put(m.getParentId(), new ArrayList<JSONObject>());
-                    }
-                    List<JSONObject> tmpMenus = subAm.get(m.getParentId());
-                    tmpMenus.add(getMenuJSONObj(m));
-                    subAm.put(m.getParentId(), tmpMenus);
-                }
-            }
-            JSONArray arr = new JSONArray();
-            for (AccountMenu m : parentAM) {
-                if (subAm.get(m.getId()) != null) {// 有子菜单
-                    arr.add(getParentMenuJSONObj(m, subAm.get(m.getId())));
-                } else {// 没有子菜单
-                    arr.add(getMenuJSONObj(m));
-                }
-            }
-            
-            root.put("button", arr);
-            root.put("matchrule", JSONObject.fromObject(matchrule).toString());
-            
-        }
-        // 添加消息id
-        root.put("msgs", getMsg());
-        return root;
-    }
+	public static JSONObject prepareMenus(List<AccountMenu> menus, Matchrule matchrule) {
+		JSONObject root = new JSONObject();
+		if(!CollectionUtils.isEmpty(menus)){
+			List<AccountMenu> parentAM = new ArrayList<AccountMenu>();
+			Map<Long,List<JSONObject>> subAm = new HashMap<Long,List<JSONObject>>();
+			for(AccountMenu m : menus){
+				if (m.getParentId().intValue() == 0) {//一级菜单
+					parentAM.add(m);
+				}else{//二级菜单
+					if(subAm.get(m.getParentId()) == null){
+						subAm.put(m.getParentId(), new ArrayList<JSONObject>());
+					}
+					List<JSONObject> tmpMenus = subAm.get(m.getParentId());
+					tmpMenus.add(getMenuJSONObj(m));
+					subAm.put(m.getParentId(), tmpMenus);
+				}
+			}
+			JSONArray arr = new JSONArray();
+			for(AccountMenu m : parentAM){
+				if(subAm.get(m.getId()) != null){//有子菜单
+					arr.add(getParentMenuJSONObj(m,subAm.get(m.getId())));
+				}else{//没有子菜单
+					arr.add(getMenuJSONObj(m));
+				}
+			}
+			root.put("button", arr);
+			root.put("matchrule", JSONObject.toJSON(matchrule).toString());
+		}
+		//添加消息id
+		root.put("msgs", getMsg());
+		return root;
+	}
 
 	/**
 	 * 此方法是构建菜单对象的；构建菜单时，对于  key 的值可以任意定义；
@@ -151,5 +168,17 @@ public class WxUtil {
         }
         obj.put("list", arr);
         return obj;
+    }
+
+	/**
+	 * 判断是否微信返回错误
+	 * @param jsonObject
+	 * @return
+	 */
+	public static boolean isWxError(JSONObject jsonObject) {
+        if (null == jsonObject || jsonObject.getIntValue("errcode") != 0) {
+            return true;
+        }
+        return false;
     }
 }

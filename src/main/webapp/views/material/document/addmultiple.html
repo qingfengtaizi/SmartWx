@@ -1,0 +1,318 @@
+<div class="fsh-rightPanel">
+    <blockquote class="site-text layui-elem-quote">
+        <h2>添加多图文</h2>
+    </blockquote>
+    <div class="layui-form" action="">
+        <div class="layui-row">
+            <div class="wxmp-doclist">
+                <div class="content">
+                    <div class="main active" data-t="1">
+                        <img src="/images/common/default.png" alt="">
+                        <p>请输入标题</p>
+                    </div>
+                </div>
+                <div class="add" id="doclist_add">
+                    <i class="iconfont icon-add"></i>
+                </div>
+            </div>
+            <div class="fsh-form-lg" id="add_form" style="overflow: hidden;" data-t="1">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><i>*</i>标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="tltle" id="add_tltle" lay-verify="required" placeholder="请输入标题"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><i>*</i>作者</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="author" id="add_auth" lay-verify="required" placeholder="请输入作者"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><i>*</i>封面图</label>
+                    <div class="layui-input-block">
+                        <input type="hidden" name="picpath" id="add_picpath" value="">
+                        <input type="hidden" name="thumbMediaId" id="add_thumbMediaId" value="">
+                        <div class="layui-upload-drag" id="uploader">
+                            <i class="layui-icon"></i>
+                            <p>点击上传，或将文件拖拽到此处</p>
+                        </div>
+                        <input type="checkbox" name="showpic" title="封面图片显示在正文中" lay-skin="primary" id="add_showpic"
+                               value="1">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">原文链接</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="fromurl" id="add_fromurl" lay-verify="required" placeholder="请输入原文链接"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">留言</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="open_comment" value="1" lay-skin="switch" lay-text="开启|关闭" checked lay-filter="comment" id="add_open_comment">
+                        <div class="layui-inline" id="add_comment_type" style="margin-bottom:0;">
+                            <input type="radio" name="fans_can_comment" value="0" title="所有人可留言" checked>
+                            <input type="radio" name="fans_can_comment" value="1" title="仅粉丝可留言">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><i>*</i>内容</label>
+                    <div class="layui-input-block">
+                        <textarea name="" id="content" cols="30" rows="10"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-block">
+                        <button type="button" class="layui-btn" id="add_submit">立即提交</button>
+<!--                         <button type="button" class="layui-btn" id="add_canl">取消</button> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html">
+
+</script>
+<script>
+    layui.use(['layedit', "upload", "form"], function () {
+        var layedit = layui.layedit;
+        var form = layui.form;
+        var upload = layui.upload;
+        var $ = layui.$;
+        // 设置富文本上传接口
+        layedit.set({
+            uploadImage: {
+                url: '/managerImg/uploadFile',
+                type: 'post'
+            }
+        });
+        var layeditIndex = layedit.build('content'); //建立编辑器
+        window.listData = [{t: 1}];
+        form.render();
+
+        var TEMP = function (t) {
+            return '<div class="item" data-t="' + t + '">'
+                + '<img src="/images/common/default.png" alt="">'
+                + '<p>请输入标题</p>'
+                + '<button class="layui-btn layui-btn-danger">删除</button>'
+                + '</div>';
+        };
+
+        //开启关闭留言
+        form.on('switch(comment)', function(data){
+            if(data.elem.checked){
+                $("#add_comment_type").show();
+            }else{
+                $("#add_comment_type").hide();
+            }
+        });
+
+
+        //增加一条
+        $("#doclist_add").click(function () {
+            if(listData.length>8){
+                layer.msg("多图文最多8条");
+                return false;
+            }
+            syncData();
+            var t = new Date().getTime();
+            $(".wxmp-doclist .content").append(template.render(TEMP(t), {}));
+            listData.push({t: t,open_comment:1,fans_can_comment:0});
+            showDataByt(t);
+        });
+        //取消
+        $("#add_canl").click(function () {
+//         	location.href = "/views/index.html#/material/document/document";
+        	jump("/material/document/document[type=more]");
+        });
+
+        //点击回显
+        $(".wxmp-doclist").on("click", ".content>.item,.content>.main", function () {
+            syncData();
+            var t = $(this).attr("data-t");
+            showDataByt(t);
+        });
+
+        //删除一条
+        $(".wxmp-doclist").on("click", "button", function () {
+
+            var $item = $(this).parent();
+            var isShow = $item.hasClass("active");
+            var t = $item.attr("data-t");
+            $.each(listData, function (i, v) {
+                if (v.t == t) {
+                    listData.splice(i, 1);
+                    $item.remove();
+                }
+            });
+            if (isShow) {
+                $(".wxmp-doclist .main").trigger("click");
+            }
+            return false;
+        });
+
+        //点击提交
+        $("#add_submit").click(function () {
+            syncData();
+            if(listData.length<2){
+                layer.msg("多图文至少2条");
+                return false;
+            }
+            var isValidated = true;
+            $.each(listData, function (_, v) {
+                if(v.title == ""){
+                    layer.msg("请完善标题信息");
+                    isValidated == false;
+                    showDataByt(v.t);
+                    return false;
+                }
+                if(v.auth == ""){
+                    layer.msg("请完善作者信息");
+                    isValidated == false;
+                    showDataByt(v.t);
+                    return false;
+                }
+                if(v.content == ""){
+                    layer.msg("请完善图文正文信息");
+                    isValidated == false;
+                    showDataByt(v.t);
+                    return false;
+                }
+            });
+            if (isValidated) {
+                ajax({
+                    url: '/msgnews/addMoreNews',
+                    data: {rows:JSON.stringify(listData)},
+                    success: function (result) {
+                        if (result.success) {
+                            layer.msg("保存成功");
+                            setTimeout(function () {
+                                location.href = "/views/index.html#/material/document/document";
+                            }, 1000);
+                        }
+                    },
+                });
+            }
+        });
+
+        //同步标题
+        $("#add_tltle").keyup(function () {
+            var v = $(this).val();
+            var t = $("#add_form").attr("data-t");
+            $(".wxmp-doclist div[data-t=" + t + "] p").html(v ? v : "请输入标题")
+        });
+
+
+        //当前数据同步到listData
+        function syncData() {
+            var title = $("#add_tltle").val();
+            var author = $("#add_auth").val();
+
+            var thumbMediaId = $("#add_thumbMediaId").val();
+            var picpath = $("#add_picpath").val();
+            var showpic = $("#add_showpic").prop("checked") ? 1 : 0;
+
+//             var brief = $("#add_digest").val();
+            var fromurl = $("#add_fromurl").val();
+            var open_comment = $("#add_open_comment").prop("checked") ? 1 : 0;
+            var fans_can_comment = parseInt($("input[name=fans_can_comment]:checked").val());
+
+            var description = layedit.getContent(layeditIndex);
+
+            var t = $("#add_form").attr("data-t");
+            $.each(listData, function (_, v) {
+                if (v.t == t) {
+                    v.title = title;
+                    v.author = author;
+					v.multType = 2;//多图文标识
+					v.newsIndex = t;//图文顺序
+                    v.thumbMediaId = thumbMediaId;
+                    v.picpath = picpath;
+                    v.showpic = showpic;
+
+                    v.brief = "";
+                    v.fromurl = fromurl;
+                    v.open_comment=open_comment;
+                    v.fans_can_comment=fans_can_comment;
+
+                    v.description = description;
+                    
+                    return false;
+                }
+            });
+        }
+
+        //回显表单
+        function showDataByt(t) {
+            $.each(listData, function (_, v) {
+                if (v.t == t) {
+                    $("#add_tltle").val(v.title ? v.title : "");
+                    $("#add_auth").val(v.author ? v.author : "");
+
+                    $("#add_thumbMediaId").val(v.thumbMediaId ? v.thumbMediaId : "");
+                    $("#add_picpath").val(v.picpath ? v.picpath : "");
+                    $("#add_showpic").prop("checked", v.showpic ? true : false);
+                    $("#uploader").html(
+                        v.picpath
+                            ? '<img src="' + v.picpath + '" style="width: 150px;height: 150px;"/><p>点击重新上传，或将文件拖拽到此处</p>'
+                            : '<i class="layui-icon"></i><p>点击上传，或将文件拖拽到此处</p>'
+                    );
+
+//                     $("#add_digest").val(v.brief ? v.brief : "");
+                    $("#add_fromurl").val(v.fromurl ? v.fromurl : "");
+
+                    $("#add_open_comment").prop("checked",v.open_comment?true:false);
+                    v.open_comment?$("#add_comment_type").show():$("#add_comment_type").hide();
+                    $("input[name=fans_can_comment][value="+v.fans_can_comment+"]").prop("checked",true);
+                    $("#content").html(v.description ? v.description : "");
+
+                    form.render();
+                    layeditIndex = layedit.build('content');
+
+                    $(".wxmp-doclist div[data-t=" + t + "]").addClass("active").siblings(".active").removeClass("active")
+                    $("#add_form").attr("data-t", t);
+                    return false;
+                }
+            });
+        }
+
+
+        //上传
+        upload.render({
+            elem: '#uploader',
+            url: '/mediaFile/addMateria',
+            data:{type:'thumb'},
+            size: 64,
+            accept:"images",
+            exts: 'JPG|jpg',
+            before: function(){
+                showLoading();
+            },
+            done: function (result) {
+                layer.closeAll('loading');
+                if (result.success) {
+                    $("#uploader").html("<img src='" + result.data.url + "' style='width: 150px;height: 150px;'/><p>点击重新上传，或将文件拖拽到此处</p>");
+                    $("#add_picpath").val(result.data.url);
+                    $("#add_thumbMediaId").val(result.data.imgMediaId);
+                    var t = $("#add_form").attr("data-t");
+                    $(".wxmp-doclist div[data-t=" + t + "] img").attr("src", result.data.url);
+                } else {
+                    layer.msg(result.msg || "上传接口异常");
+                }
+            },
+            error: function(){
+                layer.closeAll('loading');
+                layer.msg(result.msg || "上传接口异常");
+            }
+        });
+    });
+</script>

@@ -445,6 +445,8 @@ layui.define(['laytpl', 'laypage', 'layer', 'form'], function(exports){
             that.renderForm();
             that.layMain.html('<div class="'+ NONE +'">'+ (res[response.msgName] || '返回的数据状态异常') +'</div>');
           } else {
+            // 数据预处理方法 add by zhaoqf
+            options.success && (res=options.success(res));
             that.renderData(res, curr, getPageTotal(res)), sort();
             options.time = (new Date().getTime() - that.startTime) + ' ms'; //耗时（接口请求+视图渲染）
           }

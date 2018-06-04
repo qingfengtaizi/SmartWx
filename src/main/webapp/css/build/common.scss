@@ -12,7 +12,6 @@
 @include reset();
 @include baseClass();
 
-
 .layui-tab-title .layui-this:after {
   display: none;
 }
@@ -215,6 +214,11 @@
   font-size: 16px;
 }
 
+.layui-upload-drag .iconfont {
+  font-size: 50px;
+  color: #009688;
+}
+
 .layui-tab-title li.layui-this {
   border: 1px solid #5eaee3;
   color: #5eaee3;
@@ -222,9 +226,10 @@
   background: #fff;
 }
 
-.wx-search {
-  margin: 20px 0;
-  max-width: 1100px;
+.wxmp-search {
+  padding: 20px 0;
+  margin: 0 auto;
+  width: 1000px;
   .layui-input {
     border-radius: 19px;
     padding-left: 20px;
@@ -303,11 +308,11 @@
     background: #fff;
     font-size: 14px;
     float: left;
-    &:nth-child(4n){
+    &:nth-child(4n) {
       margin-right: 0;
     }
-    &:nth-child(4n+1){
-      clear:left;
+    &:nth-child(4n+1) {
+      clear: left;
     }
     img.main {
       display: block;
@@ -316,7 +321,6 @@
     }
   }
 }
-
 
 .media-list {
   .item {
@@ -372,43 +376,44 @@
         margin: 0;
       }
     }
-    .doc{
+    .doc {
       padding: 8px;
       border-bottom: 1px solid #dedede;
-      img{
+      img {
         float: right;
         margin-right: 10px;
         margin-left: 10px;
         width: 40px;
-        height:40px;
+        height: 40px;
       }
-      p{
+      p {
         overflow: hidden;
         line-height: 40px;
         padding: 0;
-        a{
+        a {
           color: inherit;
         }
       }
     }
-    p.more{
+    p.more {
       text-align: center;
       line-height: 30px;
       font-size: 12px;
       color: #666;
-      .iconfont{
+      .iconfont {
         margin-right: 10px;
       }
     }
   }
 }
-.chart-content{
+
+.chart-content {
   background: rgb(255, 255, 255);
   padding: 16px 16px 0px;
   margin-bottom: 32px;
 }
 
-.chart{
+.chart {
   height: 350px;
   width: 100%;
   -webkit-tap-highlight-color: transparent;
@@ -417,6 +422,7 @@
   background: transparent;
   background: #fff;
 }
+
 .wxmp-card-wrap {
   margin-left: -20px;
   margin-right: -20px;
@@ -512,8 +518,8 @@
         box-sizing: border-box;
         padding: 0 10px;
       }
-      &.main,&.item{
-        &.active{
+      &.main, &.item {
+        &.active {
           border: 1px solid red;
         }
       }
@@ -598,22 +604,23 @@
     }
   }
 }
-#doclist_add{
+
+#doclist_add {
   cursor: pointer;
 }
-.layui-nav-img{
+
+.layui-nav-img {
   width: 40px;
-  height:40px;
+  height: 40px;
 }
 
-
-.panel{
+.panel {
   margin-bottom: 20px;
   background-color: #fff;
   border: 1px solid transparent;
   border-radius: 4px;
-  -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
-  box-shadow: 0 1px 1px rgba(0,0,0,.05);
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
   &.panel-default {
     border-color: #ddd;
     .panel-heading {
@@ -637,5 +644,65 @@
     border-top: 1px solid #ddd;
     border-bottom-right-radius: 3px;
     border-bottom-left-radius: 3px;
+  }
+}
+
+.wxmp-list-container{
+
+}
+.wxmp-list-image {
+  @include clearfix();
+  margin:0 auto;
+  width: 1000px;
+  li {
+    width: 180px;
+    height: 180px;
+    float: left;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #beceeb;
+    box-sizing: content-box;
+    line-height: 1;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    background: #fff;
+    &:nth-child(5n){
+      margin-right: 0;
+    }
+    @include tran();
+    .img-box{
+      display: table-cell;
+      width: 180px;
+      height: 180px;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .img-main {
+      max-width: 160px;
+      max-height: 160px;
+      vertical-align: middle;
+      cursor: -webkit-zoom-in;
+      cursor: zoom-in;
+    }
+    .btn-box {
+      display: block;
+      position: absolute;
+      left:0;
+      bottom:-40px;
+      right:0;
+      @include tran();
+      line-height: 40px;
+      text-align: center;
+      background: rgba(0,0,0,.4);
+    }
+    &:hover {
+      .btn-box{
+        bottom:0;
+      }
+    }
+    .layui-btn{
+      background: transparent !important;
+      padding: 0 5px;
+    }
   }
 }

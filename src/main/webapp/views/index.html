@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>SmartWx管理系统</title>
-    <meta name="keywords" content="菜单页,微信后台管理系统,smartwx"/>
+    <meta name="keywords" content="smartwx,微信后台管理系统"/>
     <meta name="description" content="迄今为止,最好的JAVA微信后台管理系统！"/>
     <meta name="author" content="hermit"/>
     <link rel="stylesheet" href="/js/plugin/layui/css/layui.css">
@@ -18,7 +18,7 @@
         <div class="layui-logo">SmartWx管理系统</div>
         <div class="layui-nav correct" >
             <p class="layui-nav-item ">当前公众号</p>
-            <div class="layui-nav-item" id="counnt_nav">
+            <div class="layui-nav-item" id="account_nav">
                 <a href="javascript:;">
                     <span></span>
                 </a>
@@ -66,10 +66,6 @@
                                 <i class="iconfont icon-comments"></i>模板消息</a>
                         </dd>
                         <dd>
-                            <a href="javascript:;" data-url="/system/document/document">
-                                <i class="iconfont icon-pic"></i>图文管理</a>
-                        </dd>
-                        <dd>
                             <a href="javascript:;" data-url="/system/menu/menu">
                                 <i class="iconfont icon-viewlist"></i>菜单管理</a>
                         </dd>
@@ -77,14 +73,27 @@
                             <a href="javascript:;" data-url="/system/fans/fans">
                                 <i class="iconfont icon-yonghutouxiang"></i>粉丝管理</a>
                         </dd>
-                        <!--<dd>-->
-                            <!--<a href="javascript:;" data-url="/system/demo2/demo">-->
-                                <!--<i class="iconfont icon-fangyuan"></i>demo</a>-->
-                        <!--</dd>-->
-                        <!--<dd>-->
-                            <!--<a href="javascript:;" data-url="/system/demo2/index2">-->
-                                <!--<i class="iconfont icon-fangyuan"></i>index2</a>-->
-                        <!--</dd>-->
+                    </dl>
+                </li>
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:;"><i class="iconfont icon-ziyuanku"></i>素材管理</a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a href="javascript:;" data-url="/material/document/document">
+                                <i class="iconfont icon-doc"></i>图文管理</a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;" data-url="/material/image/image">
+                                <i class="iconfont icon-pic"></i>图片管理</a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;" data-url="/material/video/video">
+                                <i class="iconfont icon-shipin"></i>视频管理</a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;" data-url="/material/audio/audio">
+                                <i class="iconfont icon-fileaudio"></i>音频管理</a>
+                        </dd>
                     </dl>
                 </li>
             </ul>
@@ -95,6 +104,7 @@
     <div id="index_right" class="layui-body">
     </div>
 
+    <!--固定footer-->
     <div class="layui-footer">
         <div class="layui-main">
             <p>Copyright&nbsp;&nbsp;© 2012-2018&nbsp;&nbsp;<a href="http://www.webcsn.com">SmartWx.</a> &nbsp;All Rights Reserved </p>
@@ -153,6 +163,7 @@
 <script src="/js/plugin/pagination/pagination.js"></script>
 <script src="/js/plugin/layui/src/layui.js"></script>
 <script src="/js/plugin/template-web.js"></script>
+<script src="/js/util.js"></script>
 <script src="/js/mylayui.js"></script>
 <script src="/js/src/index.js"></script>
 </body>

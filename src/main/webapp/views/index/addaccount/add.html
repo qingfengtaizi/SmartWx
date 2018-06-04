@@ -66,7 +66,7 @@
         form.render();
         //监听提交
         form.on('submit(add_account)', function (data) {
-            $.ajax({
+            ajax({
                 url: '/wxcms/getUrl',
                 data: data.field,
                 success: function (result) {

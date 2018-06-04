@@ -1,36 +1,38 @@
-/**
- * Copyright &copy; 2017-2018 <a href="http://www.webcsn.com">webcsn</a> All rights reserved.
+/*
+ * FileName：WxCmsCtrl.java 
+ * <p>
+ * Copyright (c) 2017-2020, <a href="http://www.webcsn.com">hermit (794890569@qq.com)</a>.
+ * <p>
+ * Licensed under the GNU General Public License, Version 3 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.gnu.org/licenses/gpl-3.0.html
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  *
- * @author hermit
- * @date 2018-04-17 10:54:58
  */
 package com.wxmp.wxcms.ctrl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.wxmp.core.common.BaseCtrl;
-import com.wxmp.core.exception.BusinessException;
-import com.wxmp.core.util.AjaxResult;
-import com.wxmp.wxcms.domain.ImgResource;
-import com.wxmp.wxcms.domain.SysUser;
-import com.wxmp.wxcms.service.SysUserService;
-import com.wxmp.core.spring.SpringFreemarkerContextPathUtil;
-import com.wxmp.core.util.PropertiesConfigUtil;
-import com.wxmp.core.util.UploadUtil;
-import com.wxmp.wxapi.process.MediaType;
-import com.wxmp.wxapi.process.MpAccount;
-import com.wxmp.wxapi.process.WxApiClient;
-import com.wxmp.wxapi.process.WxMemoryCacheClient;
-import com.wxmp.wxapi.vo.Material;
-import com.wxmp.wxapi.vo.MaterialArticle;
-import com.wxmp.wxapi.vo.MaterialItem;
-import com.wxmp.wxcms.domain.Account;
-import com.wxmp.wxcms.domain.MediaFiles;
-import com.wxmp.wxcms.domain.MsgNews;
-import com.wxmp.wxcms.domain.MsgText;
-import com.wxmp.wxcms.mapper.AccountDao;
-import com.wxmp.wxcms.service.MsgNewsService;
-import net.sf.json.JSONObject;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,13 +43,31 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.wxmp.core.common.BaseCtrl;
+import com.wxmp.core.exception.BusinessException;
+import com.wxmp.core.spring.SpringFreemarkerContextPathUtil;
+import com.wxmp.core.util.AjaxResult;
+import com.wxmp.core.util.PropertiesConfigUtil;
+import com.wxmp.core.util.UploadUtil;
+import com.wxmp.wxapi.process.MediaType;
+import com.wxmp.wxapi.process.MpAccount;
+import com.wxmp.wxapi.process.WxApiClient;
+import com.wxmp.wxapi.process.WxMemoryCacheClient;
+import com.wxmp.wxapi.vo.Material;
+import com.wxmp.wxapi.vo.MaterialArticle;
+import com.wxmp.wxapi.vo.MaterialItem;
+import com.wxmp.wxcms.domain.Account;
+import com.wxmp.wxcms.domain.ImgResource;
+import com.wxmp.wxcms.domain.MediaFiles;
+import com.wxmp.wxcms.domain.MsgNews;
+import com.wxmp.wxcms.domain.MsgText;
+import com.wxmp.wxcms.domain.SysUser;
+import com.wxmp.wxcms.mapper.AccountDao;
+import com.wxmp.wxcms.service.MsgNewsService;
+import com.wxmp.wxcms.service.SysUserService;
 
 /**
  *
@@ -230,7 +250,7 @@ public class WxCmsCtrl extends BaseCtrl {
 	
 	//获取永久素材
 	@RequestMapping(value = "/getMaterials")
-	public AjaxResult syncMaterials(MaterialArticle materialArticle) throws BusinessException{
+	public AjaxResult syncMaterials(MaterialArticle materialArticle) throws Exception{
 		List<MaterialArticle> materialList = new ArrayList<MaterialArticle>();
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		Material material = WxApiClient.syncBatchMaterial(MediaType.News, materialArticle.getPage(), materialArticle.getPageSize(),mpAccount);
@@ -258,7 +278,6 @@ public class WxCmsCtrl extends BaseCtrl {
 	public void saveFile(MultipartFile file,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		 String fileName = file.getOriginalFilename();  
 		 String ext = FilenameUtils.getExtension(fileName);
-		 System.out.println(System.currentTimeMillis());
 		 fileName = System.currentTimeMillis()+new Random().nextInt(10000)+"."+ext;
 		 
 		 String filePath = request.getSession().getServletContext().getRealPath("/")+"upload\\"+fileName;  
