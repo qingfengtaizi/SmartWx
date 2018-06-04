@@ -23,7 +23,7 @@ JAVA开发框架：Spring MVC+Spring+Mybatis
 
 ## 简介
 1. QQ群：[![加入QQ群](https://img.shields.io/badge/QQ群-671585861-blue.svg)](http://shang.qq.com/wpa/qunwpa?idkey=b7f4442a2a6b369a55aaa549bc0fbf14c478543d6a9c8f74eafca0378fcfcf40) 或 [![加入QQ群](https://img.shields.io/badge/QQ群-671585861-blue.svg)](https://jq.qq.com/?_wv=1027&k=5bGtRX8)，推荐点击按钮入群，当然如果无法成功操作，请自行搜索群号`671585861`进行添加
-1. 官方网址：[http://smartwx.webcsn.com](http://smartwx.webcsn.com/)
+1. 官方网址：[https://www.smartwx.info](https://www.smartwx.info/)
 1. 本项目在以下代码托管网站同步更新:
 * 码云：https://gitee.com/qingfengtaizi/wxmp
 * github：https://github.com/qingfengtaizi/wxmp-web
@@ -91,7 +91,7 @@ JAVA开发框架：Spring MVC+Spring+Mybatis
 1. 添加完公众号，大家先尝试下 同步粉丝功能，若成功，则项目配置完成，若无法获取accesstoken，切记检查 微信后台 ***获取accesstoken白名单设置***
 
  ## 相关连接
-官方网址：[https://smartwx.webcsn.com](https://smartwx.webcsn.com/)
+官方网址：[https://www.smartwx.info](https://www.smartwx.info/)
 
 版主QQ：[794890569](http://wpa.qq.com/msgrd?v=3&uin=794890569&site=qq&menu=yes/)
 
