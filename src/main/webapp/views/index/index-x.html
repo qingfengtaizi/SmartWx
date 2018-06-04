@@ -291,7 +291,7 @@
         });
 
         function checkUpdate() {
-            $.getJSON("https://smartwx.webcsn.com/newVersion?callback=?", function (result) {
+            $.getJSON("https://www.smartwx.info/newVersion?callback=?", function (result) {
                 if(systemVersion && result.LAST_SYSTEM_VERSION) {
                     //渲染版本信息
                     result.systemName=systemName;

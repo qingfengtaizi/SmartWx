@@ -91,7 +91,7 @@ JAVA开发框架：Spring MVC+Spring+Mybatis
 1. 添加完公众号，大家先尝试下 同步粉丝功能，若成功，则项目配置完成，若无法获取accesstoken，切记检查 微信后台 ***获取accesstoken白名单设置***
 
  ## 相关连接
-官方网址：[https://smartwx.webcsn.com](https://smartwx.webcsn.com/)
+官方网址：[https://www.smartwx.info](https://www.smartwx.info/)
 
 版主QQ：[794890569](http://wpa.qq.com/msgrd?v=3&uin=794890569&site=qq&menu=yes/)
 

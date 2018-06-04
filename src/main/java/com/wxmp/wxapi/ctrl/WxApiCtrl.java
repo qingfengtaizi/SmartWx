@@ -372,7 +372,7 @@ public class WxApiCtrl extends BaseCtrl{
 			//微信公众号号的template id，开发者自行处理参数
 			tplMsg.setTemplateId("azx4q5sQjWUk1O3QY0MJSJkwePQmjR-T5rCyjyMUw8U");
 
-			tplMsg.setUrl("https://smartwx.webcsn.com");
+			tplMsg.setUrl("https://www.smartwx.info");
 			Map<String, String> dataMap = new HashMap<String, String>();
 			dataMap.put("first", "多公众号管理开源平台");
 			dataMap.put("keyword1", "时间：" + DateUtil.changeDateTOStr(new Date()));
