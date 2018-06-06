@@ -125,6 +125,7 @@ public class MyServiceImpl implements MyService {
         String content = msgRequest.getContent();
         if (!StringUtils.isEmpty(content)) {// 文本消息
             String tmpContent = content.trim();
+            // 获取文本消息
             MsgText msgText = msgTextDao.getRandomMsg(tmpContent);
             if(msgText != null) {
                 return MsgXmlUtil.textToXml(WxMessageBuilder.getMsgResponseText(msgRequest, msgText));
