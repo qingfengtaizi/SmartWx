@@ -73,6 +73,10 @@ public class MsgTextCtrl extends BaseCtrl {
 	@RequestMapping(value = "/updateText")
 	@ResponseBody
 	public AjaxResult updateText(MsgText entity){
+	    MsgText msgText = entityService.getRandomMsg(entity.getInputcode());
+        if (msgText != null) {
+            return AjaxResult.failure("关键词重复");
+        }
 		if (entity.getId() != null) {
 			entityService.update(entity);
 			//更新成功

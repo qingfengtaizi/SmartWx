@@ -53,6 +53,7 @@ import com.wxmp.wxcms.mapper.AccountMenuDao;
 import com.wxmp.wxcms.mapper.AccountMenuGroupDao;
 import com.wxmp.wxcms.mapper.MsgBaseDao;
 import com.wxmp.wxcms.mapper.MsgNewsDao;
+import com.wxmp.wxcms.mapper.MsgTextDao;
 
 /**
  * 业务消息处理
@@ -67,6 +68,9 @@ public class MyServiceImpl implements MyService {
 
     @Resource
     private MsgNewsDao msgNewsDao;
+    
+    @Resource
+    private MsgTextDao msgTextDao;
 
     @Resource
     private AccountMenuDao menuDao;
@@ -121,9 +125,9 @@ public class MyServiceImpl implements MyService {
         String content = msgRequest.getContent();
         if (!StringUtils.isEmpty(content)) {// 文本消息
             String tmpContent = content.trim();
-            List<MsgNews> msgNews = msgNewsDao.getRandomMsgByContent(tmpContent, mpAccount.getMsgcount());
-            if (!CollectionUtils.isEmpty(msgNews)) {
-                return MsgXmlUtil.newsToXml(WxMessageBuilder.getMsgResponseNews(msgRequest, msgNews));
+            MsgText msgText = msgTextDao.getRandomMsg(tmpContent);
+            if(msgText != null) {
+                return MsgXmlUtil.textToXml(WxMessageBuilder.getMsgResponseText(msgRequest, msgText));
             }
         }
         return null;
