@@ -126,7 +126,27 @@ public class WxApiClient {
         }
         return null;
     }
-    
+	//创建用户标签
+	public static JSONObject createUserTag(String userTags,MpAccount mpAccount ) throws WxErrorException {
+		String accessToken = getAccessToken(mpAccount);
+		String url = WxApi.getCreateUserTag(accessToken);
+		return WxApi.httpsRequest(url, HttpMethod.POST, userTags);
+	}
+	
+	//获取标签下粉丝列表
+	public static JSONObject getUserListByTag(String tagId,MpAccount mpAccount) throws WxErrorException {
+		String accessToken = getAccessToken(mpAccount);
+		String url = WxApi.getUserListByTag(accessToken);
+		return WxApi.httpsRequest(url, HttpMethod.POST, tagId);
+	}
+	
+	//删除用户标签
+	public static JSONObject deleteUserTag(String tagId,MpAccount mpAccount) throws WxErrorException {
+		String accessToken = getAccessToken(mpAccount);
+		String url = WxApi.getDeleteUserTag(accessToken);
+		return WxApi.httpsRequest(url, HttpMethod.POST, tagId);
+	}
+	
     // 发布菜单
     public static JSONObject publishMenus(String menus, MpAccount mpAccount)
         throws WxErrorException {

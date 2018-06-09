@@ -38,6 +38,8 @@ public interface AccountFansService {
 
 	public List<AccountFans> getFansListByPage(AccountFans searchEntity);
 
+	public List<AccountFans> getFansByOpenIdListByPage(List<AccountFans> openIds);
+	
 	public AccountFans getLastOpenId();
 
 	public void sync(AccountFans searchEntity);

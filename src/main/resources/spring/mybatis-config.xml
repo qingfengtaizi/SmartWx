@@ -17,7 +17,7 @@
 
 	<!-- 实体起别名 -->
 	<typeAliases>
-		<!--<typeAlias alias="SysNotice" type="com.fsh.entity.SysNotice"/>-->
+		<package name="com.wxmp.wxcms.domain"/>
 	</typeAliases>
 
 	<!-- 配置分页插件 -->

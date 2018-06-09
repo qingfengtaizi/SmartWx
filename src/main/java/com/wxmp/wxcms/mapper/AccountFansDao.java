@@ -58,4 +58,10 @@ public interface AccountFansDao {
 	 * @return
 	 */
 	public List<AccountFans> getAccountFansList(AccountFans searchEntity);
+	/**
+	 * 根据多个openId查看粉丝列表
+	 * @param openIds
+	 * @return List
+	 */
+	public List<AccountFans> getFansByOpenIdListByPage(List<AccountFans> openIds);
 }

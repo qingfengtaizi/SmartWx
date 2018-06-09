@@ -1,0 +1,138 @@
+<style>
+    img.fans-portrait{
+        width:50px;
+        height:50px;
+    }
+    .fsh-rightPanel .layui-table-body .layui-table-cell {
+        height: 50px;
+        line-height: 50px;
+    }
+</style>
+<div class="fsh-rightPanel">
+    <div class="layui-anim layui-anim-upbit">
+        <div class="layui-form-item wx-search" id="list_form">
+            <div class="layui-inline">
+                <input type="text" name="name" placeholder="请输入标签名" autocomplete="off" class="layui-input">
+            </div>
+            <button class="layui-btn btn-primary" id="search">搜索</button>
+            <div class="layui-inline right">
+                <button class="layui-btn btn-primary" id="tags_add">添加</button>
+                <button class="layui-btn btn-danger" id="tags_sync">批量同步</button>
+                <button class="layui-btn btn-danger" id="tags_del">批量删除</button>
+            </div>
+        </div>
+        <table id="list_table" class="layui-hide" lay-filter="mainList"></table>
+    </div>
+</div>
+
+<script>
+    layui.use(['layer', 'table'], function () {
+        var layer = layui.layer;
+        var table = layui.table;
+
+        var tableObj = table.render({
+            id: 'list_table',
+            elem: '#list_table',
+            url: '/userTag/listForPage',
+            align: "center",
+            cols: [[ //表头
+                {type: 'checkbox'},
+                {type: 'numbers', title: '编号',width:50},
+                {field:'id', title: '标签编号',width:150,align: 'center'},
+                {field: 'name', title: '标签名称', width: 150, align: 'center'},
+                {field: 'count', title: '粉丝数量', width: 150, align: 'center'},
+                {field: 'createTime', title: '创建时间', width: 180, align: 'center'},
+                {
+                    field: 'lock', title: '操作', width: 300, align: 'center', templet: function (d) {
+                        return '<a href="javascript:;" class="font-primary" lay-event="showUser">查看粉丝</a>' ;
+                    }, unresize: true, align: 'center'
+                }
+            ]],
+        });
+
+        // 检索
+        $("#search").click(function () {
+            reloadTable(tableObj);
+        });
+     // 添加
+        $("#tags_add").click(function () {
+            showDialog({
+                title: '添加'
+                , template: 'add'
+                , saveUrl: '/userTag/update'
+                , tableObj: tableObj
+            })
+        });
+        // 批量同步用户标签
+        $("#tags_sync").click(function () {
+            layer.confirm('确认用户标签？', {
+                icon: 7,
+                title: "提示",
+                btn: ['确认', '取消'] //按钮
+            }, function () {
+                $.ajax({
+                    url: '/userTag/syncUserTagList',
+                    success: function (result) {
+                        if (result.success) {
+                            layer.msg("同步成功");
+                            reloadTable(tableObj);
+                        }
+                    },
+                    error: function () {
+                        layer.msg("同步异常");
+                    }
+                })
+            }, function () {
+                layer.closeAll();
+            });
+        });
+
+        // 批量删除
+        $("#tags_del").click(function () {
+            var data = table.checkStatus('list_table').data;//已选中数据
+            if (data.length == 0) {
+                layer.msg("至少选择一条");
+                return;
+            }
+            var arr = [];     //选中数组
+            for (var i = 0; i < data.length; i++) {
+                arr.push(data[i].id)
+            }
+            showConfirm("确认删除？", function () {
+                $.ajax({
+                    url: '/userTag/deleteBatchIds',
+                    data: {"ids": arr.join(",")},
+                    success: function (result) {
+                        if (result.success) {
+                            layer.msg("删除成功");
+                            reloadTable(tableObj);
+                        } else {
+                            layer.msg("删除失败");
+                        }
+                    }
+                })
+            });
+        });
+        
+        //表格内部操作按钮监听
+        table.on('tool(mainList)', function (obj) { //注：tool是工具条事件名，mainList是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值
+			//显示粉丝
+            if (layEvent === 'showUser') {            
+                showDialog({
+                    title: '粉丝信息', 
+                    template: 'fans',
+                    height: 600,
+                    htmlData: data,
+                    btn: ['关闭'],
+                    yes: function (index, layero) {
+                        layer.close(index);
+                    }
+                });
+            }
+           
+        });
+
+    });
+</script>
