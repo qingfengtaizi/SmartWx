@@ -72,7 +72,19 @@
 		<filter-name>characterEncodingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-
+  <!-- xss防御过滤器 -->
+  	<filter>
+		<filter-name>XSSFilter</filter-name>
+		<filter-class>com.wxmp.core.interceptor.XSSFilter</filter-class>
+		<init-param>
+	      <param-name>excludedPages</param-name>
+	      <param-value>/addSingleNews,/addMoreNews,/toUpdateSingleNews,/updateSingleNews</param-value>
+	    </init-param>
+	</filter>
+	  <filter-mapping>
+	    <filter-name>XSSFilter</filter-name>
+	    <url-pattern>/*</url-pattern>
+	  </filter-mapping>
 	<!--+++++++++++++++ filter 结束 ++++++++++++++++++++++++++++++++++++++++++++++++++-->
 
 	<!--+++++++++++++++ servlet 开始 ++++++++++++++++++++++++++++++++++++++++++++++++++-->
