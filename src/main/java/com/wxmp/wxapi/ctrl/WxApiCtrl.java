@@ -43,6 +43,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.wxmp.core.common.BaseCtrl;
 import com.wxmp.core.exception.BusinessException;
@@ -56,6 +57,7 @@ import com.wxmp.wxapi.process.MediaType;
 import com.wxmp.wxapi.process.MpAccount;
 import com.wxmp.wxapi.process.MsgType;
 import com.wxmp.wxapi.process.MsgXmlUtil;
+import com.wxmp.wxapi.process.WxApi;
 import com.wxmp.wxapi.process.WxApiClient;
 import com.wxmp.wxapi.process.WxMemoryCacheClient;
 import com.wxmp.wxapi.process.WxSign;
@@ -711,5 +713,22 @@ public class WxApiCtrl extends BaseCtrl{
 		}
 		code = failureMsg;
 		return code;
+	}
+	/**
+	 * 用户统计分析
+	 * @param start 开始时间
+	 * @param end 结束时间
+	 * @return
+	 * @throws WxErrorException
+	 */
+	@RequestMapping(value = "/userDataCube")
+	@ResponseBody
+	public AjaxResult userDataCube(String start,String end) throws WxErrorException  {
+		
+		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
+		String accessToken = WxApiClient.getAccessToken(mpAccount);
+		JSONObject result = WxApi.getUserSummary(accessToken, start, end);
+		
+		return AjaxResult.success(result);
 	}
 }

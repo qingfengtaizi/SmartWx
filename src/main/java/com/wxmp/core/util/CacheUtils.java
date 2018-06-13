@@ -103,6 +103,7 @@ public class CacheUtils {
 		Cache cache = cacheManager.getCache(cacheName);
 		if (cache == null){
 			synchronized (_lock) {
+				cache = cacheManager.getCache(cacheName);
 				if (cache == null){
 					cacheManager.addCache(cacheName);
 					cache = cacheManager.getCache(cacheName);

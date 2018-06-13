@@ -81,5 +81,8 @@ public class AccountFansServiceImpl implements AccountFansService{
 	public void deleteByOpenId(String openId){
 		entityDao.deleteByOpenId(openId);
 	}
-
+	@Override
+	public List<AccountFans> getFansByOpenIdListByPage(List<AccountFans> openIds) {
+		return entityDao.getFansByOpenIdListByPage(openIds);
+	}
 }

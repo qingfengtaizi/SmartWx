@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wxmp.wxcms.mapper.UserTagDao">
+
+	<select id="getUserTagListByPage" parameterType="com.wxmp.wxcms.domain.UserTag" resultType="com.wxmp.wxcms.domain.UserTag">
+		SELECT * FROM wxcms_user_tag
+		<trim prefix="where" prefixOverrides="and|or">
+	        1=1 
+			<if test="name != null and name != '' ">
+			    AND  NAME = #{name}
+			</if>
+		</trim>	 
+		ORDER BY ID
+	</select>
+
+	<select id="getById" parameterType="java.lang.Integer" resultType="com.wxmp.wxcms.domain.UserTag">
+		SELECT * FROM wxcms_user_tag WHERE ID = #{id}
+	</select>
+	
+	<select id="getMaxId" resultType="int">
+		SELECT MAX(ID) FROM wxcms_user_tag
+	</select>
+	
+	<insert id="add" parameterType="com.wxmp.wxcms.domain.UserTag" flushCache="true" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO wxcms_user_tag ( ID,NAME,COUNT )  VALUES ( #{id},#{name},#{count})
+	</insert>
+
+	<update id="update" parameterType="com.wxmp.wxcms.domain.UserTag" flushCache="true">
+		UPDATE wxcms_user_tag SET NAME = #{name},COUNT = #{count},CREATE_TIME = #{createTime} WHERE ID = #{id}
+	</update>
+	
+	<delete id="delete" parameterType="com.wxmp.wxcms.domain.UserTag" >
+		DELETE FROM wxcms_user_tag WHERE ID = #{id}
+	</delete>
+	
+	<delete id="deleteBatchIds" parameterType="list">
+		DELETE FROM wxcms_user_tag WHERE ID IN 
+		<foreach collection="array"  item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<!-- 批量添加微信服务器的用户标签到本地库 -->
+	<insert id="addList" parameterType="list">  
+        INSERT INTO wxcms_user_tag ( ID,NAME,COUNT )
+        VALUES
+        <foreach  collection="list" item="item" index="index" separator="," >  
+        	<![CDATA[
+             ( #{item.id},#{item.name},#{item.count} )
+        	 ]]>
+        </foreach> 
+    </insert>
+</mapper>
