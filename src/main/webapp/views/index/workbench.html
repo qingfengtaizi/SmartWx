@@ -29,7 +29,24 @@
                 </div>
             </div>
         </div>
+		<div class="layui-tab-item layui-show">
+                    <!--搜索框-->
+                    <div class="layui-form-item wxmp-search" id="search_form1">
+                        <div class="layui-inline">
+                            <input type="text" class="layui-input laydate" name="start" id="start1">
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                        <span class="font-primary">-</span>
+                        <div class="layui-inline">
+                            <input type="text" class="layui-input laydate" name="end" id="end1">
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn btn-primary" id="search1">搜索</button>
+                        </div>
 
+                    </div>
+                </div>
         <div class="chart-content">
             <div class="chart" id="chart1">
 
@@ -75,9 +92,30 @@
     </div>
 </div>
 <script>
-    layui.use(['layer',"table"], function () {
+    layui.use(["laydate",'layer',"table"], function () {
+    	var laydate = layui.laydate;
         var layer = layui.layer;
         var table = layui.table;
+        laydate.render({
+            elem: '#start1',
+            done: function (value, date, endDate) {
+                var end = $("#end1").val();
+                if (value && end && parseInt(Math.abs(new Date(end) - new Date(value) ) / 1000 / 60 / 60 /24) >= 7 && (new Date(end) - new Date(value))<0) {
+                    $("#start1").val("");
+                    layer.msg("开始时间需小于结束时间且结束时间与开始时间的差值不能大于7");
+                }
+            }
+        });
+        laydate.render({
+            elem: '#end1',
+            done: function (value, date, endDate) {
+                var start = $("#start1").val();
+                if (value && start && parseInt(Math.abs(new Date(value) - new Date(start) ) / 1000 / 60 / 60 /24) >= 7 && (new Date(value) - new Date(start)) <0) {
+                    $("#end1").val("");
+                    layer.msg("结束时间需大于开始时间且结束时间与开始时间的差值不能大于7");
+                }
+            }
+        });
         $(".card-panel-num").each(function () {
             var $this=$(this);
             var num=parseFloat($this.text()) || 0;
