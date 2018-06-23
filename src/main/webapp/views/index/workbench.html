@@ -47,16 +47,82 @@
 
                     </div>
                 </div>
-        <div class="chart-content">
-            <div class="chart" id="chart1">
-
-            </div>
-        </div>
+             <div class="layui-tab" lay-filter="cudeType">
+				  <ul class="layui-tab-title">
+				    <li class="layui-this" data-type="getusersummary-add">新增关注</li>
+				    <li data-type="getusersummary-canl">取消关注</li>
+				    <li data-type="getusersummary-have">净增关注</li>
+				    <li data-type="getusersummary-all">累积关注</li>
+				    <li data-type="getuserread-int">图文总阅读</li>
+				    <li data-type="getuserread-ori">原文页阅读</li>
+				    <li data-type="getusershare-share">分享转发</li>
+				    <li data-type="getusershare-fav">微信收藏</li>
+				  </ul>
+				  <div class="layui-tab-content">
+				    <div class="layui-tab-item layui-show">
+				      <div class="chart-content">
+				            <div class="chart" id="chart1">
+				
+				            </div>
+				        </div>
+				    </div>
+				    <div class="layui-tab-item">
+   				      <div class="chart-content">
+				            <div class="chart" id="chart2">
+				
+				            </div>
+				        </div>
+				    </div>
+				    <div class="layui-tab-item">
+				    <div class="chart-content">
+				            <div class="chart" id="chart2">
+				
+				            </div>
+				        </div>
+				    </div>
+				    <div class="layui-tab-item">
+				    <div class="chart-content">
+				            <div class="chart" id="chart4">
+				
+				            </div>
+				        </div>
+				    </div>
+				    <div class="layui-tab-item">
+				    <div class="chart-content">
+				            <div class="chart" id="chart5">
+				
+				            </div>
+				        </div>
+				    </div>
+				    <div class="layui-tab-item">
+				    <div class="chart-content">
+				            <div class="chart" id="chart6">
+				
+				            </div>
+				        </div>
+				    </div>
+				    <div class="layui-tab-item">
+				    <div class="chart-content">
+				            <div class="chart" id="chart7">
+				
+				            </div>
+				        </div>
+				    </div>
+				    <div class="layui-tab-item">
+				    <div class="chart-content">
+				            <div class="chart" id="chart8">
+				
+				            </div>
+				        </div>
+				    </div>
+				  </div>
+				</div>   
+        
         <div class="layui-row" style="margin-left: -20px;margin-right: -20px;">
             <div class="layui-col-md4">
                 <div style="padding-left: 16px;padding-right: 16px;">
                     <div class="chart-content">
-                        <div class="chart" id="chart2">
+                        <div class="chart" id="chart21">
 
                         </div>
                     </div>
@@ -65,7 +131,7 @@
             <div class="layui-col-md4">
                 <div style="padding-left: 16px;padding-right: 16px;">
                     <div class="chart-content">
-                        <div class="chart" id="chart3">
+                        <div class="chart" id="chart31">
 
                         </div>
                     </div>
@@ -74,7 +140,7 @@
             <div class="layui-col-md4">
                 <div style="padding-left: 16px;padding-right: 16px;">
                     <div class="chart-content">
-                        <div class="chart" id="chart4">
+                        <div class="chart" id="chart41">
 
                         </div>
                     </div>
@@ -96,6 +162,44 @@
     	var laydate = layui.laydate;
         var layer = layui.layer;
         var table = layui.table;
+        var element = layui.element;
+        // tab 切换
+        element.on('tab(cudeType)', function (data) {
+        	console.log($(this).attr("data-type"));
+           console.log(data);
+           console.log(data.index); //得到当前Tab的所在下标
+           console.log(data.elem.children(".layui-tab-content").children(".layui-show").html()); //得到当前的Tab大容器
+           
+           switch (data.index) {
+		case 8:
+			
+			break;
+		case 1:
+			
+			break;	
+		case 2:
+			
+			break;	
+		case 3:
+			
+			break;
+		case 4:
+			
+			break;		
+		case 5:
+			
+			break;
+		case 6:
+			
+			break;
+		case 7:
+			
+			break;			
+		default://默认是0
+			
+			break;
+		}
+        });
         laydate.render({
             elem: '#start1',
             done: function (value, date, endDate) {
@@ -148,10 +252,6 @@
             ]],
             page:false
         });
-        util.loadJs([
-            "/js/plugin/echarts/echarts.min.js",
-            "/js/plugin/echarts/macarons.js"
-        ],function () {
 
             var expectedData=[100, 120, 161, 134, 105, 160, 165];
             var actualData=[120, 82, 91, 154, 162, 140, 145];
@@ -227,8 +327,8 @@
             });
 
             // 雷达图
-            var chart2= echarts.init($("#chart2")[0], 'macarons');
-            chart2.setOption({
+            var chart21= echarts.init($("#chart21")[0], 'macarons');
+            chart21.setOption({
                 tooltip: {
                     trigger: 'axis',
                     axisPointer: { // 坐标轴指示器，坐标轴触发有效
@@ -294,8 +394,8 @@
             });
 
             //饼图
-            var chart3= echarts.init($("#chart3")[0], 'macarons');
-            chart3.setOption({
+            var chart31= echarts.init($("#chart31")[0], 'macarons');
+            chart31.setOption({
                 tooltip: {
                     trigger: 'item',
                     formatter: '{a} <br/>{b} : {c} ({d}%)'
@@ -327,8 +427,8 @@
             });
 
             // 柱状图
-            var chart4= echarts.init($("#chart4")[0], 'macarons');
-            chart4.setOption({
+            var chart41= echarts.init($("#chart41")[0], 'macarons');
+            chart41.setOption({
                 tooltip: {
                     trigger: 'axis',
                     axisPointer: { // 坐标轴指示器，坐标轴触发有效
@@ -378,7 +478,6 @@
                     animationDuration:6000
                 }]
             });
-        });
     })
 </script>
 

@@ -715,20 +715,19 @@ public class WxApiCtrl extends BaseCtrl{
 		return code;
 	}
 	/**
-	 * 用户统计分析
+	 * 统计分析
 	 * @param start 开始时间
 	 * @param end 结束时间
 	 * @return
 	 * @throws WxErrorException
 	 */
-	@RequestMapping(value = "/userDataCube")
+	@RequestMapping(value = "/dataCube")
 	@ResponseBody
-	public AjaxResult userDataCube(String start,String end) throws WxErrorException  {
+	public AjaxResult dataCube(String type,String start,String end) throws WxErrorException  {
 		
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		String accessToken = WxApiClient.getAccessToken(mpAccount);
-		JSONObject result = WxApi.getUserSummary(accessToken, start, end);
-		
+		JSONObject result = WxApi.forDataCube(accessToken, type, start, end);
 		return AjaxResult.success(result);
 	}
 }
