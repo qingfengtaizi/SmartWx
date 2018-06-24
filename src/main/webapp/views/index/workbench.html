@@ -49,14 +49,10 @@
                 </div>
              <div class="layui-tab" lay-filter="cudeType">
 				  <ul class="layui-tab-title">
-				    <li class="layui-this" data-type="getusersummary-add">新增关注</li>
-				    <li data-type="getusersummary-canl">取消关注</li>
-				    <li data-type="getusersummary-have">净增关注</li>
-				    <li data-type="getusercumulate-all">累积关注</li>
-				    <li data-type="getuserread-int">图文总阅读</li>
-				    <li data-type="getuserread-ori">原文页阅读</li>
-				    <li data-type="getusershare-share">分享转发</li>
-				    <li data-type="getusershare-fav">微信收藏</li>
+				    <li class="layui-this" data-type="getusersummary">关注变化</li>
+				    <li data-type="getusercumulate">累积关注</li>
+				    <li data-type="getuserread">图文统计</li>
+				    <li data-type="getusershare">分享转发</li>
 				  </ul>
 				  <div class="layui-tab-content">
 				    <div class="layui-tab-item layui-show">
@@ -75,7 +71,7 @@
 				    </div>
 				    <div class="layui-tab-item">
 				    <div class="chart-content">
-				            <div class="chart" id="chart2">
+				            <div class="chart" id="chart3">
 				
 				            </div>
 				        </div>
@@ -83,34 +79,6 @@
 				    <div class="layui-tab-item">
 				    <div class="chart-content">
 				            <div class="chart" id="chart4">
-				
-				            </div>
-				        </div>
-				    </div>
-				    <div class="layui-tab-item">
-				    <div class="chart-content">
-				            <div class="chart" id="chart5">
-				
-				            </div>
-				        </div>
-				    </div>
-				    <div class="layui-tab-item">
-				    <div class="chart-content">
-				            <div class="chart" id="chart6">
-				
-				            </div>
-				        </div>
-				    </div>
-				    <div class="layui-tab-item">
-				    <div class="chart-content">
-				            <div class="chart" id="chart7">
-				
-				            </div>
-				        </div>
-				    </div>
-				    <div class="layui-tab-item">
-				    <div class="chart-content">
-				            <div class="chart" id="chart8">
 				
 				            </div>
 				        </div>
@@ -168,28 +136,11 @@
         	console.log($(this).attr("data-type"));
            console.log(data);
            console.log(data.index); //得到当前Tab的所在下标
-           console.log(data.elem.children(".layui-tab-content").children(".layui-show").html()); //得到当前的Tab大容器
+//            console.log(data.elem.children(".layui-tab-content").children(".layui-show").html()); //得到当前的Tab大容器
           var tp= $(this).attr("data-type");
-          var sps=tp.split('-');
            var end = $("#end1").val();
            var start = $("#start1").val();
-           $.ajax({
-               url: '/wxapi/dataCube',
-               data: {
-            	   type: sps[0],
-            	   start: start,
-            	   end:end
-               },
-               success: function (result) {
-            	   console.log(result)
-                   if (result.success) {
-                       layer.msg("群发成功");
-                       //layer.close(index);
-                   } else {
-                       layer.msg("群发失败");
-                   }
-               }
-           })
+           dataCube(data.index+1, tp, start, end);
         });
         laydate.render({
             elem: '#start1',
@@ -214,6 +165,398 @@
                 }
             }
         });
+        // 折线图
+        var chart1= echarts.init($("#chart1")[0], 'macarons');
+        var chart2= echarts.init($("#chart2")[0], 'macarons');
+        var chart3= echarts.init($("#chart3")[0], 'macarons');
+        var chart4= echarts.init($("#chart4")[0], 'macarons');
+        /**
+        index:对应的tab索引
+        type:统计分析类别
+        start:开始时间
+        end:结束时间
+        **/
+        function dataCube(index,type,start,end){
+        	
+        	if(index && type && start && end){
+        		var load = layer.load();
+        		$.ajax({
+                    url: '/wxapi/dataCube',
+                    data: {
+                 	   type: type,
+                 	   start: start,
+                 	   end:end
+                    },
+                    success: function (result) {
+                    	 layer.close(load);
+                 	   console.log(result)
+                        if (result.success) {
+                           if(index==1){
+                        	   var xAxisData=Array();//x轴数据
+                        	   var seriesData1=Array();//新增
+                        	   var seriesData2=Array();//取消
+                        	   var seriesData3=Array();//净增
+                        	   if(result.data.list.length>0){
+                        		   $.each(result.data.list, function (i, el) {
+                        			   console.log(el)
+                        			   xAxisData.push(el.ref_date);
+                         			  seriesData1.push(el.new_user);
+                         			  seriesData2.push(el.cancel_user);
+                         			  var jz=(new_user-el.cancel_user)>=0?(new_user-el.cancel_user):0
+                         			  seriesData3.push(jz);
+                                   });
+                        	   }
+                        	   chart1.setOption({
+                               	title : {
+                               	    text: '用户增减数据'
+                               	},
+                                   xAxis: {
+                                       data: xAxisData,
+                                       boundaryGap: false,
+                                       axisTick: {
+                                           show: false
+                                       }
+                                   },
+                                   grid: {
+                                       left: 10,
+                                       right: 10,
+                                       bottom: 20,
+                                       top: 30,
+                                       containLabel: true
+                                   },
+                                   tooltip: {
+                                       trigger: 'axis',
+                                       axisPointer: {
+                                           type: 'cross'
+                                       },
+                                       padding: [5, 10]
+                                   },
+                                   yAxis: {
+                                       axisTick: {
+                                           show: false
+                                       }
+                                   },
+                                   legend: {
+                                       data: ['新增关注', '取消关注','净增人数']
+                                   },
+                                   series: [{
+                                       name: '新增关注', itemStyle: {
+                                           normal: {
+                                               color: '#FF005A',
+                                               lineStyle: {
+                                                   color: '#FF005A',
+                                                   width: 2
+                                               }
+                                           }
+                                       },
+                                       smooth: true,
+                                       type: 'line',
+                                       data: seriesData1,
+                                       animationDuration: 2800,
+                                       animationEasing: 'cubicInOut'
+                                   },{
+                                           name: '取消关注',
+                                           smooth: true,
+                                           type: 'line',
+                                           itemStyle: {
+                                               normal: {
+                                                   color: '#3888fa',
+                                                   lineStyle: {
+                                                       color: '#3888fa',
+                                                       width: 2
+                                                   },
+                                                   areaStyle: {
+                                                       color: '#f3f8ff'
+                                                   }
+                                               }
+                                           },
+                                           data: seriesData2,
+                                           animationDuration: 2800,
+                                           animationEasing: 'quadraticOut'
+                                       },{
+                                           name: '净增人数',
+                                           smooth: true,
+                                           type: 'line',
+                                           itemStyle: {
+                                               normal: {
+                                                   color: '#3888fa',
+                                                   lineStyle: {
+                                                       color: '#3888fa',
+                                                       width: 2
+                                                   },
+                                                   areaStyle: {
+                                                       color: '#f3f8ff'
+                                                   }
+                                               }
+                                           },
+                                           data: seriesData3,
+                                           animationDuration: 2800,
+                                           animationEasing: 'quadraticOut'
+                                       }]
+                               }); 
+                           }else if(index==2){
+                        	   var xAxisData=Array();//x轴数据
+                        	   var seriesData=Array();//新增
+                        	   if(result.data.list.length>0){
+                        		   $.each(result.data.list, function (i, el) {
+                        			   console.log(el)
+                        			   xAxisData.push(el.ref_date);
+                         			  seriesData.push(el.cumulate_user);
+                                   });
+                        	   }
+                        	   chart2.setOption({
+                               	title : {
+                               	    text: '累计关注数'
+                               	},
+                                   xAxis: {
+                                	   type: 'category',
+                                       data: xAxisData,
+                                       boundaryGap: false,
+                                       axisTick: {
+                                           show: false
+                                       }
+                                   },
+                                   yAxis: {
+                                	   type:'value',
+                                       axisTick: {
+                                           show: false
+                                       }
+                                   },
+                                   legend: {
+                                       data: ['累计人数']
+                                   },
+                                   series: [{
+                                       name: '累计人数', itemStyle: {
+                                           normal: {
+                                               color: '#FF005A',
+                                               lineStyle: {
+                                                   color: '#FF005A',
+                                                   width: 2
+                                               }
+                                           }
+                                       },
+                                       smooth: true,
+                                       type: 'line',
+                                       data: seriesData,
+                                       animationDuration: 2800,
+                                       animationEasing: 'cubicInOut'
+                                   }]
+                               });
+                           }else if(index==3){
+                        	   var xAxisData=Array();//x轴数据
+                        	   var seriesData1=Array();//图文页阅读人数
+                        	   var seriesData2=Array();//图文页阅读次数
+                        	   var seriesData3=Array();//收藏人数
+                        	   var seriesData4=Array();//收藏次数
+                        	   if(result.data.list.length>0){
+                        		   $.each(result.data.list, function (i, el) {
+                        			   console.log(el)
+                        			   xAxisData.push(el.ref_date);
+                         			   seriesData1.push(el.int_page_read_user);
+                         			   seriesData2.push(el.int_page_read_count);
+                         			   seriesData3.push(el.add_to_fav_user);
+                         			 	seriesData4.push(el.add_to_fav_count);
+                                   });
+                        	   }
+                        	   chart3.setOption({
+                               	title : {
+                               	    text: '图文统计数据'
+                               	},
+                                   xAxis: {
+                                       data: xAxisData,
+                                       boundaryGap: false,
+                                       axisTick: {
+                                           show: false
+                                       }
+                                   },
+                                   grid: {
+                                       left: 10,
+                                       right: 10,
+                                       bottom: 20,
+                                       top: 30,
+                                       containLabel: true
+                                   },
+                                   tooltip: {
+                                       trigger: 'axis',
+                                       axisPointer: {
+                                           type: 'cross'
+                                       },
+                                       padding: [5, 10]
+                                   },
+                                   yAxis: {
+                                       axisTick: {
+                                           show: false
+                                       }
+                                   },
+                                   legend: {
+                                       data: ['阅读人数', '阅读次数','收藏人数','收藏次数']
+                                   },
+                                   series: [{
+                                       name: '阅读人数', itemStyle: {
+                                           normal: {
+                                               color: '#FF005A',
+                                               lineStyle: {
+                                                   color: '#FF005A',
+                                                   width: 2
+                                               }
+                                           }
+                                       },
+                                       smooth: true,
+                                       type: 'line',
+                                       data: seriesData1,
+                                       animationDuration: 2800,
+                                       animationEasing: 'cubicInOut'
+                                   },{
+                                           name: '阅读次数',
+                                           smooth: true,
+                                           type: 'line',
+                                           itemStyle: {
+                                               normal: {
+                                                   color: '#3888fa',
+                                                   lineStyle: {
+                                                       color: '#3888fa',
+                                                       width: 2
+                                                   },
+                                                   areaStyle: {
+                                                       color: '#f3f8ff'
+                                                   }
+                                               }
+                                           },
+                                           data: seriesData2,
+                                           animationDuration: 2800,
+                                           animationEasing: 'quadraticOut'
+                                       },{
+                                           name: '收藏人数',
+                                           smooth: true,
+                                           type: 'line',
+                                           itemStyle: {
+                                               normal: {
+                                                   color: '#3888fa',
+                                                   lineStyle: {
+                                                       color: '#3888fa',
+                                                       width: 2
+                                                   },
+                                                   areaStyle: {
+                                                       color: '#f3f8ff'
+                                                   }
+                                               }
+                                           },
+                                           data: seriesData3,
+                                           animationDuration: 2800,
+                                           animationEasing: 'quadraticOut'
+                                       },{
+                                           name: '收藏次数',
+                                           smooth: true,
+                                           type: 'line',
+                                           itemStyle: {
+                                               normal: {
+                                                   color: '#3888fa',
+                                                   lineStyle: {
+                                                       color: '#3888fa',
+                                                       width: 2
+                                                   },
+                                                   areaStyle: {
+                                                       color: '#f3f8ff'
+                                                   }
+                                               }
+                                           },
+                                           data: seriesData4,
+                                           animationDuration: 2800,
+                                           animationEasing: 'quadraticOut'
+                                       }]
+                               }); 
+                        	   
+                           }else if(index==4){
+                        	   var xAxisData=Array();//x轴数据
+                        	   var seriesData1=Array();//分享人数
+                        	   var seriesData2=Array();//分享次数
+                        	   if(result.data.list.length>0){
+                        		   $.each(result.data.list, function (i, el) {
+                        			   console.log(el)
+                        			   xAxisData.push(el.ref_date);
+                         			  seriesData1.push(el.share_user);
+                         			  seriesData2.push(el.share_count);
+                                   });
+                        	   }
+                        	   chart4.setOption({
+                               	title : {
+                               	    text: '分享统计数据'
+                               	},
+                                   xAxis: {
+                                       data: xAxisData,
+                                       boundaryGap: false,
+                                       axisTick: {
+                                           show: false
+                                       }
+                                   },
+                                   grid: {
+                                       left: 10,
+                                       right: 10,
+                                       bottom: 20,
+                                       top: 30,
+                                       containLabel: true
+                                   },
+                                   tooltip: {
+                                       trigger: 'axis',
+                                       axisPointer: {
+                                           type: 'cross'
+                                       },
+                                       padding: [5, 10]
+                                   },
+                                   yAxis: {
+                                       axisTick: {
+                                           show: false
+                                       }
+                                   },
+                                   legend: {
+                                       data: ['分享人数', '分享次数']
+                                   },
+                                   series: [{
+                                       name: '分享人数', itemStyle: {
+                                           normal: {
+                                               color: '#FF005A',
+                                               lineStyle: {
+                                                   color: '#FF005A',
+                                                   width: 2
+                                               }
+                                           }
+                                       },
+                                       smooth: true,
+                                       type: 'line',
+                                       data: seriesData1,
+                                       animationDuration: 2800,
+                                       animationEasing: 'cubicInOut'
+                                   },{
+                                           name: '分享次数',
+                                           smooth: true,
+                                           type: 'line',
+                                           itemStyle: {
+                                               normal: {
+                                                   color: '#3888fa',
+                                                   lineStyle: {
+                                                       color: '#3888fa',
+                                                       width: 2
+                                                   },
+                                                   areaStyle: {
+                                                       color: '#f3f8ff'
+                                                   }
+                                               }
+                                           },
+                                           data: seriesData2,
+                                           animationDuration: 2800,
+                                           animationEasing: 'quadraticOut'
+                                       }]
+                               }); 
+                           }
+                        } else {
+                            layer.msg("查询失败");
+                        }
+                    }
+                })
+        	}
+        	 
+        }
+        
         $(".card-panel-num").each(function () {
             var $this=$(this);
             var num=parseFloat($this.text()) || 0;
@@ -247,79 +590,7 @@
             page:false
         });
 
-            var expectedData=[100, 120, 161, 134, 105, 160, 165];
-            var actualData=[120, 82, 91, 154, 162, 140, 145];
-
-            // 折线图
-            var chart1= echarts.init($("#chart1")[0], 'macarons');
-            chart1.setOption({
-                xAxis: {
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    boundaryGap: false,
-                    axisTick: {
-                        show: false
-                    }
-                },
-                grid: {
-                    left: 10,
-                    right: 10,
-                    bottom: 20,
-                    top: 30,
-                    containLabel: true
-                },
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                        type: 'cross'
-                    },
-                    padding: [5, 10]
-                },
-                yAxis: {
-                    axisTick: {
-                        show: false
-                    }
-                },
-                legend: {
-                    data: ['expected', 'actual']
-                },
-                series: [{
-                    name: 'expected', itemStyle: {
-                        normal: {
-                            color: '#FF005A',
-                            lineStyle: {
-                                color: '#FF005A',
-                                width: 2
-                            }
-                        }
-                    },
-                    smooth: true,
-                    type: 'line',
-                    data: expectedData,
-                    animationDuration: 2800,
-                    animationEasing: 'cubicInOut'
-                },
-                    {
-                        name: 'actual',
-                        smooth: true,
-                        type: 'line',
-                        itemStyle: {
-                            normal: {
-                                color: '#3888fa',
-                                lineStyle: {
-                                    color: '#3888fa',
-                                    width: 2
-                                },
-                                areaStyle: {
-                                    color: '#f3f8ff'
-                                }
-                            }
-                        },
-                        data: actualData,
-                        animationDuration: 2800,
-                        animationEasing: 'quadraticOut'
-                    }]
-            });
-
+		
             // 雷达图
             var chart21= echarts.init($("#chart21")[0], 'macarons');
             chart21.setOption({
