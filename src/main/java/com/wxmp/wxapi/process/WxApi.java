@@ -200,11 +200,11 @@ public class WxApi {
     /**
      * 获取用户增减数据-7d-POST
      */
-    public static final String GET_USER_SUMMARY="	https://api.weixin.qq.com/datacube/getusersummary?access_token=%s";
+    public static final String GET_USER_SUMMARY="https://api.weixin.qq.com/datacube/getusersummary?access_token=%s";
     /**
      * 获取累计用户数据-7d-POST
      */
-    public static final String GET_USER_CUMULATE="	https://api.weixin.qq.com/datacube/getusercumulate?access_token=%s";
+    public static final String GET_USER_CUMULATE="https://api.weixin.qq.com/datacube/getusercumulate?access_token=%s";
     
     /**
      * 获取图文群发每日数据-1d-POST
@@ -853,7 +853,7 @@ public class WxApi {
 			throw new WxErrorException(WxError.newBuilder().setErrorCode(-4).setErrorMsg("时间转化出错").build());
 		}
     	//最大时间跨度
-    	if(days<=0||days>=Integer.parseInt(cube[0])){
+    	if(days<0||days>=Integer.parseInt(cube[0])){
     		throw new WxErrorException(WxError.newBuilder().setErrorCode(9001031).setErrorMsg("时间区间不合法").build());
     	}
     	JSONObject json=new JSONObject();

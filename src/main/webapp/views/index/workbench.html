@@ -52,7 +52,7 @@
 				    <li class="layui-this" data-type="getusersummary-add">新增关注</li>
 				    <li data-type="getusersummary-canl">取消关注</li>
 				    <li data-type="getusersummary-have">净增关注</li>
-				    <li data-type="getusersummary-all">累积关注</li>
+				    <li data-type="getusercumulate-all">累积关注</li>
 				    <li data-type="getuserread-int">图文总阅读</li>
 				    <li data-type="getuserread-ori">原文页阅读</li>
 				    <li data-type="getusershare-share">分享转发</li>
@@ -169,54 +169,48 @@
            console.log(data);
            console.log(data.index); //得到当前Tab的所在下标
            console.log(data.elem.children(".layui-tab-content").children(".layui-show").html()); //得到当前的Tab大容器
-           
-           switch (data.index) {
-		case 8:
-			
-			break;
-		case 1:
-			
-			break;	
-		case 2:
-			
-			break;	
-		case 3:
-			
-			break;
-		case 4:
-			
-			break;		
-		case 5:
-			
-			break;
-		case 6:
-			
-			break;
-		case 7:
-			
-			break;			
-		default://默认是0
-			
-			break;
-		}
+          var tp= $(this).attr("data-type");
+          var sps=tp.split('-');
+           var end = $("#end1").val();
+           var start = $("#start1").val();
+           $.ajax({
+               url: '/wxapi/dataCube',
+               data: {
+            	   type: sps[0],
+            	   start: start,
+            	   end:end
+               },
+               success: function (result) {
+            	   console.log(result)
+                   if (result.success) {
+                       layer.msg("群发成功");
+                       //layer.close(index);
+                   } else {
+                       layer.msg("群发失败");
+                   }
+               }
+           })
         });
         laydate.render({
             elem: '#start1',
             done: function (value, date, endDate) {
+            	console.log(value);
                 var end = $("#end1").val();
-                if (value && end && parseInt(Math.abs(new Date(end) - new Date(value) ) / 1000 / 60 / 60 /24) >= 7 && (new Date(end) - new Date(value))<0) {
+                console.log(moment(value).add(+6,'day').format("YYYY-MM-DD") == end);
+                if (value && end && (new Date(end) - new Date(value))<=0) {
                     $("#start1").val("");
-                    layer.msg("开始时间需小于结束时间且结束时间与开始时间的差值不能大于7");
+                    layer.msg("开始时间需小于结束时间");
                 }
             }
         });
         laydate.render({
             elem: '#end1',
             done: function (value, date, endDate) {
+            	console.log(value);
                 var start = $("#start1").val();
-                if (value && start && parseInt(Math.abs(new Date(value) - new Date(start) ) / 1000 / 60 / 60 /24) >= 7 && (new Date(value) - new Date(start)) <0) {
+                if (value && start && (new Date(value) - new Date(start)) <=0) {
                     $("#end1").val("");
-                    layer.msg("结束时间需大于开始时间且结束时间与开始时间的差值不能大于7");
+                    layer.msg("结束时间需大于开始时间");
                 }
             }
         });
