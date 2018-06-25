@@ -144,6 +144,7 @@
         });
         laydate.render({
             elem: '#start1',
+            value:moment().add(-7,'day').format("YYYY-MM-DD"),
             done: function (value, date, endDate) {
             	console.log(value);
                 var end = $("#end1").val();
@@ -156,6 +157,7 @@
         });
         laydate.render({
             elem: '#end1',
+            value:moment().add(-1,'day').format("YYYY-MM-DD"),
             done: function (value, date, endDate) {
             	console.log(value);
                 var start = $("#start1").val();
@@ -170,6 +172,11 @@
         var chart2= echarts.init($("#chart2")[0], 'macarons');
         var chart3= echarts.init($("#chart3")[0], 'macarons');
         var chart4= echarts.init($("#chart4")[0], 'macarons');
+        //增加初始化数据
+        dataCube(1,"getusersummary",moment().add(-7,'day').format("YYYY-MM-DD"),moment().add(-1,'day').format("YYYY-MM-DD"));
+        dataCube(2,"getusercumulate",moment().add(-7,'day').format("YYYY-MM-DD"),moment().add(-1,'day').format("YYYY-MM-DD"));
+        dataCube(3,"getuserread",moment().add(-3,'day').format("YYYY-MM-DD"),moment().add(-1,'day').format("YYYY-MM-DD"));
+        dataCube(4,"getusershare",moment().add(-7,'day').format("YYYY-MM-DD"),moment().add(-1,'day').format("YYYY-MM-DD"));
         /**
         index:对应的tab索引
         type:统计分析类别
@@ -202,7 +209,7 @@
                         			   xAxisData.push(el.ref_date);
                          			  seriesData1.push(el.new_user);
                          			  seriesData2.push(el.cancel_user);
-                         			  var jz=(new_user-el.cancel_user)>=0?(new_user-el.cancel_user):0
+                         			  var jz=(el.new_user-el.cancel_user)>=0?(el.new_user-el.cancel_user):0
                          			  seriesData3.push(jz);
                                    });
                         	   }
@@ -218,10 +225,10 @@
                                        }
                                    },
                                    grid: {
-                                       left: 10,
-                                       right: 10,
-                                       bottom: 20,
-                                       top: 30,
+                                       left: '3%',
+                                       right: '3%',
+                                       bottom: '1%',
+                                       top: '3%',
                                        containLabel: true
                                    },
                                    tooltip: {
@@ -240,16 +247,7 @@
                                        data: ['新增关注', '取消关注','净增人数']
                                    },
                                    series: [{
-                                       name: '新增关注', itemStyle: {
-                                           normal: {
-                                               color: '#FF005A',
-                                               lineStyle: {
-                                                   color: '#FF005A',
-                                                   width: 2
-                                               }
-                                           }
-                                       },
-                                       smooth: true,
+                                       name: '新增关注',                                        smooth: true,
                                        type: 'line',
                                        data: seriesData1,
                                        animationDuration: 2800,
@@ -258,18 +256,6 @@
                                            name: '取消关注',
                                            smooth: true,
                                            type: 'line',
-                                           itemStyle: {
-                                               normal: {
-                                                   color: '#3888fa',
-                                                   lineStyle: {
-                                                       color: '#3888fa',
-                                                       width: 2
-                                                   },
-                                                   areaStyle: {
-                                                       color: '#f3f8ff'
-                                                   }
-                                               }
-                                           },
                                            data: seriesData2,
                                            animationDuration: 2800,
                                            animationEasing: 'quadraticOut'
@@ -277,18 +263,6 @@
                                            name: '净增人数',
                                            smooth: true,
                                            type: 'line',
-                                           itemStyle: {
-                                               normal: {
-                                                   color: '#3888fa',
-                                                   lineStyle: {
-                                                       color: '#3888fa',
-                                                       width: 2
-                                                   },
-                                                   areaStyle: {
-                                                       color: '#f3f8ff'
-                                                   }
-                                               }
-                                           },
                                            data: seriesData3,
                                            animationDuration: 2800,
                                            animationEasing: 'quadraticOut'
@@ -326,15 +300,7 @@
                                        data: ['累计人数']
                                    },
                                    series: [{
-                                       name: '累计人数', itemStyle: {
-                                           normal: {
-                                               color: '#FF005A',
-                                               lineStyle: {
-                                                   color: '#FF005A',
-                                                   width: 2
-                                               }
-                                           }
-                                       },
+                                       name: '累计人数', 
                                        smooth: true,
                                        type: 'line',
                                        data: seriesData,
@@ -392,15 +358,7 @@
                                        data: ['阅读人数', '阅读次数','收藏人数','收藏次数']
                                    },
                                    series: [{
-                                       name: '阅读人数', itemStyle: {
-                                           normal: {
-                                               color: '#FF005A',
-                                               lineStyle: {
-                                                   color: '#FF005A',
-                                                   width: 2
-                                               }
-                                           }
-                                       },
+                                       name: '阅读人数', 
                                        smooth: true,
                                        type: 'line',
                                        data: seriesData1,
@@ -410,18 +368,6 @@
                                            name: '阅读次数',
                                            smooth: true,
                                            type: 'line',
-                                           itemStyle: {
-                                               normal: {
-                                                   color: '#3888fa',
-                                                   lineStyle: {
-                                                       color: '#3888fa',
-                                                       width: 2
-                                                   },
-                                                   areaStyle: {
-                                                       color: '#f3f8ff'
-                                                   }
-                                               }
-                                           },
                                            data: seriesData2,
                                            animationDuration: 2800,
                                            animationEasing: 'quadraticOut'
@@ -429,18 +375,6 @@
                                            name: '收藏人数',
                                            smooth: true,
                                            type: 'line',
-                                           itemStyle: {
-                                               normal: {
-                                                   color: '#3888fa',
-                                                   lineStyle: {
-                                                       color: '#3888fa',
-                                                       width: 2
-                                                   },
-                                                   areaStyle: {
-                                                       color: '#f3f8ff'
-                                                   }
-                                               }
-                                           },
                                            data: seriesData3,
                                            animationDuration: 2800,
                                            animationEasing: 'quadraticOut'
@@ -448,18 +382,6 @@
                                            name: '收藏次数',
                                            smooth: true,
                                            type: 'line',
-                                           itemStyle: {
-                                               normal: {
-                                                   color: '#3888fa',
-                                                   lineStyle: {
-                                                       color: '#3888fa',
-                                                       width: 2
-                                                   },
-                                                   areaStyle: {
-                                                       color: '#f3f8ff'
-                                                   }
-                                               }
-                                           },
                                            data: seriesData4,
                                            animationDuration: 2800,
                                            animationEasing: 'quadraticOut'
@@ -512,15 +434,7 @@
                                        data: ['分享人数', '分享次数']
                                    },
                                    series: [{
-                                       name: '分享人数', itemStyle: {
-                                           normal: {
-                                               color: '#FF005A',
-                                               lineStyle: {
-                                                   color: '#FF005A',
-                                                   width: 2
-                                               }
-                                           }
-                                       },
+                                       name: '分享人数', 
                                        smooth: true,
                                        type: 'line',
                                        data: seriesData1,
@@ -530,18 +444,6 @@
                                            name: '分享次数',
                                            smooth: true,
                                            type: 'line',
-                                           itemStyle: {
-                                               normal: {
-                                                   color: '#3888fa',
-                                                   lineStyle: {
-                                                       color: '#3888fa',
-                                                       width: 2
-                                                   },
-                                                   areaStyle: {
-                                                       color: '#f3f8ff'
-                                                   }
-                                               }
-                                           },
                                            data: seriesData2,
                                            animationDuration: 2800,
                                            animationEasing: 'quadraticOut'
@@ -549,10 +451,12 @@
                                }); 
                            }
                         } else {
-                            layer.msg("查询失败");
+                            layer.msg(result.msg);
                         }
                     }
                 })
+        	}else{
+        		layer.msg("时间区间数据为空！！！");
         	}
         	 
         }
