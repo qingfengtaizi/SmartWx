@@ -172,4 +172,35 @@
 		<!--<url-pattern>/views/*</url-pattern>-->
 	<!--</servlet-mapping>-->
 	<!--+++++++++++++++ servlet 结束 ++++++++++++++++++++++++++++++++++++++++++++++++++-->
+    
+    <!--+++++++++++++++ druid sql 监控开始 ++++++++++++++++++++++++++++++++++++++++++++++-->
+    <servlet>  
+        <servlet-name>DruidStatView</servlet-name>  
+        <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>  
+        <init-param>  
+            <!-- 允许清空统计数据 -->  
+            <param-name>resetEnable</param-name>  
+            <param-value>true</param-value>  
+        </init-param>  
+        <init-param>
+            <param-name>exclusions</param-name>
+            <param-value>*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*</param-value>
+        </init-param>
+        <init-param>  
+            <!-- 用户名 -->  
+            <param-name>loginUsername</param-name>  
+            <param-value>root</param-value>  
+        </init-param>  
+        <init-param>  
+            <!-- 密码 -->  
+            <param-name>loginPassword</param-name>  
+            <param-value>root</param-value>  
+        </init-param>  
+    </servlet>  
+    <servlet-mapping>  
+        <servlet-name>DruidStatView</servlet-name>  
+        <url-pattern>/druid/*</url-pattern>  
+    </servlet-mapping>  
+    <!--+++++++++++++++ druid sql 监控结束 ++++++++++++++++++++++++++++++++++++++++++++++-->
+    
 </web-app>
