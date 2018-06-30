@@ -29,92 +29,60 @@
                 </div>
             </div>
         </div>
-		<div class="layui-tab-item layui-show">
-                    <!--搜索框-->
-                    <div class="layui-form-item wxmp-search" id="search_form1">
-                        <div class="layui-inline">
-                            <input type="text" class="layui-input laydate" name="start" id="start1">
-                            <i class="iconfont icon-rili"></i>
-                        </div>
-                        <span class="font-primary">-</span>
-                        <div class="layui-inline">
-                            <input type="text" class="layui-input laydate" name="end" id="end1">
-                            <i class="iconfont icon-rili"></i>
-                        </div>
-                        <div class="layui-inline">
-                            <button class="layui-btn btn-primary" id="search1">搜索</button>
-                        </div>
-
-                    </div>
+        <div class="layui-tab-item layui-show">
+            <!--搜索框-->
+            <div class="layui-form-item wxmp-search" id="search_form1">
+                <input type="hidden" name="start" id="start">
+                <input type="hidden" name="end" id="end">
+                <div class="layui-inline" style="width: 250px">
+                    <input type="text" class="layui-input" id="workbench_time" placeholder="选择上传日期">
+                    <i class="iconfont icon-rili"></i>
                 </div>
-             <div class="layui-tab" lay-filter="cudeType">
-				  <ul class="layui-tab-title">
-				    <li class="layui-this" data-type="getusersummary">关注变化</li>
-				    <li data-type="getusercumulate">累积关注</li>
-				    <li data-type="getuserread">图文统计</li>
-				    <li data-type="getusershare">分享转发</li>
-				  </ul>
-				  <div class="layui-tab-content">
-				    <div class="layui-tab-item layui-show">
-				      <div class="chart-content">
-				            <div class="chart" id="chart1">
-				
-				            </div>
-				        </div>
-				    </div>
-				    <div class="layui-tab-item">
-   				      <div class="chart-content">
-				            <div class="chart" id="chart2">
-				
-				            </div>
-				        </div>
-				    </div>
-				    <div class="layui-tab-item">
-				    <div class="chart-content">
-				            <div class="chart" id="chart3">
-				
-				            </div>
-				        </div>
-				    </div>
-				    <div class="layui-tab-item">
-				    <div class="chart-content">
-				            <div class="chart" id="chart4">
-				
-				            </div>
-				        </div>
-				    </div>
-				  </div>
-				</div>   
-        
-        <div class="layui-row" style="margin-left: -20px;margin-right: -20px;">
-            <div class="layui-col-md4">
-                <div style="padding-left: 16px;padding-right: 16px;">
-                    <div class="chart-content">
-                        <div class="chart" id="chart21">
-
-                        </div>
-                    </div>
+                <div class="layui-inline">
+                    <button class="layui-btn btn-primary" id="search1">搜索</button>
                 </div>
+
             </div>
-            <div class="layui-col-md4">
-                <div style="padding-left: 16px;padding-right: 16px;">
+        </div>
+        <div class="layui-tab" lay-filter="cudeType">
+            <ul class="layui-tab-title">
+                <li class="layui-this" data-type="getusersummary">关注变化</li>
+                <li data-type="getusercumulate">累积关注</li>
+                <li data-type="getuserread">图文统计</li>
+                <li data-type="getusershare">分享转发</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
                     <div class="chart-content">
-                        <div class="chart" id="chart31">
+                        <div class="chart" id="chart1">
 
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="layui-col-md4">
-                <div style="padding-left: 16px;padding-right: 16px;">
+                <div class="layui-tab-item">
                     <div class="chart-content">
-                        <div class="chart" id="chart41">
+                        <div class="chart" id="chart2">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="chart-content">
+                        <div class="chart" id="chart3">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="chart-content">
+                        <div class="chart" id="chart4">
 
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div>
             <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                 <legend>最新文章</legend>
@@ -126,354 +94,336 @@
     </div>
 </div>
 <script>
-    layui.use(["laydate",'layer',"table"], function () {
-    	var laydate = layui.laydate;
+    layui.use(["laydate", 'layer', "table"], function () {
+        var laydate = layui.laydate;
         var layer = layui.layer;
         var table = layui.table;
         var element = layui.element;
         // tab 切换
         element.on('tab(cudeType)', function (data) {
-        	console.log($(this).attr("data-type"));
-           console.log(data);
-           console.log(data.index); //得到当前Tab的所在下标
-//            console.log(data.elem.children(".layui-tab-content").children(".layui-show").html()); //得到当前的Tab大容器
-          var tp= $(this).attr("data-type");
-           var end = $("#end1").val();
-           var start = $("#start1").val();
-           dataCube(data.index+1, tp, start, end);
+            var tp = $(this).attr("data-type");
+            var end = $("#end").val();
+            var start = $("#start").val();
+            dataCube(data.index + 1, tp, start, end);
         });
+        //日期选择
         laydate.render({
-            elem: '#start1',
-            value:moment().add(-7,'day').format("YYYY-MM-DD"),
+            elem: '#workbench_time',
+            range: true,
             done: function (value, date, endDate) {
-            	console.log(value);
-                var end = $("#end1").val();
-                console.log(moment(value).add(+6,'day').format("YYYY-MM-DD") == end);
-                if (value && end && (new Date(end) - new Date(value))<=0) {
-                    $("#start1").val("");
-                    layer.msg("开始时间需小于结束时间");
-                }
-            }
-        });
-        laydate.render({
-            elem: '#end1',
-            value:moment().add(-1,'day').format("YYYY-MM-DD"),
-            done: function (value, date, endDate) {
-            	console.log(value);
-                var start = $("#start1").val();
-                if (value && start && (new Date(value) - new Date(start)) <=0) {
-                    $("#end1").val("");
-                    layer.msg("结束时间需大于开始时间");
+                if (value) {
+                    $("#list_form input[name='start']").val(value.substring(0, 10));
+                    $("#list_form input[name='end']").val(value.substring(13));
+                } else {
+                    $("#list_form input[name='start']").val(moment().add(-7, 'day').format("YYYY-MM-DD"));
+                    $("#list_form input[name='end']").val(moment().add(-1, 'day').format("YYYY-MM-DD"));
                 }
             }
         });
         // 折线图
-        var chart1= echarts.init($("#chart1")[0], 'macarons');
-        var chart2= echarts.init($("#chart2")[0], 'macarons');
-        var chart3= echarts.init($("#chart3")[0], 'macarons');
-        var chart4= echarts.init($("#chart4")[0], 'macarons');
+        var chart1 = echarts.init($("#chart1")[0], 'macarons');
+        var chart2 = echarts.init($("#chart2")[0], 'macarons');
+        var chart3 = echarts.init($("#chart3")[0], 'macarons');
+        var chart4 = echarts.init($("#chart4")[0], 'macarons');
         //增加初始化数据
-        dataCube(1,"getusersummary",moment().add(-7,'day').format("YYYY-MM-DD"),moment().add(-1,'day').format("YYYY-MM-DD"));
-        dataCube(2,"getusercumulate",moment().add(-7,'day').format("YYYY-MM-DD"),moment().add(-1,'day').format("YYYY-MM-DD"));
-        dataCube(3,"getuserread",moment().add(-3,'day').format("YYYY-MM-DD"),moment().add(-1,'day').format("YYYY-MM-DD"));
-        dataCube(4,"getusershare",moment().add(-7,'day').format("YYYY-MM-DD"),moment().add(-1,'day').format("YYYY-MM-DD"));
+        dataCube(1, "getusersummary", moment().add(-7, 'day').format("YYYY-MM-DD"), moment().add(-1, 'day').format("YYYY-MM-DD"));
+        dataCube(2, "getusercumulate", moment().add(-7, 'day').format("YYYY-MM-DD"), moment().add(-1, 'day').format("YYYY-MM-DD"));
+        dataCube(3, "getuserread", moment().add(-3, 'day').format("YYYY-MM-DD"), moment().add(-1, 'day').format("YYYY-MM-DD"));
+        dataCube(4, "getusershare", moment().add(-7, 'day').format("YYYY-MM-DD"), moment().add(-1, 'day').format("YYYY-MM-DD"));
         /**
-        index:对应的tab索引
-        type:统计分析类别
-        start:开始时间
-        end:结束时间
-        **/
-        function dataCube(index,type,start,end){
-        	
-        	if(index && type && start && end){
-        		var load = layer.load();
-        		$.ajax({
+         index:对应的tab索引
+         type:统计分析类别
+         start:开始时间
+         end:结束时间
+         **/
+        function dataCube(index, type, start, end) {
+
+            if (index && type && start && end) {
+                var load = layer.load();
+                $.ajax({
                     url: '/wxapi/dataCube',
                     data: {
-                 	   type: type,
-                 	   start: start,
-                 	   end:end
+                        type: type,
+                        start: start,
+                        end: end
                     },
                     success: function (result) {
-                    	 layer.close(load);
-                 	   console.log(result)
+                        layer.close(load);
+                        console.log(result)
                         if (result.success) {
-                           if(index==1){
-                        	   var xAxisData=Array();//x轴数据
-                        	   var seriesData1=Array();//新增
-                        	   var seriesData2=Array();//取消
-                        	   var seriesData3=Array();//净增
-                        	   if(result.data.list.length>0){
-                        		   $.each(result.data.list, function (i, el) {
-                        			   console.log(el)
-                        			   xAxisData.push(el.ref_date);
-                         			  seriesData1.push(el.new_user);
-                         			  seriesData2.push(el.cancel_user);
-                         			  var jz=(el.new_user-el.cancel_user)>=0?(el.new_user-el.cancel_user):0
-                         			  seriesData3.push(jz);
-                                   });
-                        	   }
-                        	   chart1.setOption({
-                               	title : {
-                               	    text: '用户增减数据'
-                               	},
-                                   xAxis: {
-                                       data: xAxisData,
-                                       boundaryGap: false,
-                                       axisTick: {
-                                           show: false
-                                       }
-                                   },
-                                   grid: {
-                                       left: '3%',
-                                       right: '3%',
-                                       bottom: '1%',
-                                       top: '3%',
-                                       containLabel: true
-                                   },
-                                   tooltip: {
-                                       trigger: 'axis',
-                                       axisPointer: {
-                                           type: 'cross'
-                                       },
-                                       padding: [5, 10]
-                                   },
-                                   yAxis: {
-                                       axisTick: {
-                                           show: false
-                                       }
-                                   },
-                                   legend: {
-                                       data: ['新增关注', '取消关注','净增人数']
-                                   },
-                                   series: [{
-                                       name: '新增关注',                                        smooth: true,
-                                       type: 'line',
-                                       data: seriesData1,
-                                       animationDuration: 2800,
-                                       animationEasing: 'cubicInOut'
-                                   },{
-                                           name: '取消关注',
-                                           smooth: true,
-                                           type: 'line',
-                                           data: seriesData2,
-                                           animationDuration: 2800,
-                                           animationEasing: 'quadraticOut'
-                                       },{
-                                           name: '净增人数',
-                                           smooth: true,
-                                           type: 'line',
-                                           data: seriesData3,
-                                           animationDuration: 2800,
-                                           animationEasing: 'quadraticOut'
-                                       }]
-                               }); 
-                           }else if(index==2){
-                        	   var xAxisData=Array();//x轴数据
-                        	   var seriesData=Array();//新增
-                        	   if(result.data.list.length>0){
-                        		   $.each(result.data.list, function (i, el) {
-                        			   console.log(el)
-                        			   xAxisData.push(el.ref_date);
-                         			  seriesData.push(el.cumulate_user);
-                                   });
-                        	   }
-                        	   chart2.setOption({
-                               	title : {
-                               	    text: '累计关注数'
-                               	},
-                                   xAxis: {
-                                	   type: 'category',
-                                       data: xAxisData,
-                                       boundaryGap: false,
-                                       axisTick: {
-                                           show: false
-                                       }
-                                   },
-                                   yAxis: {
-                                	   type:'value',
-                                       axisTick: {
-                                           show: false
-                                       }
-                                   },
-                                   legend: {
-                                       data: ['累计人数']
-                                   },
-                                   series: [{
-                                       name: '累计人数', 
-                                       smooth: true,
-                                       type: 'line',
-                                       data: seriesData,
-                                       animationDuration: 2800,
-                                       animationEasing: 'cubicInOut'
-                                   }]
-                               });
-                           }else if(index==3){
-                        	   var xAxisData=Array();//x轴数据
-                        	   var seriesData1=Array();//图文页阅读人数
-                        	   var seriesData2=Array();//图文页阅读次数
-                        	   var seriesData3=Array();//收藏人数
-                        	   var seriesData4=Array();//收藏次数
-                        	   if(result.data.list.length>0){
-                        		   $.each(result.data.list, function (i, el) {
-                        			   console.log(el)
-                        			   xAxisData.push(el.ref_date);
-                         			   seriesData1.push(el.int_page_read_user);
-                         			   seriesData2.push(el.int_page_read_count);
-                         			   seriesData3.push(el.add_to_fav_user);
-                         			 	seriesData4.push(el.add_to_fav_count);
-                                   });
-                        	   }
-                        	   chart3.setOption({
-                               	title : {
-                               	    text: '图文统计数据'
-                               	},
-                                   xAxis: {
-                                       data: xAxisData,
-                                       boundaryGap: false,
-                                       axisTick: {
-                                           show: false
-                                       }
-                                   },
-                                   grid: {
-                                       left: 10,
-                                       right: 10,
-                                       bottom: 20,
-                                       top: 30,
-                                       containLabel: true
-                                   },
-                                   tooltip: {
-                                       trigger: 'axis',
-                                       axisPointer: {
-                                           type: 'cross'
-                                       },
-                                       padding: [5, 10]
-                                   },
-                                   yAxis: {
-                                       axisTick: {
-                                           show: false
-                                       }
-                                   },
-                                   legend: {
-                                       data: ['阅读人数', '阅读次数','收藏人数','收藏次数']
-                                   },
-                                   series: [{
-                                       name: '阅读人数', 
-                                       smooth: true,
-                                       type: 'line',
-                                       data: seriesData1,
-                                       animationDuration: 2800,
-                                       animationEasing: 'cubicInOut'
-                                   },{
-                                           name: '阅读次数',
-                                           smooth: true,
-                                           type: 'line',
-                                           data: seriesData2,
-                                           animationDuration: 2800,
-                                           animationEasing: 'quadraticOut'
-                                       },{
-                                           name: '收藏人数',
-                                           smooth: true,
-                                           type: 'line',
-                                           data: seriesData3,
-                                           animationDuration: 2800,
-                                           animationEasing: 'quadraticOut'
-                                       },{
-                                           name: '收藏次数',
-                                           smooth: true,
-                                           type: 'line',
-                                           data: seriesData4,
-                                           animationDuration: 2800,
-                                           animationEasing: 'quadraticOut'
-                                       }]
-                               }); 
-                        	   
-                           }else if(index==4){
-                        	   var xAxisData=Array();//x轴数据
-                        	   var seriesData1=Array();//分享人数
-                        	   var seriesData2=Array();//分享次数
-                        	   if(result.data.list.length>0){
-                        		   $.each(result.data.list, function (i, el) {
-                        			   console.log(el)
-                        			   xAxisData.push(el.ref_date);
-                         			  seriesData1.push(el.share_user);
-                         			  seriesData2.push(el.share_count);
-                                   });
-                        	   }
-                        	   chart4.setOption({
-                               	title : {
-                               	    text: '分享统计数据'
-                               	},
-                                   xAxis: {
-                                       data: xAxisData,
-                                       boundaryGap: false,
-                                       axisTick: {
-                                           show: false
-                                       }
-                                   },
-                                   grid: {
-                                       left: 10,
-                                       right: 10,
-                                       bottom: 20,
-                                       top: 30,
-                                       containLabel: true
-                                   },
-                                   tooltip: {
-                                       trigger: 'axis',
-                                       axisPointer: {
-                                           type: 'cross'
-                                       },
-                                       padding: [5, 10]
-                                   },
-                                   yAxis: {
-                                       axisTick: {
-                                           show: false
-                                       }
-                                   },
-                                   legend: {
-                                       data: ['分享人数', '分享次数']
-                                   },
-                                   series: [{
-                                       name: '分享人数', 
-                                       smooth: true,
-                                       type: 'line',
-                                       data: seriesData1,
-                                       animationDuration: 2800,
-                                       animationEasing: 'cubicInOut'
-                                   },{
-                                           name: '分享次数',
-                                           smooth: true,
-                                           type: 'line',
-                                           data: seriesData2,
-                                           animationDuration: 2800,
-                                           animationEasing: 'quadraticOut'
-                                       }]
-                               }); 
-                           }
+                            if (index == 1) {
+                                var xAxisData = Array();//x轴数据
+                                var seriesData1 = Array();//新增
+                                var seriesData2 = Array();//取消
+                                var seriesData3 = Array();//净增
+                                if (result.data.list.length > 0) {
+                                    $.each(result.data.list, function (i, el) {
+                                        xAxisData.push(el.ref_date);
+                                        seriesData1.push(el.new_user);
+                                        seriesData2.push(el.cancel_user);
+                                        var jz = (el.new_user - el.cancel_user) >= 0 ? (el.new_user - el.cancel_user) : 0
+                                        seriesData3.push(jz);
+                                    });
+                                }
+                                chart1.setOption({
+                                    title: {
+                                        text: '用户增减数据'
+                                    },
+                                    xAxis: {
+                                        data: xAxisData,
+                                        boundaryGap: false,
+                                        axisTick: {
+                                            show: false
+                                        }
+                                    },
+                                    grid: {
+                                        left: '3%',
+                                        right: '3%',
+                                        bottom: '1%',
+                                        top: '3%',
+                                        containLabel: true
+                                    },
+                                    tooltip: {
+                                        trigger: 'axis',
+                                        axisPointer: {
+                                            type: 'cross'
+                                        },
+                                        padding: [5, 10]
+                                    },
+                                    yAxis: {
+                                        axisTick: {
+                                            show: false
+                                        }
+                                    },
+                                    legend: {
+                                        data: ['新增关注', '取消关注', '净增人数']
+                                    },
+                                    series: [{
+                                        name: '新增关注',
+                                        smooth: true,
+                                        type: 'line',
+                                        data: seriesData1,
+                                        animationDuration: 2800,
+                                        animationEasing: 'cubicInOut'
+                                    }, {
+                                        name: '取消关注',
+                                        smooth: true,
+                                        type: 'line',
+                                        data: seriesData2,
+                                        animationDuration: 2800,
+                                        animationEasing: 'quadraticOut'
+                                    }, {
+                                        name: '净增人数',
+                                        smooth: true,
+                                        type: 'line',
+                                        data: seriesData3,
+                                        animationDuration: 2800,
+                                        animationEasing: 'quadraticOut'
+                                    }]
+                                });
+                            } else if (index == 2) {
+                                var xAxisData = Array();//x轴数据
+                                var seriesData = Array();//新增
+                                if (result.data.list.length > 0) {
+                                    $.each(result.data.list, function (i, el) {
+                                        xAxisData.push(el.ref_date);
+                                        seriesData.push(el.cumulate_user);
+                                    });
+                                }
+                                chart2.setOption({
+                                    title: {
+                                        text: '累计关注数'
+                                    },
+                                    xAxis: {
+                                        type: 'category',
+                                        data: xAxisData,
+                                        boundaryGap: false,
+                                        axisTick: {
+                                            show: false
+                                        }
+                                    },
+                                    yAxis: {
+                                        type: 'value',
+                                        axisTick: {
+                                            show: false
+                                        }
+                                    },
+                                    legend: {
+                                        data: ['累计人数']
+                                    },
+                                    series: [{
+                                        name: '累计人数',
+                                        smooth: true,
+                                        type: 'line',
+                                        data: seriesData,
+                                        animationDuration: 2800,
+                                        animationEasing: 'cubicInOut'
+                                    }]
+                                });
+                            } else if (index == 3) {
+                                var xAxisData = Array();//x轴数据
+                                var seriesData1 = Array();//图文页阅读人数
+                                var seriesData2 = Array();//图文页阅读次数
+                                var seriesData3 = Array();//收藏人数
+                                var seriesData4 = Array();//收藏次数
+                                if (result.data.list.length > 0) {
+                                    $.each(result.data.list, function (i, el) {
+                                        xAxisData.push(el.ref_date);
+                                        seriesData1.push(el.int_page_read_user);
+                                        seriesData2.push(el.int_page_read_count);
+                                        seriesData3.push(el.add_to_fav_user);
+                                        seriesData4.push(el.add_to_fav_count);
+                                    });
+                                }
+                                chart3.setOption({
+                                    title: {
+                                        text: '图文统计数据'
+                                    },
+                                    xAxis: {
+                                        data: xAxisData,
+                                        boundaryGap: false,
+                                        axisTick: {
+                                            show: false
+                                        }
+                                    },
+                                    grid: {
+                                        left: 10,
+                                        right: 10,
+                                        bottom: 20,
+                                        top: 30,
+                                        containLabel: true
+                                    },
+                                    tooltip: {
+                                        trigger: 'axis',
+                                        axisPointer: {
+                                            type: 'cross'
+                                        },
+                                        padding: [5, 10]
+                                    },
+                                    yAxis: {
+                                        axisTick: {
+                                            show: false
+                                        }
+                                    },
+                                    legend: {
+                                        data: ['阅读人数', '阅读次数', '收藏人数', '收藏次数']
+                                    },
+                                    series: [{
+                                        name: '阅读人数',
+                                        smooth: true,
+                                        type: 'line',
+                                        data: seriesData1,
+                                        animationDuration: 2800,
+                                        animationEasing: 'cubicInOut'
+                                    }, {
+                                        name: '阅读次数',
+                                        smooth: true,
+                                        type: 'line',
+                                        data: seriesData2,
+                                        animationDuration: 2800,
+                                        animationEasing: 'quadraticOut'
+                                    }, {
+                                        name: '收藏人数',
+                                        smooth: true,
+                                        type: 'line',
+                                        data: seriesData3,
+                                        animationDuration: 2800,
+                                        animationEasing: 'quadraticOut'
+                                    }, {
+                                        name: '收藏次数',
+                                        smooth: true,
+                                        type: 'line',
+                                        data: seriesData4,
+                                        animationDuration: 2800,
+                                        animationEasing: 'quadraticOut'
+                                    }]
+                                });
+
+                            } else if (index == 4) {
+                                var xAxisData = Array();//x轴数据
+                                var seriesData1 = Array();//分享人数
+                                var seriesData2 = Array();//分享次数
+                                if (result.data.list.length > 0) {
+                                    $.each(result.data.list, function (i, el) {
+                                        xAxisData.push(el.ref_date);
+                                        seriesData1.push(el.share_user);
+                                        seriesData2.push(el.share_count);
+                                    });
+                                }
+                                chart4.setOption({
+                                    title: {
+                                        text: '分享统计数据'
+                                    },
+                                    xAxis: {
+                                        data: xAxisData,
+                                        boundaryGap: false,
+                                        axisTick: {
+                                            show: false
+                                        }
+                                    },
+                                    grid: {
+                                        left: 10,
+                                        right: 10,
+                                        bottom: 20,
+                                        top: 30,
+                                        containLabel: true
+                                    },
+                                    tooltip: {
+                                        trigger: 'axis',
+                                        axisPointer: {
+                                            type: 'cross'
+                                        },
+                                        padding: [5, 10]
+                                    },
+                                    yAxis: {
+                                        axisTick: {
+                                            show: false
+                                        }
+                                    },
+                                    legend: {
+                                        data: ['分享人数', '分享次数']
+                                    },
+                                    series: [{
+                                        name: '分享人数',
+                                        smooth: true,
+                                        type: 'line',
+                                        data: seriesData1,
+                                        animationDuration: 2800,
+                                        animationEasing: 'cubicInOut'
+                                    }, {
+                                        name: '分享次数',
+                                        smooth: true,
+                                        type: 'line',
+                                        data: seriesData2,
+                                        animationDuration: 2800,
+                                        animationEasing: 'quadraticOut'
+                                    }]
+                                });
+                            }
                         } else {
                             layer.msg(result.msg);
                         }
                     }
                 })
-        	}else{
-        		layer.msg("时间区间数据为空！！！");
-        	}
-        	 
+            } else {
+                layer.msg("时间区间数据为空！！！");
+            }
+
         }
-        
+
         $(".card-panel-num").each(function () {
-            var $this=$(this);
-            var num=parseFloat($this.text()) || 0;
-            var now=0,step=parseInt(num/60);
-            var i=setInterval(function () {
-                if(now<num){
+            var $this = $(this);
+            var num = parseFloat($this.text()) || 0;
+            var now = 0, step = parseInt(num / 60);
+            var i = setInterval(function () {
+                if (now < num) {
                     $this.text(now);
-                }else{
+                } else {
                     $this.text(num);
                     clearInterval(i);
                 }
-                now+=step;
-            },20);
+                now += step;
+            }, 20);
         });
 
         var tableObj = table.render({
@@ -491,162 +441,8 @@
                 }, unresize: true, align: 'center'
                 }
             ]],
-            page:false
+            page: false
         });
-
-		
-            // 雷达图
-            var chart21= echarts.init($("#chart21")[0], 'macarons');
-            chart21.setOption({
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: { // 坐标轴指示器，坐标轴触发有效
-                        type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-                    }
-                },
-                radar: {
-                    radius: '66%',
-                    center: ['50%', '42%'],
-                    splitNumber: 8,
-                    splitArea: {
-                        areaStyle: {
-                            color: 'rgba(127,95,132,.3)',
-                            opacity: 1,
-                            shadowBlur: 45,
-                            shadowColor: 'rgba(0,0,0,.5)',
-                            shadowOffsetX: 0,
-                            shadowOffsetY: 15
-                        }
-                    },
-                    indicator: [
-                        { name: 'Sales', max: 10000 },
-                        { name: 'Administration', max: 20000 },
-                        { name: 'Information Techology', max: 20000 },
-                        { name: 'Customer Support', max: 20000 },
-                        { name: 'Development', max: 20000 },
-                        { name: 'Marketing', max: 20000 }
-                    ]
-                },
-                legend: {
-                    left: 'center',
-                    bottom: '10',
-                    data: ['Allocated Budget', 'Expected Spending', 'Actual Spending']
-                },
-                series: [{
-                    type: 'radar',
-                    symbolSize: 0,
-                    areaStyle: {
-                        normal: {
-                            shadowBlur: 13,
-                            shadowColor: 'rgba(0,0,0,.2)',
-                            shadowOffsetX: 0,
-                            shadowOffsetY: 10,
-                            opacity: 1
-                        }
-                    },
-                    data: [
-                        {
-                            value: [5000, 7000, 12000, 11000, 15000, 14000],
-                            name: 'Allocated Budget'
-                        },
-                        {
-                            value: [4000, 9000, 15000, 15000, 13000, 11000],
-                            name: 'Expected Spending'
-                        },
-                        {
-                            value: [5500, 11000, 12000, 15000, 12000, 12000],
-                            name: 'Actual Spending'
-                        }
-                    ],
-                    animationDuration: 3000
-                }]
-            });
-
-            //饼图
-            var chart31= echarts.init($("#chart31")[0], 'macarons');
-            chart31.setOption({
-                tooltip: {
-                    trigger: 'item',
-                    formatter: '{a} <br/>{b} : {c} ({d}%)'
-                },
-                legend: {
-                    left: 'center',
-                    bottom: '10',
-                    data: ['Industries', 'Technology', 'Forex', 'Gold', 'Forecasts']
-                },
-                calculable: true,
-                series: [
-                    {
-                        name: 'WEEKLY WRITE ARTICLES',
-                        type: 'pie',
-                        roseType: 'radius',
-                        radius: [15, 95],
-                        center: ['50%', '38%'],
-                        data: [
-                            { value: 320, name: 'Industries' },
-                            { value: 240, name: 'Technology' },
-                            { value: 149, name: 'Forex' },
-                            { value: 100, name: 'Gold' },
-                            { value: 59, name: 'Forecasts' }
-                        ],
-                        animationEasing: 'cubicInOut',
-                        animationDuration: 2600
-                    }
-                ]
-            });
-
-            // 柱状图
-            var chart41= echarts.init($("#chart41")[0], 'macarons');
-            chart41.setOption({
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: { // 坐标轴指示器，坐标轴触发有效
-                        type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-                    }
-                },
-                grid: {
-                    top: 10,
-                    left: '2%',
-                    right: '2%',
-                    bottom: '3%',
-                    containLabel: true
-                },
-                xAxis: [{
-                    type: 'category',
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    axisTick: {
-                        alignWithLabel: true
-                    }
-                }],
-                yAxis: [{
-                    type: 'value',
-                    axisTick: {
-                        show: false
-                    }
-                }],
-                series: [{
-                    name: 'pageA',
-                    type: 'bar',
-                    stack: 'vistors',
-                    barWidth: '60%',
-                    data: [79, 52, 200, 334, 390, 330, 220],
-                    animationDuration:6000
-                }, {
-                    name: 'pageB',
-                    type: 'bar',
-                    stack: 'vistors',
-                    barWidth: '60%',
-                    data: [80, 52, 200, 334, 390, 330, 220],
-                    animationDuration:6000
-                }, {
-                    name: 'pageC',
-                    type: 'bar',
-                    stack: 'vistors',
-                    barWidth: '60%',
-                    data: [30, 52, 200, 334, 390, 330, 220],
-                    animationDuration:6000
-                }]
-            });
     })
 </script>
 

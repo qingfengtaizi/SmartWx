@@ -31,7 +31,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.wxmp.core.common.EchartsData;
+import com.wxmp.core.common.Series;
 import com.wxmp.core.exception.WxErrorException;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -724,7 +727,6 @@ public class WxApiCtrl extends BaseCtrl{
 	@RequestMapping(value = "/dataCube")
 	@ResponseBody
 	public AjaxResult dataCube(String type,String start,String end) throws WxErrorException  {
-		
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		String accessToken = WxApiClient.getAccessToken(mpAccount);
 		JSONObject result = WxApi.forDataCube(accessToken, type, start, end);
