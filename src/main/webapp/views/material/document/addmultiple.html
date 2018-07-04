@@ -93,7 +93,15 @@
             uploadImage: {
                 url: '/managerImg/uploadFile',
                 type: 'post'
-            }
+            },
+            uploadVideo: {
+                url: '/views/test/upvideo.json',
+                type: 'post'
+            },
+            uploadAudio: {
+                url: '/views/test/upaudio.json',
+                type: 'post'
+            },
         });
         var layeditIndex = layedit.build('content'); //建立编辑器
         window.listData = [{t: 1}];
@@ -278,7 +286,7 @@
                     form.render();
                     layeditIndex = layedit.build('content');
 
-                    $(".wxmp-doclist div[data-t=" + t + "]").addClass("active").siblings(".active").removeClass("active")
+                    $(".wxmp-doclist div[data-t=" + t + "]").addClass("active").siblings(".active").removeClass("active");;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                     $("#add_form").attr("data-t", t);
                     return false;
                 }

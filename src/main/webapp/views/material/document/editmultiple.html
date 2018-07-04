@@ -83,12 +83,19 @@
     layui.use('layedit', function () {
         var layedit = layui.layedit;
         var form = layui.form;
-        // 设置富文本上传接口
         layedit.set({
             uploadImage: {
                 url: '/managerImg/uploadFile',
                 type: 'post'
-            }
+            },
+            uploadVideo: {
+                url: '/views/test/upvideo.json',
+                type: 'post'
+            },
+            uploadAudio: {
+                url: '/views/test/upaudio.json',
+                type: 'post'
+            },
         });
         var layeditIndex=layedit.build('content'); //建立编辑器
         var upload = layui.upload;
@@ -316,7 +323,7 @@
                     form.render();
                     layeditIndex = layedit.build('content');
 
-                    $(".wxmp-doclist div[data-t=" + t + "]").addClass("active").siblings(".active").removeClass("active")
+                    $(".wxmp-doclist div[data-t=" + t + "]").addClass("active").siblings(".active").removeClass("active");;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                     $("#add_form").attr("data-t", t);
                     return false;
                 }

@@ -81,6 +81,8 @@
         </div>
     </div>
 </div>
+<video src="/views/test/upvideo.json"></video>
+<audio src="/views/test/upaudio.json"></audio>
 <script>
     layui.use(['layedit', "upload", "form"], function () {
         var layedit = layui.layedit;
@@ -92,7 +94,15 @@
             uploadImage: {
                 url: '/managerImg/uploadFile',
                 type: 'post'
-            }
+            },
+            uploadVideo: {
+                url: '/views/test/upvideo.json',
+                type: 'post'
+            },
+            uploadAudio: {
+                url: '/views/test/upaudio.json',
+                type: 'post'
+            },
         });
         var layeditIndex = layedit.build('content');
         var id=getHashParam().id;
