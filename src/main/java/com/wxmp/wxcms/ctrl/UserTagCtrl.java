@@ -29,8 +29,6 @@ import com.wxmp.wxcms.domain.UserTag;
 import com.wxmp.wxcms.service.AccountFansService;
 import com.wxmp.wxcms.service.UserTagService;
 
-
-
 /**
  *
  * @author fuziKong
@@ -78,25 +76,7 @@ public class UserTagCtrl extends BaseCtrl {
 		result.setMsg("没有数据");
 		return result;
 	}
-	
-	
-	/**
-	 * 同步用户标签列表
-	 * @return
-	 */
-	@RequestMapping(value = "/syncUserTagList")
-	@ResponseBody
-	public AjaxResult syncUserTagList(){
-		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
-		if(mpAccount != null){
-			boolean flag = entityService.syncUserTagList(mpAccount);
-			if(flag){
-				return AjaxResult.success();
-			}
-		}
-		return AjaxResult.failure();
-	}
-	
+
 	/**
 	 * 根据Id查询用户标签
 	 * @param id

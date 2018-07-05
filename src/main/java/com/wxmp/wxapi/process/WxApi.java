@@ -624,13 +624,14 @@ public class WxApi {
 
     /**
      * 新增图文永久素材
+     * 
      * @param materialUri
      * @param filePath
      * @return
      * @throws Exception
      */
-    public static JSONObject addMaterial(String materialUri, String filePath) throws Exception {
-        String result = null;
+    public static JSONObject addMaterial(String materialUri, String filePath)
+        throws Exception {
         File file = new File(filePath);
         if (!file.exists() || !file.isFile()) {
             try {
@@ -639,76 +640,13 @@ public class WxApi {
                 e.printStackTrace();
             }
         }
-        /**
-        * 第一部分
-        */
-        URL urlObj = new URL(materialUri);
-        HttpURLConnection con = (HttpURLConnection) urlObj.openConnection();
-        con.setRequestMethod("POST"); // 以Post方式提交表单，默认get方式
-        con.setDoInput(true);
-        con.setDoOutput(true);
-        con.setUseCaches(false); // post方式不能使用缓存
-        // 设置请求头信息
-        con.setRequestProperty("Connection", "Keep-Alive");
-        con.setRequestProperty("Charset", "UTF-8");
-        // 设置边界
-        String BOUNDARY = "----------" + System.currentTimeMillis();
-        con.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
-        // 请求正文信息
-        // 第一部分：
-        StringBuilder sb = new StringBuilder();
-        sb.append("--"); // 必须多两道线
-        sb.append(BOUNDARY);
-        sb.append("\r\n");
-        sb.append("Content-Disposition: form-data;name=\"media\";filename=\"" + file.getName() + "\"\r\n");
-        sb.append("Content-Type:application/octet-stream\r\n\r\n");
-        byte[] head = sb.toString().getBytes("utf-8");
-        // 获得输出流
-        OutputStream out = new DataOutputStream(con.getOutputStream());
-        // 输出表头
-        out.write(head);
-        // 文件正文部分
-        // 把文件已流文件的方式 推入到url中
-        DataInputStream in = new DataInputStream(new FileInputStream(file));
-        int bytes = 0;
-        byte[] bufferOut = new byte[1024];
-        while ((bytes = in.read(bufferOut)) != -1) {
-            out.write(bufferOut, 0, bytes);
+        String result = HttpClientUtils.sendHttpPost(materialUri, file);
+        WxError wxError = WxError.fromJson(result);
+        if (wxError.getErrorCode() != 0) {
+            throw new WxErrorException(wxError);
         }
-        in.close();
-        // 结尾部分
-        byte[] foot = ("\r\n--" + BOUNDARY + "--\r\n").getBytes("utf-8");// 定义最后数据分隔线
-        out.write(foot);
-        out.flush();
-        out.close();
-        StringBuffer buffer = new StringBuffer();
-        BufferedReader reader = null;
-        try {
-            // 定义BufferedReader输入流来读取URL的响应
-            reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line);
-            }
-            if (result == null) {
-                result = buffer.toString();
-            }
-            JSONObject jsonObject = JSONObject.parseObject(result.toString());
-
-            if (jsonObject != null) {
-                return jsonObject;
-            }
-        } catch (IOException e) {
-            System.out.println("发送POST请求出现异常！" + e);
-            e.printStackTrace();
-            throw new IOException("数据读取异常");
-        } finally {
-            if (reader != null) {
-                reader.close();
-            }
-        }
-
-        return null;
+        
+        return JSONObject.parseObject(result);
     }
     /**
      *  永久素材添加-不包含图文
@@ -989,140 +927,6 @@ public class WxApi {
     	
     	return forDataCube(accessToken, "getusersharehour", start, end);
     }
-    
-    /**
-     * 构造微信JSSDK支付参数，返回到页面
-     */
-    public static Map<String, String> getWSJSPayPara(String openId, String appId, String appsecret, String partnerkey,
-                                                     String mch_id, String body, String outTradeNo, String payMoney, String notify_url, String trade_type,
-                                                     String str_timestamp, String str_nonceStr) {
-        // 支付金额
-        float sessionmoney = Float.parseFloat(payMoney);
-        payMoney = String.format("%.2f", sessionmoney);
-        payMoney = payMoney.replace(".", "");
-
-        System.out.println("微信端充值金额：=======" + payMoney);
-        String nonce_str = str_nonceStr; // 签名用的noncestr和timestamp必须与wx.config中的nonceStr和timestamp相同。
-        // 订单生成的机器 IP
-        String spbill_create_ip = "123.57.243.49";
-
-        System.out.println("ip地址：=============" + spbill_create_ip);
-
-        long currentTime = System.currentTimeMillis() + 0 * 60 * 1000;
-        String strCurrentTime = com.wxmp.core.util.wx.TenpayUtil2.getWXTime(currentTime);
-        long currentTimeLay30m = currentTime + 30 * 60 * 1000;// 30分钟后 【要求至少5分钟过期】
-        String strCurrentTimeLay30m = com.wxmp.core.util.wx.TenpayUtil2.getWXTime(currentTimeLay30m);
-        // 订 单 生 成 时 间 非必输
-        String time_start = strCurrentTime;
-        // 订单失效时间 非必输
-        String time_expire = strCurrentTimeLay30m;
-
-        SortedMap<String, String> packageParams = new TreeMap<String, String>();
-        packageParams.put("appid", appId);
-        packageParams.put("mch_id", mch_id);
-        packageParams.put("device_info", "WEB");// PC网页或公众号内支付请传"WEB"
-        packageParams.put("body", body);
-        packageParams.put("openid", openId); // jssdk模式时这个必填
-        packageParams.put("nonce_str", nonce_str);
-        packageParams.put("out_trade_no", outTradeNo);
-        packageParams.put("total_fee", payMoney);
-        packageParams.put("spbill_create_ip", spbill_create_ip);
-        packageParams.put("notify_url", notify_url);
-        packageParams.put("trade_type", trade_type);
-
-        com.wxmp.core.util.wx.RequestHandler reqHandler = new com.wxmp.core.util.wx.RequestHandler(null, null);
-        reqHandler.init(appId, appsecret, partnerkey);
-
-        // ##生成加密签名，此签名用于统一订单接口
-        String sign = reqHandler.createSign(packageParams);
-        String xml = "<xml>" + "<openid>" + openId + "</openid>" + "<appid>" + appId + "</appid>" + "<mch_id>" + mch_id
-                + "</mch_id>" + "<device_info>" + "WEB" + "</device_info>" + "<nonce_str>" + nonce_str + "</nonce_str>"
-                + "<body><![CDATA[" + body + "]]></body>" + "<out_trade_no>" + outTradeNo + "</out_trade_no>"
-                + "<total_fee>" + payMoney + "</total_fee>" + "<spbill_create_ip>" + spbill_create_ip
-                + "</spbill_create_ip>" + "<notify_url>" + notify_url + "</notify_url>" + "<trade_type>" + trade_type
-                + "</trade_type>" + "<sign>" + sign + "</sign>" + "</xml>";
-
-        System.out.println("手机端外部订单号：out_trade_no" + outTradeNo);
-        System.out.println("======================================：");
-        System.out.println("手机端统一订单接口传参：" + xml);
-
-        Map<String, String> dataMap = new HashMap<String, String>();
-        String createOrderURL = getUnifiedOrderUrl();
-        String prepay_id = "";
-        String errMsg = "";
-        String timestamp = String.valueOf(System.currentTimeMillis() / 1000);
-        String nonceStr = Identities.getRandomString(8);
-        // #######jssdk config配置时已设置，从前台传过来######
-        timestamp = str_timestamp;
-        nonceStr = str_nonceStr;// nonce_str:下统一订单时的随机字符串，此时这三个随机变量完全相等
-        String paySign = "";
-
-        try {
-            String retXmlStr = httpsRequestByXml(createOrderURL, HttpMethod.POST, xml);
-            System.out.println("手机端统一订单接口结果:" + retXmlStr);
-            if (null != retXmlStr && retXmlStr.contains("return_code")) {
-                Map map = com.wxmp.core.util.wx.TenpayUtil2.doXMLParseByDom4j(retXmlStr);
-                String return_code = (String) map.get("return_code");
-                if ("SUCCESS".equals(return_code)) {
-                    String result_code = (String) map.get("result_code");
-                    if ("SUCCESS".equals(result_code)) {
-                        prepay_id = (String) map.get("prepay_id");
-                        errMsg = "0";
-                    } else {
-                        prepay_id = "";
-                        errMsg = (String) map.get("err_code_des");
-                    }
-                } else {
-                    prepay_id = "";
-                    errMsg = (String) map.get("return_msg");
-                }
-
-                // ###生成支付签名,此签名 给 微信支付的调用使用（前台页面使用）
-                SortedMap<String, String> packageParams_paySign = new TreeMap<String, String>();
-                packageParams_paySign.put("appId", appId);
-                packageParams_paySign.put("timeStamp", timestamp);// 后台生成签名时是大写的timeStamp
-                packageParams_paySign.put("nonceStr", nonceStr);// 签名用的noncestr和timestamp必须与wx.config中的nonceStr和timestamp相同。
-                packageParams_paySign.put("package", "prepay_id=" + prepay_id);
-                packageParams_paySign.put("signType", "MD5");
-                com.wxmp.core.util.wx.RequestHandler reqHandler_paySign = new com.wxmp.core.util.wx.RequestHandler(null,
-                        null);
-                reqHandler_paySign.init(appId, appsecret, partnerkey);
-                paySign = reqHandler_paySign.createSign(packageParams_paySign);
-
-                /**
-                 * 最后别忘记一定要设置：微信支付授权目录设置
-                 * 微信支付授权目录设置
-                 注意这里所指的是目录，所以一定要以左斜杠“/”结尾，不是设置支付的url网址
-                 例如设置的是：http://www.newfms.com/order/pay/
-                 那么真正支付url是
-                 http://www.newfms.com/order/pay/
-                 http://www.newfms.com/order/pay/1
-                 如果是这样的支付url就会报错：http://www.newfms.com/order/pay
-                 */
-
-            } else {
-                System.out.println("统一支付接口出错");
-                prepay_id = "";
-                errMsg = "统一支付接口出错";
-            }
-        } catch (Exception e1) {
-            System.out.println("系统异常\n" + e1.getMessage());
-            prepay_id = "";
-            errMsg = "系统异常\n" + e1.getMessage();
-        } // try-catch end
-
-        // ###返回给 微信支付的调用使用（前台页面使用）
-        dataMap.put("appid", appId);
-        dataMap.put("timestamp", timestamp);// 前台页面调用jssdk支付时是小写的timestamp
-        dataMap.put("nonceStr", nonceStr);
-        dataMap.put("package", "prepay_id=" + prepay_id);
-        dataMap.put("signType", "MD5");
-        dataMap.put("paySign", paySign);
-        dataMap.put("errMsg", errMsg);
-
-        return dataMap;
-    }
-
     // 发送请求
     public static JSONObject httpsRequest(String requestUrl, String requestMethod) {
         return httpsRequest(requestUrl, requestMethod, null);

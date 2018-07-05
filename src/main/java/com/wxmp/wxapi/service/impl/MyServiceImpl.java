@@ -19,11 +19,15 @@
 package com.wxmp.wxapi.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import com.wxmp.core.exception.WxErrorException;
+import com.wxmp.wxcms.domain.*;
+import com.wxmp.wxcms.mapper.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -43,16 +47,6 @@ import com.wxmp.wxapi.process.WxMessageBuilder;
 import com.wxmp.wxapi.service.MyService;
 import com.wxmp.wxapi.vo.Matchrule;
 import com.wxmp.wxapi.vo.MsgRequest;
-import com.wxmp.wxcms.domain.AccountFans;
-import com.wxmp.wxcms.domain.AccountMenu;
-import com.wxmp.wxcms.domain.MsgBase;
-import com.wxmp.wxcms.domain.MsgNews;
-import com.wxmp.wxcms.domain.MsgText;
-import com.wxmp.wxcms.mapper.AccountFansDao;
-import com.wxmp.wxcms.mapper.AccountMenuDao;
-import com.wxmp.wxcms.mapper.AccountMenuGroupDao;
-import com.wxmp.wxcms.mapper.MsgBaseDao;
-import com.wxmp.wxcms.mapper.MsgNewsDao;
 
 /**
  * 业务消息处理
@@ -76,6 +70,9 @@ public class MyServiceImpl implements MyService {
 
     @Resource
     private AccountFansDao fansDao;
+
+    @Resource
+    private UserTagDao userTagDao;
 
     private Logger logger = Logger.getLogger(MyServiceImpl.class);
 
@@ -292,5 +289,47 @@ public class MyServiceImpl implements MyService {
             }
         }
         return fans;
+    }
+
+    //同步粉丝列表
+    public boolean syncUserTagList(MpAccount mpAccount) throws WxErrorException {
+        String url=null;
+        try {
+            url = WxApi.getUserTagList(WxApiClient.getAccessToken(mpAccount));
+        } catch (WxErrorException e) {
+            e.printStackTrace();
+        }
+        logger.info("同步用户标签参消息如下:"+url);
+        JSONObject jsonObject = WxApi.httpsRequest(url, HttpMethod.GET, null);
+        logger.info("同步用户标签消息如下:"+jsonObject.toString());
+        if(jsonObject.containsKey("errcode")){
+            return false;
+        }
+        JSONArray arr = jsonObject.getJSONArray("tags");//获取jsonArray对象
+        String js=JSONObject.toJSONString(arr);//将array数组转换成字符串
+        List<UserTag> userTagList=JSONObject.parseArray(js, UserTag.class);//把字符串转换成集合
+        //判断是否已经同步
+        Collections.sort(userTagList, new Comparator<UserTag>() {
+            @Override
+            public int compare(UserTag o1, UserTag o2) {
+                return o2.getId().compareTo(o1.getId());
+            }
+        });
+        UserTag userTag = userTagList.get(0);
+        Integer maxIdInDb = userTagDao.getMaxId() == null ?  0 : userTagDao.getMaxId();//第一次同步，数据库没有数据返回null
+        if (null == userTag.getId() || userTag.getId().intValue() == maxIdInDb.intValue()) {
+            //说明已经同步
+            return true;
+        }else if( userTag.getId() > maxIdInDb ){
+            //如果微信服务器新增用户标签，同步新增标签，新增标签的ID比本地库的ID大
+            for (UserTag tag: userTagList) {
+                if(tag.getId()<=maxIdInDb){
+                    userTagList.remove(tag);
+                }
+            }
+            userTagDao.addList(userTagList);
+            return true;
+        }
+        return true;
     }
 }

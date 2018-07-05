@@ -259,6 +259,18 @@ public class HttpClientUtils {
      *            地址
      * @param file
      *            附件,名称和File对应
+     */
+    public static String sendHttpPost(String httpUrl, File file) {
+        return sendHttpPost(httpUrl,  ImmutableMap.of( "media", file), null, null);
+    }
+
+    /**
+     * 发送 post请求（带文件）
+     *
+     * @param httpUrl
+     *            地址
+     * @param file
+     *            附件,名称和File对应
      * @param maps
      *            参数
      */

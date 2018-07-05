@@ -46,5 +46,7 @@ public interface MyService {
 	
 	//根据openid 获取粉丝，如果没有，同步粉丝
 	public AccountFans getFansByOpenId(String openid,MpAccount mpAccount) throws WxErrorException ;
-	
+
+	//同步服务器的用户标签
+	public boolean syncUserTagList(MpAccount mpAccount)throws WxErrorException ;
 }

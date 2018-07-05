@@ -20,7 +20,6 @@ package com.wxmp.wxcms.ctrl;
 
 import static com.wxmp.core.util.DateUtilOld.COMMON_FULL;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -38,7 +37,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.gson.JsonParseException;
 import com.wxmp.core.common.BaseCtrl;
 import com.wxmp.core.spring.SpringFreemarkerContextPathUtil;
 import com.wxmp.core.util.AjaxResult;
@@ -63,7 +61,7 @@ import com.wxmp.wxcms.service.MsgNewsService;
 public class MsgNewsCtrl extends BaseCtrl {
 
     @Autowired
-    private MsgNewsService entityService;
+    private MsgNewsService msgNewsService;
 
     @Autowired
     private MsgArticleService articleService;
@@ -71,13 +69,13 @@ public class MsgNewsCtrl extends BaseCtrl {
     @RequestMapping(value = "/detail")
     @ResponseBody
     public AjaxResult getById(String id) {
-        return AjaxResult.success(entityService.getById(id));
+        return AjaxResult.success(msgNewsService.getById(id));
     }
 
     @RequestMapping(value = "/list")
     @ResponseBody
     public AjaxResult list(MsgNews searchEntity) {
-        List<MsgNews> pageList = entityService.getWebNewsListByPage(searchEntity);
+        List<MsgNews> pageList = msgNewsService.getWebNewsListByPage(searchEntity);
         return getResult(searchEntity, pageList);
     }
 
@@ -91,7 +89,7 @@ public class MsgNewsCtrl extends BaseCtrl {
     @ResponseBody
     public String sendNewsMaterial(String newsId, HttpServletRequest request) throws Exception {
         String code = "";
-        MsgNews msgNews = entityService.getById(newsId);
+        MsgNews msgNews = msgNewsService.getById(newsId);
         List<MsgNews> msgNewsList = new ArrayList<MsgNews>();
         msgNewsList.add(msgNews);
         MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();// 获取缓存中的唯一账号
@@ -115,7 +113,7 @@ public class MsgNewsCtrl extends BaseCtrl {
                 MsgNews entity = new MsgNews();
                 entity.setId(Long.valueOf(newsId));
                 entity.setMediaId(newsMediaId);
-                entityService.updateMediaId(entity);
+                msgNewsService.updateMediaId(entity);
                 code = "1";
             } else {
                 code = newsResultObj.toString();
@@ -137,13 +135,14 @@ public class MsgNewsCtrl extends BaseCtrl {
      */
     @RequestMapping(value = "/addSingleNews", method = RequestMethod.POST)
     @ResponseBody
-    public AjaxResult addSingleNews(MsgNews msgNews, HttpServletRequest request) throws Exception {
-
+    public AjaxResult addSingleNews(MsgNews msgNews, HttpServletRequest request)
+        throws Exception {
+        
         String filePath = request.getSession().getServletContext().getRealPath("/");
-
+        
         String description = msgNews.getDescription();
         String description2 = msgNews.getDescription();
-
+        
         description = description.replaceAll("'", "\"");
         // 去多个img的src值
         String subFilePath = "";
@@ -151,7 +150,7 @@ public class MsgNewsCtrl extends BaseCtrl {
         if (description.contains("img")) {
             Pattern p = Pattern.compile("<img[^>]+src\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>");
             Matcher m = p.matcher(description);
-
+            
             while (m.find()) {
                 String imgSrc = m.group(1);
                 subOldFilePath += imgSrc + ",";
@@ -163,55 +162,50 @@ public class MsgNewsCtrl extends BaseCtrl {
         }
         MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();// 获取缓存中的唯一账号
         if (StringUtils.isNotBlank(subFilePath)) {
-
+            
             subFilePath = subFilePath.substring(0, subFilePath.length() - 1);
             subOldFilePath = subOldFilePath.substring(0, subOldFilePath.length() - 1);
-
+            
             // 本地图片地址
             String[] imgPathArry = subFilePath.split(",");
             String[] imgOldPathArry = subOldFilePath.split(",");
-
+            
             String[] newPathArry = new String[imgPathArry.length];
             for (int i = 0; i < imgPathArry.length; i++) {
                 String newFilePath = imgPathArry[i];
-                // 添加永久图片
-                String materialType = MediaType.Image.toString();
                 // 将图片上传到微信，返回url
                 JSONObject imgResultObj = WxApiClient.uploadMaterialImg(newFilePath, mpAccount);
-
                 // 上传图片的id
                 // String contentImgMediaId = "";
                 String contentContentUrl = "";
                 if (imgResultObj != null && imgResultObj.containsKey("url")) {
-                    // 微信返回来的媒体素材id
-                    // contentImgMediaId = imgResultObj.getString("media_id");
                     // 图片url
                     contentContentUrl = imgResultObj.getString("url");
                 }
                 newPathArry[i] = contentContentUrl;
             }
-
+            
             for (int i = 0; i < imgPathArry.length; i++) {
                 description = description.replace(imgOldPathArry[i], newPathArry[i]);
             }
         }
-
+        
         // 内容保存
         msgNews.setDescription(description);
-
+        
         List<MsgNews> msgNewsList = new ArrayList<MsgNews>();
         msgNewsList.add(msgNews);
         // 封面图片媒体id
         String imgMediaId = msgNews.getThumbMediaId();
-
+        
         JSONObject resultObj = WxApiClient.addNewsMaterial(msgNewsList, imgMediaId, mpAccount);
-
+        
         if (resultObj != null && resultObj.containsKey("media_id")) {
             String newsMediaId = resultObj.getString("media_id");
             JSONObject newsResult = WxApiClient.getMaterial(newsMediaId, mpAccount);
-
+            
             JSONArray articles = newsResult.getJSONArray("news_item");
-            JSONObject article = (JSONObject) articles.get(0);
+            JSONObject article = (JSONObject)articles.get(0);
             MsgNews newsPo = new MsgNews();
             newsPo.setMultType(1);// 指定为1，代表单图文
             newsPo.setTitle(article.getString("title"));
@@ -225,15 +219,15 @@ public class MsgNewsCtrl extends BaseCtrl {
             newsPo.setMediaId(newsMediaId);
             newsPo.setThumbMediaId(imgMediaId);
             newsPo.setNewsIndex(0);
-
+            
             MediaFiles entity = new MediaFiles();
             entity.setMediaId(newsMediaId);
             entity.setMediaType("news");
             entity.setCreateTime(COMMON_FULL.getLongDate(Long.parseLong(newsResult.getString("create_time"))));
             entity.setUpdateTime(COMMON_FULL.getLongDate(Long.parseLong(newsResult.getString("update_time"))));
-
-            int resultCount = this.entityService.addSingleNews(newsPo, entity);
-
+            
+            int resultCount = this.msgNewsService.addSingleNews(newsPo, entity);
+            
             if (resultCount > 0) {
                 return AjaxResult.success();
             } else {
@@ -241,7 +235,7 @@ public class MsgNewsCtrl extends BaseCtrl {
             }
         }
         return AjaxResult.failure();
-
+        
     }
 
     /**
@@ -375,7 +369,7 @@ public class MsgNewsCtrl extends BaseCtrl {
             }
             msgNew.setArticles(listArticles);
 
-            int bl = this.entityService.addMoreNews(msgNew);
+            int bl = this.msgNewsService.addMoreNews(msgNew);
             if (bl == 1) {
                 return AjaxResult.success();
             }
@@ -392,14 +386,14 @@ public class MsgNewsCtrl extends BaseCtrl {
     @RequestMapping(value = "/deleteMaterial", method = RequestMethod.POST)
     @ResponseBody
     public AjaxResult deleteMaterial(String id) throws WxErrorException {
-        MsgNews news = entityService.getById(id);
+        MsgNews news = msgNewsService.getById(id);
         // 添加多图文永久素材
         JSONObject jsonObject = WxApiClient.deleteMaterial(news.getMediaId(), WxMemoryCacheClient.getMpAccount());
 
         if (null != jsonObject && jsonObject.containsKey("errcode") && jsonObject.getIntValue("errcode") == 0) {
 
             try {
-                this.entityService.delete(news);
+                this.msgNewsService.delete(news);
                 return AjaxResult.deleteSuccess();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -417,7 +411,7 @@ public class MsgNewsCtrl extends BaseCtrl {
     @RequestMapping(value = "/toUpdateSingleNews", method = RequestMethod.POST)
     @ResponseBody
     public AjaxResult toUpdateSingleNews(String id) {
-        MsgNews newsObj = entityService.getById(id);
+        MsgNews newsObj = msgNewsService.getById(id);
 
         return AjaxResult.success(newsObj);
     }
@@ -502,7 +496,7 @@ public class MsgNewsCtrl extends BaseCtrl {
             msgNews.setDescription(description2);
             try {
                 // 更新成功
-                this.entityService.updateSingleNews(msgNews);
+                this.msgNewsService.updateSingleNews(msgNews);
                 return AjaxResult.updateSuccess();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -521,7 +515,7 @@ public class MsgNewsCtrl extends BaseCtrl {
     @RequestMapping(value = "/toUpdateMoreNews")
     @ResponseBody
     public AjaxResult toUpdateMoreNews(String id) {
-        MsgNews newsObj = entityService.getById(id);
+        MsgNews newsObj = msgNewsService.getById(id);
         return AjaxResult.success(newsObj.getArticles());
     }
 
@@ -633,12 +627,12 @@ public class MsgNewsCtrl extends BaseCtrl {
             // 更新成功
             this.articleService.update(article);
             // 修改图文news表数据
-            MsgNews msgNews = this.entityService.getById(String.valueOf(article.getNewsId()));
+            MsgNews msgNews = this.msgNewsService.getById(String.valueOf(article.getNewsId()));
             List<MsgArticle> newArticles = msgNews.getArticles();
             if (newArticles.get(0).getArId() == article.getArId()) {
                 // 这里只修改title 为了模糊查询的时候可以查询到数据
                 msgNews.setTitle(article.getTitle());
-                this.entityService.updateMediaId(msgNews);
+                this.msgNewsService.updateMediaId(msgNews);
             }
             return AjaxResult.updateSuccess();
         } else {

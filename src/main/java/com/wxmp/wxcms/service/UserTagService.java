@@ -28,9 +28,7 @@ public interface UserTagService {
 	public void update(UserTag entity);
 
 	public void delete(UserTag entity);
-	//同步服务器的用户标签
-	public boolean syncUserTagList(MpAccount mpAccount);
-	
+
 	public Integer deleteBatchIds(String [] ids);
 	//获取数据库中用户标签的最大值，判断是否同步
 	public Integer getMaxId();

@@ -737,41 +737,4 @@ public class WxApiClient {
         }
         return rstObj;
     }
-
-    /**
-     * 构造微信JSSDK支付参数，返回到页面
-     */
-    public static Map<String, String> getWSJSPayPara(MpAccount mpAccount, String openid, String timestamp, String nonceStr) {
-        Map<String, String> dataMap = new HashMap<String, String>();
-        String openId = openid;
-        String appId = mpAccount.getAppid();
-        String appsecret = mpAccount.getAppsecret();
-        String partnerkey = "abcdefghijklmnopqrstuvwxyz123456";// 在微信商户平台pay.weixin.com里自己生成的那个key
-        String mch_id = "1317476101";
-        String body = "支付009992";
-        String out_trade_no = "20160411111101";
-        String finalmoney = "1";
-        String notify_url = "http://www.yjydt.cn/wxmp/wxapi/wxipay_noity";
-        // String notify_url="http://www.yjydt.cn/pay/wxipay_noity";
-        String trade_type = "JSAPI";// 公众号支付
-
-        dataMap = WxApi.getWSJSPayPara(openId, appId, appsecret, partnerkey, mch_id, body, out_trade_no, finalmoney, notify_url, trade_type, timestamp, nonceStr);
-        return dataMap;
-    }
-
-	public static void main(String[] args) {
-        String appid = "wx91961db8b6273777";
-        String appsecret = "7d0377b8b30d4b3df4ba46bb7febc793";
-        String mch_id = "1317476101";
-        String partnerkey = "abcdefghijklmnopqrstuvwxyz123456";// 在微信商户平台pay.weixin.com里自己生成的那个key
-        MpAccount mpAccount = new MpAccount();
-        mpAccount.setAppid(appid);
-        mpAccount.setAppsecret(appsecret);
-        
-        String openid = "otLBWs_uiGnrWBGgHEemPZTQLatE";
-        
-        String timestamp = String.valueOf(System.currentTimeMillis() / 1000);
-        String nonceStr = Identities.getRandomString(8);
-        getWSJSPayPara(mpAccount, openid, timestamp, nonceStr);
-    }
 }

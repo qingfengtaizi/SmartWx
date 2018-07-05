@@ -81,7 +81,7 @@ layui.define(['layer', 'form'], function(exports){
       ,'<div class="layui-layedit-iframe">'
         ,'<iframe id="'+ name +'" name="'+ name +'" textarea="'+ id +'" frameborder="0"></iframe>'
       ,'</div>'
-    ,'</div>'].join(''));;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ,'</div>'].join(''));
     
     //编辑器不兼容ie8以下
     if(device.ie && device.ie < 8){
@@ -90,7 +90,7 @@ layui.define(['layer', 'form'], function(exports){
 
     haveBuild[0] && (haveBuild.remove());
 
-    setIframe.call(that, editor, textArea[0], set);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    setIframe.call(that, editor, textArea[0], set);
     textArea.addClass('layui-hide').after(editor);
 
     return that.index;
@@ -510,7 +510,7 @@ layui.define(['layer', 'form'], function(exports){
       toolCheck.call(iframeWin, tools, othis);
     }
     
-    ,isClick = /image|video|audio/;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ,isClick = /image|video|audio/;
 
     tools.find('>i').on('mousedown', function(e){
       var othis = $(this)

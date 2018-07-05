@@ -6,7 +6,7 @@
                     <i class="iconfont icon-pic"></i>
                     <div class="card-panel-description">
                         <div class="card-panel-text">文章数</div>
-                        <div class="card-panel-num">1224</div>
+                        <div class="card-panel-num" id="articals"></div>
                     </div>
                 </div>
             </div>
@@ -15,7 +15,7 @@
                     <i class="iconfont icon-tongji"></i>
                     <div class="card-panel-description">
                         <div class="card-panel-text">粉丝数</div>
-                        <div class="card-panel-num">1224</div>
+                        <div class="card-panel-num" id="fans">1224</div>
                     </div>
                 </div>
             </div>
@@ -23,8 +23,8 @@
                 <div class="wxmp-card">
                     <i class="iconfont icon-daohang-gongzhonghaotixing"></i>
                     <div class="card-panel-description">
-                        <div class="card-panel-text">昨日访问</div>
-                        <div class="card-panel-num">1224</div>
+                        <div class="card-panel-text">昨日</div>
+                        <div class="card-panel-num" id="readcount">1224</div>
                     </div>
                 </div>
             </div>
@@ -528,15 +528,15 @@
         var tableObj = table.render({
             id: 'list_table',
             elem: '#list_table',
-            url: '/views/test/data/data.json',
+            url: '/msgnews/list',
             align: "center",
             cols: [[ //表头
                 {type: 'numbers'},
                 {field: 'title', title: '标题', width: 150, align: 'center',},
-                {field: 'content', title: '消息描述', align: 'center',},
+                {field: 'brief', title: '描述', align: 'center',},
                 {
                     field: 'lock', title: '操作', width: 150, align: 'center', templet: function (d) {
-                    return '<a class="font-primary2" href="#">查看</a>';
+                    return '<a class="font-primary2" href="' + d.url + '">查看</a>';
                 }, unresize: true, align: 'center'
                 }
             ]],
