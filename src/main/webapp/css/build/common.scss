@@ -734,3 +734,16 @@
   filter: Alpha(opacity=1);
   cursor: pointer;
 }
+
+.layui-tab-item{
+  position: relative;
+}
+.search-chart{
+  width: 100%;
+  text-align: right;
+  position: absolute;
+  top: 0;
+  z-index: 999;
+  padding: 10px 10px;
+  box-sizing: border-box;
+}

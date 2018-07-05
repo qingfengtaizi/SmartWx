@@ -29,21 +29,6 @@
                 </div>
             </div>
         </div>
-        <div class="layui-tab-item layui-show">
-            <!--搜索框-->
-            <div class="layui-form-item wxmp-search" id="search_form1">
-                <input type="hidden" name="start" id="start">
-                <input type="hidden" name="end" id="end">
-                <div class="layui-inline" style="width: 250px">
-                    <input type="text" class="layui-input" id="workbench_time" placeholder="选择上传日期">
-                    <i class="iconfont icon-rili"></i>
-                </div>
-                <div class="layui-inline">
-                    <button class="layui-btn btn-primary" id="search1">搜索</button>
-                </div>
-
-            </div>
-        </div>
         <div class="layui-tab" lay-filter="cudeType">
             <ul class="layui-tab-title">
                 <li class="layui-this" data-type="getusersummary">关注变化</li>
@@ -53,6 +38,15 @@
             </ul>
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
+                    <!--搜索框-->
+                    <div class="layui-form-item wxmp-search search-chart" id="search_form1">
+                        <input type="hidden" name="start" id="start1">
+                        <input type="hidden" name="end" id="end1">
+                        <div class="layui-inline" style="width: 250px">
+                            <input type="text" class="layui-input" id="workbench_time1" placeholder="选择上传日期">
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
                     <div class="chart-content">
                         <div class="chart" id="chart1">
 
@@ -60,6 +54,15 @@
                     </div>
                 </div>
                 <div class="layui-tab-item">
+                    <!--搜索框-->
+                    <div class="layui-form-item wxmp-search search-chart" id="search_form2">
+                        <input type="hidden" name="start" id="start2">
+                        <input type="hidden" name="end" id="end2">
+                        <div class="layui-inline" style="width: 250px">
+                            <input type="text" class="layui-input" id="workbench_time2" placeholder="选择上传日期">
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
                     <div class="chart-content">
                         <div class="chart" id="chart2">
 
@@ -67,6 +70,15 @@
                     </div>
                 </div>
                 <div class="layui-tab-item">
+                    <!--搜索框-->
+                    <div class="layui-form-item wxmp-search search-chart" id="search_form3">
+                        <input type="hidden" name="start" id="start3">
+                        <input type="hidden" name="end" id="end3">
+                        <div class="layui-inline" style="width: 250px">
+                            <input type="text" class="layui-input" id="workbench_time3" placeholder="选择上传日期">
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
                     <div class="chart-content">
                         <div class="chart" id="chart3">
 
@@ -74,6 +86,15 @@
                     </div>
                 </div>
                 <div class="layui-tab-item">
+                    <!--搜索框-->
+                    <div class="layui-form-item wxmp-search search-chart" id="search_form4">
+                        <input type="hidden" name="start" id="start4">
+                        <input type="hidden" name="end" id="end4">
+                        <div class="layui-inline" style="width: 250px">
+                            <input type="text" class="layui-input" id="workbench_time4" placeholder="选择上传日期">
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
                     <div class="chart-content">
                         <div class="chart" id="chart4">
 
@@ -101,24 +122,80 @@
         var element = layui.element;
         // tab 切换
         element.on('tab(cudeType)', function (data) {
-            var tp = $(this).attr("data-type");
-            var end = $("#end").val();
-            var start = $("#start").val();
-            dataCube(data.index + 1, tp, start, end);
+//            var tp = $(this).attr("data-type");
+//            var end = $("#end").val();
+//            var start = $("#start").val();
+//            dataCube(data.index + 1, tp, start, end);
             $(window).trigger("resize");
         });
+
+
         //日期选择
         laydate.render({
-            elem: '#workbench_time',
+            elem: '#workbench_time1',
             range: true,
             done: function (value, date, endDate) {
                 if (value) {
-                    $("#list_form input[name='start']").val(value.substring(0, 10));
-                    $("#list_form input[name='end']").val(value.substring(13));
+                    $("#start1").val(value.substring(0, 10));
+                    $("#end1").val(value.substring(13));
                 } else {
-                    $("#list_form input[name='start']").val(moment().add(-7, 'day').format("YYYY-MM-DD"));
-                    $("#list_form input[name='end']").val(moment().add(-1, 'day').format("YYYY-MM-DD"));
+                    $("#start1").val(moment().add(-7, 'day').format("YYYY-MM-DD"));
+                    $("#end1").val(moment().add(-1, 'day').format("YYYY-MM-DD"));
                 }
+                var end = $("#end1").val();
+                var start = $("#start1").val();
+                dataCube(1, "getusersummary", start, end);
+            }
+        });
+        //日期选择
+        laydate.render({
+            elem: '#workbench_time2',
+            range: true,
+            done: function (value, date, endDate) {
+                if (value) {
+                    $("#start2").val(value.substring(0, 10));
+                    $("#end2").val(value.substring(13));
+                } else {
+                    $("#start2").val(moment().add(-7, 'day').format("YYYY-MM-DD"));
+                    $("#end2").val(moment().add(-1, 'day').format("YYYY-MM-DD"));
+                }
+                var end = $("#end2").val();
+                var start = $("#start2").val();
+                dataCube(2, "getusercumulate", start, end);
+            }
+        });
+        //日期选择
+        laydate.render({
+            elem: '#workbench_time3',
+            range: true,
+            done: function (value, date, endDate) {
+                if (value) {
+                    $("#start3").val(value.substring(0, 10));
+                    $("#end3").val(value.substring(13));
+                } else {
+                    $("#start3").val(moment().add(-3, 'day').format("YYYY-MM-DD"));
+                    $("#end3").val(moment().add(-1, 'day').format("YYYY-MM-DD"));
+                }
+                var end = $("#end3").val();
+                var start = $("#start3").val();
+                dataCube(3, "getuserread", start, end);
+            }
+        });
+        //日期选择
+        laydate.render({
+            elem: '#workbench_time4',
+            range: true,
+            done: function (value, date, endDate) {
+                if (value) {
+                    $("#start4").val(value.substring(0, 10));
+                    $("#end4").val(value.substring(13));
+                } else {
+                    $("#start4").val(moment().add(-7, 'day').format("YYYY-MM-DD"));
+                    $("#end4").val(moment().add(-1, 'day').format("YYYY-MM-DD"));
+                }
+                var end = $("#end4").val();
+                var start = $("#start4").val();
+                dataCube(4, "getusershare", start, end);
             }
         });
         // 折线图
@@ -157,7 +234,7 @@
                     },
                     success: function (result) {
                         layer.close(load);
-                        console.log(result);;;;;;;;;;;;;;;;
+                        console.log(result);
                         if (result.success) {
                             if (index == 1) {
                                 var xAxisData = Array();//x轴数据
@@ -169,7 +246,7 @@
                                         xAxisData.push(el.ref_date);
                                         seriesData1.push(el.new_user);
                                         seriesData2.push(el.cancel_user);
-                                        var jz = (el.new_user - el.cancel_user) >= 0 ? (el.new_user - el.cancel_user) : 0;;;;;;;;;;;;;;;;
+                                        var jz = (el.new_user - el.cancel_user) >= 0 ? (el.new_user - el.cancel_user) : 0;
                                         seriesData3.push(jz);
                                     });
                                 }
@@ -188,7 +265,7 @@
                                         left: 30,
                                         right: 50,
                                         bottom: 20,
-                                        top: 30,
+                                        top: 60,
                                         containLabel: true
                                     },
                                     tooltip: {
@@ -267,7 +344,7 @@
                                         left: 30,
                                         right: 50,
                                         bottom: 20,
-                                        top: 30,
+                                        top: 60,
                                         containLabel: true
                                     },
                                     legend: {
@@ -312,7 +389,7 @@
                                         left: 30,
                                         right: 50,
                                         bottom: 20,
-                                        top: 30,
+                                        top: 60,
                                         containLabel: true
                                     },
                                     tooltip: {
@@ -387,7 +464,7 @@
                                         left: 30,
                                         right: 50,
                                         bottom: 20,
-                                        top: 30,
+                                        top: 60,
                                         containLabel: true
                                     },
                                     tooltip: {
