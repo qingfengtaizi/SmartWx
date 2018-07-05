@@ -193,19 +193,19 @@ public class WxApi {
      * 设置群发速度-POST
      */
     public static final String MASS_SPEED_SET="https://api.weixin.qq.com/cgi-bin/message/mass/speed/set?access_token=%s";
-    
+
     /**
      * ###统计分析相关接口
      */
     /**
      * 获取用户增减数据-7d-POST
      */
-    public static final String GET_USER_SUMMARY="https://api.weixin.qq.com/datacube/getusersummary?access_token=%s";
+    public static final String GET_USER_SUMMARY="	https://api.weixin.qq.com/datacube/getusersummary?access_token=%s";
     /**
      * 获取累计用户数据-7d-POST
      */
-    public static final String GET_USER_CUMULATE="https://api.weixin.qq.com/datacube/getusercumulate?access_token=%s";
-    
+    public static final String GET_USER_CUMULATE="	https://api.weixin.qq.com/datacube/getusercumulate?access_token=%s";
+
     /**
      * 获取图文群发每日数据-1d-POST
      */
@@ -230,7 +230,7 @@ public class WxApi {
      * 获取图文分享转发分时数据-1d-POST
      */
     public static final String GET_ARTICLE_SHAREHOUR="https://api.weixin.qq.com/datacube/getusersharehour?access_token=%s";
-    
+
     /**
      * 获取消息发送概况数据-7d-POST
      */
@@ -259,7 +259,7 @@ public class WxApi {
      * 获取消息发送分布月数据-30d-POST
      */
     public static final String GET_UPSTREAM_MSGDISTMONTH="https://api.weixin.qq.com/datacube/getupstreammsgdistmonth?access_token=%s";
-    
+
     /**
      * 获取接口分析数据-30d-POST
      */

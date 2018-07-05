@@ -605,7 +605,7 @@ public class WxApiCtrl extends BaseCtrl{
 		return code;
 	}
 	
-	
+
 	/**
 	 * 高级群发-图文消息|
 	 * @param mediaId
