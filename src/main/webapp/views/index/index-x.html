@@ -1,13 +1,14 @@
 <div class="fsh-rightPanel wxmp-index" >
     <div class="layui-anim layui-anim-upbit">
-        <blockquote class="layui-elem-quote layui-bg-blue" style="border: 0;">
+        <blockquote class="layui-elem-quote layui-bg-red" style="border: 0;">
             <p>
-                感谢您使用SmartWx，SmartWx正在不断完善中，可以向我们提出宝贵的建议或意见，SmartWx的成长需要大家的支持。
+                我们的全新后台管理系统1.0版本，已成功上线，有需要的请请点击下方的【联系我】.
+                <a href="https://www.smartwx.info"  style="color: #fff;text-decoration: underline;">访问官网</a>
             </p>
         </blockquote>
         <blockquote class="layui-elem-quote layui-bg-red hide" id="index-update" style="border: 0;">
             <p>
-                系统已升级，请升级管理员权限，否则将无法进入管理员管理界面，
+                系统已升级，请升级本系统，我们将持续问您提供安全保障。
                 <a href="https://gitee.com/qingfengtaizi/wxmp"  style="color: #fff;text-decoration: underline;">马上升级</a>
             </p>
         </blockquote>
@@ -16,13 +17,13 @@
                 <div class="panel panel-default" style="min-height: 249px;">
                     <div class="panel-heading">简介</div>
                     <div class="panel-body">
-                        基于SmartWx，SmartWx是一款基于JAVA企业级平台研发的微信公众号管理系统，
-                        依托企业级JAVA的高效、安全、稳定等优势，开创国内JAVA版开源微信公众号管理系统先河。
-                        数据库使用MYSQL，全部源代码开放，官方网址：
+                        基于开源SmartWx，SmartAdmin是一款基于JAVA企业级平台研发的后台管理系统，
+                        我们依旧秉持简单实用至上的原则，代码采用极简化，更适合二次开发。此次1.0版本包括 用户管理，角色管理，机构管理，资源管理，字典管理等功能
+                        官方网址：
                         <p class="text-center" style="margin-top: 50px;">
                             <a class="layui-btn btn-primary" href="http://wpa.qq.com/msgrd?v=3&uin=794890569&site=qq&menu=yes" target="_blank">
                                 <i class="iconfont icon-qq"></i>联系我</a>
-                            <a class="layui-btn layui-btn-warm" href="http://www.webcsn.com" target="_blank">
+                            <a class="layui-btn layui-btn-warm" href="https://www.smartwx.info" target="_blank">
                                 <i class="iconfont icon-shouye"></i>访问官网</a>
                             <a class="layui-btn btn-primary" href="https://github.com/qingfengtaizi/wxmp-web" target="_blank">
                                 <i class="iconfont icon-github"></i>Github</a>
@@ -234,6 +235,18 @@
                             <li class="layui-timeline-item">
                                 <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
                                 <div class="layui-timeline-content layui-text">
+                                    <h3 class="layui-timeline-title">7月6日</h3>
+                                    <p>
+                                        SmartAdmin 1.0 已成功上线。
+                                        <br>从SmartWx开始，我们的脚步，从未停下，后台管理系统，我们已经开始了，接下来我们会做的更多
+                                        <br>纵然当今，管理系统泛滥，请相信我们的初衷，我们已然在路上 <i class="layui-icon"></i>
+                                        <br>在此我依然要特表感谢我的两位朋友（排名不分先后顺序）：<em>zhaoqingfu</em>   <em>哥本哈根的小哥</em>
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="layui-timeline-item">
+                                <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                                <div class="layui-timeline-content layui-text">
                                     <h3 class="layui-timeline-title">4月15日</h3>
                                     <p>
                                         SmartWx 2.0 的一切准备工作似乎都已到位。
@@ -322,25 +335,5 @@
                 }
             });
         }
-
-//        $(".managerAddBtn").click(function () {
-//            $.ajax({
-//                url: "${managePath}/config/managerAdd/",
-//                type: "post",
-//                data: {
-//                    name: "${loginUser.name}"
-//                },
-//                cache: false,
-//                dataType: "json",
-//                timeout: 5000,
-//                error: function () {
-//                    layer.msg("请求失败")
-//                },
-//                success: function (res) {
-//                    layer.msg(res.message);
-//                }
-//            });
-//        });
-
     });
 </script>
