@@ -1,4 +1,4 @@
-<div class="fsh-rightPanel">
+<div class="fsh-rightPanel" style="background: #e9edf6;">
     <div class="layui-anim layui-anim-upbit">
         <div class="layui-row wxmp-card-wrap">
             <div class="layui-col-md4">
@@ -15,7 +15,7 @@
                     <i class="iconfont icon-tongji"></i>
                     <div class="card-panel-description">
                         <div class="card-panel-text">粉丝数</div>
-                        <div class="card-panel-num" id="fans">1224</div>
+                        <div class="card-panel-num" id="fans"></div>
                     </div>
                 </div>
             </div>
@@ -24,7 +24,7 @@
                     <i class="iconfont icon-daohang-gongzhonghaotixing"></i>
                     <div class="card-panel-description">
                         <div class="card-panel-text">昨日</div>
-                        <div class="card-panel-num" id="readcount">1224</div>
+                        <div class="card-panel-num" id="readcount"></div>
                     </div>
                 </div>
             </div>
@@ -106,7 +106,7 @@
 
         <div>
             <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                <legend>最新文章</legend>
+                <legend id="doc_title">最新文章</legend>
             </fieldset>
             <div style="padding: 10px;background: #fff;border-radius: 5px;">
                 <table id="list_table" class="layui-hide" lay-filter="mainList"></table>
@@ -359,6 +359,11 @@
                                         animationEasing: 'cubicInOut'
                                     }]
                                 });
+                                if(!$("#fans").hasClass("load") && result.data.list.length>0){
+                                    $("#fans").text(result.data.list[result.data.list.length-1].cumulate_user);;;;;;
+//                                    numberHandle($("#fans").text(result.data.list[result.data.list.length-1].cumulate_user));
+                                    $("#fans").addClass("load");
+                                }
                             } else if (index == 3) {
                                 var xAxisData = Array();//x轴数据
                                 var seriesData1 = Array();//图文页阅读人数
@@ -373,6 +378,11 @@
                                         seriesData3.push(el.add_to_fav_user);
                                         seriesData4.push(el.add_to_fav_count);
                                     });
+                                }
+                                if(!$("#readcount").hasClass("load") && result.data.list.length>0){
+                                    $("#readcount").text(result.data.list[result.data.list.length-1].int_page_read_count);;;;;;
+//                                    numberHandle($("#readcount").text(result.data.list[result.data.list.length-1].int_page_read_count));
+                                    $("#readcount").addClass("load");
                                 }
                                 chart3.setOption({
                                     title: {
@@ -437,7 +447,6 @@
                                         animationEasing: 'quadraticOut'
                                     }]
                                 });
-
                             } else if (index == 4) {
                                 var xAxisData = Array();//x轴数据
                                 var seriesData1 = Array();//分享人数
@@ -510,9 +519,25 @@
 
         }
 
-        $(".card-panel-num").each(function () {
-            var $this = $(this);
+//        $(".card-panel-num").each(function () {
+//            var $this = $(this);
+//            var num = parseFloat($this.text()) || 0;
+//            var now = 0, step = parseInt(num / 60);
+//            var i = setInterval(function () {
+//                if (now < num) {
+//                    $this.text(now);
+//                } else {
+//                    $this.text(num);
+//                    clearInterval(i);
+//                }
+//                now += step;
+//            }, 20);
+//        });
+
+        function numberHandle(ele){
+            var $this = ele;
             var num = parseFloat($this.text()) || 0;
+            debugger;;;;;;
             var now = 0, step = parseInt(num / 60);
             var i = setInterval(function () {
                 if (now < num) {
@@ -523,24 +548,36 @@
                 }
                 now += step;
             }, 20);
-        });
+        }
 
-        var tableObj = table.render({
-            id: 'list_table',
-            elem: '#list_table',
+        $.ajax({
             url: '/msgnews/list',
-            align: "center",
-            cols: [[ //表头
-                {type: 'numbers'},
-                {field: 'title', title: '标题', width: 150, align: 'center',},
-                {field: 'brief', title: '描述', align: 'center',},
-                {
-                    field: 'lock', title: '操作', width: 150, align: 'center', templet: function (d) {
-                    return '<a class="font-primary2" href="' + d.url + '">查看</a>';
-                }, unresize: true, align: 'center'
+            type: 'POST',
+            async: false,
+            dataType: 'json',
+            success: function (result) {
+                if (result.success && result.data) {
+                    $("#articals").text(result.page.total);
+//                    numberHandle($("#articals").text(result.page.total));
+                    table.render({
+                        id: 'list_table',
+                        elem: '#list_table',
+                        align: "center",
+                        cols: [[ //表头
+                            {type: 'numbers'},
+                            {field: 'title', title: '标题', width: 150, align: 'center',},
+                            {field: 'brief', title: '描述', align: 'center',},
+                            {
+                                field: 'lock', title: '操作', width: 150, align: 'center', templet: function (d) {
+                                return '<a class="font-primary2" href="' + d.url + '" target="_blank">查看</a>';
+                            }, unresize: true, align: 'center'
+                            }
+                        ]],
+                        data:result.data,
+                        page: false
+                    });
                 }
-            ]],
-            page: false
+            }
         });
     })
 </script>
