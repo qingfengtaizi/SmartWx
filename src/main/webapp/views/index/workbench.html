@@ -1,4 +1,4 @@
-<div class="fsh-rightPanel">
+<div class="fsh-rightPanel" style="background: #e9edf6;">
     <div class="layui-anim layui-anim-upbit">
         <div class="layui-row wxmp-card-wrap">
             <div class="layui-col-md4">
@@ -6,7 +6,7 @@
                     <i class="iconfont icon-pic"></i>
                     <div class="card-panel-description">
                         <div class="card-panel-text">文章数</div>
-                        <div class="card-panel-num">1224</div>
+                        <div class="card-panel-num" id="articals"></div>
                     </div>
                 </div>
             </div>
@@ -15,7 +15,7 @@
                     <i class="iconfont icon-tongji"></i>
                     <div class="card-panel-description">
                         <div class="card-panel-text">粉丝数</div>
-                        <div class="card-panel-num">1224</div>
+                        <div class="card-panel-num" id="fans"></div>
                     </div>
                 </div>
             </div>
@@ -23,39 +23,78 @@
                 <div class="wxmp-card">
                     <i class="iconfont icon-daohang-gongzhonghaotixing"></i>
                     <div class="card-panel-description">
-                        <div class="card-panel-text">昨日访问</div>
-                        <div class="card-panel-num">1224</div>
+                        <div class="card-panel-text">昨日阅读数</div>
+                        <div class="card-panel-num" id="readcount"></div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="layui-tab" lay-filter="cudeType">
+            <ul class="layui-tab-title">
+                <li class="layui-this" data-type="getusersummary">关注变化</li>
+                <li data-type="getusercumulate">累积关注</li>
+                <li data-type="getuserread">图文统计</li>
+                <li data-type="getusershare">分享转发</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <!--搜索框-->
+                    <div class="layui-form-item wxmp-search search-chart" id="search_form1">
+                        <input type="hidden" name="start" id="start1">
+                        <input type="hidden" name="end" id="end1">
+                        <div class="layui-inline" style="width: 250px">
+                            <input type="text" class="layui-input" id="workbench_time1" placeholder="选择上传日期">
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
+                    <div class="chart-content">
+                        <div class="chart" id="chart1">
 
-        <div class="chart-content">
-            <div class="chart" id="chart1">
-
-            </div>
-        </div>
-        <div class="layui-row" style="margin-left: -20px;margin-right: -20px;">
-            <div class="layui-col-md4">
-                <div style="padding-left: 16px;padding-right: 16px;">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <!--搜索框-->
+                    <div class="layui-form-item wxmp-search search-chart" id="search_form2">
+                        <input type="hidden" name="start" id="start2">
+                        <input type="hidden" name="end" id="end2">
+                        <div class="layui-inline" style="width: 250px">
+                            <input type="text" class="layui-input" id="workbench_time2" placeholder="选择上传日期">
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
                     <div class="chart-content">
                         <div class="chart" id="chart2">
 
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="layui-col-md4">
-                <div style="padding-left: 16px;padding-right: 16px;">
+                <div class="layui-tab-item">
+                    <!--搜索框-->
+                    <div class="layui-form-item wxmp-search search-chart" id="search_form3">
+                        <input type="hidden" name="start" id="start3">
+                        <input type="hidden" name="end" id="end3">
+                        <div class="layui-inline" style="width: 250px">
+                            <input type="text" class="layui-input" id="workbench_time3" placeholder="选择上传日期">
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
                     <div class="chart-content">
                         <div class="chart" id="chart3">
 
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="layui-col-md4">
-                <div style="padding-left: 16px;padding-right: 16px;">
+                <div class="layui-tab-item">
+                    <!--搜索框-->
+                    <div class="layui-form-item wxmp-search search-chart" id="search_form4">
+                        <input type="hidden" name="start" id="start4">
+                        <input type="hidden" name="end" id="end4">
+                        <div class="layui-inline" style="width: 250px">
+                            <input type="text" class="layui-input" id="workbench_time4" placeholder="选择上传日期">
+                            <i class="iconfont icon-rili"></i>
+                        </div>
+                    </div>
                     <div class="chart-content">
                         <div class="chart" id="chart4">
 
@@ -64,9 +103,10 @@
                 </div>
             </div>
         </div>
+
         <div>
             <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                <legend>最新文章</legend>
+                <legend id="doc_title">最新文章</legend>
             </fieldset>
             <div style="padding: 10px;background: #fff;border-radius: 5px;">
                 <table id="list_table" class="layui-hide" lay-filter="mainList"></table>
@@ -75,271 +115,469 @@
     </div>
 </div>
 <script>
-    layui.use(['layer',"table"], function () {
+    layui.use(["laydate", 'layer', "table"], function () {
+        var laydate = layui.laydate;
         var layer = layui.layer;
         var table = layui.table;
-        $(".card-panel-num").each(function () {
-            var $this=$(this);
-            var num=parseFloat($this.text()) || 0;
-            var now=0,step=parseInt(num/60);
-            var i=setInterval(function () {
-                if(now<num){
+        var element = layui.element;
+        // tab 切换
+        element.on('tab(cudeType)', function (data) {
+//            var tp = $(this).attr("data-type");
+//            var end = $("#end").val();
+//            var start = $("#start").val();
+//            dataCube(data.index + 1, tp, start, end);
+            $(window).trigger("resize");
+        });
+
+
+        //日期选择
+        laydate.render({
+            elem: '#workbench_time1',
+            range: true,
+            done: function (value, date, endDate) {
+                if (value) {
+                    $("#start1").val(value.substring(0, 10));
+                    $("#end1").val(value.substring(13));
+                } else {
+                    $("#start1").val(moment().add(-7, 'day').format("YYYY-MM-DD"));
+                    $("#end1").val(moment().add(-1, 'day').format("YYYY-MM-DD"));
+                }
+                var end = $("#end1").val();
+                var start = $("#start1").val();
+                dataCube(1, "getusersummary", start, end);
+            }
+        });
+        //日期选择
+        laydate.render({
+            elem: '#workbench_time2',
+            range: true,
+            done: function (value, date, endDate) {
+                if (value) {
+                    $("#start2").val(value.substring(0, 10));
+                    $("#end2").val(value.substring(13));
+                } else {
+                    $("#start2").val(moment().add(-7, 'day').format("YYYY-MM-DD"));
+                    $("#end2").val(moment().add(-1, 'day').format("YYYY-MM-DD"));
+                }
+                var end = $("#end2").val();
+                var start = $("#start2").val();
+                dataCube(2, "getusercumulate", start, end);
+            }
+        });
+        //日期选择
+        laydate.render({
+            elem: '#workbench_time3',
+            range: true,
+            done: function (value, date, endDate) {
+                if (value) {
+                    $("#start3").val(value.substring(0, 10));
+                    $("#end3").val(value.substring(13));
+                } else {
+                    $("#start3").val(moment().add(-3, 'day').format("YYYY-MM-DD"));
+                    $("#end3").val(moment().add(-1, 'day').format("YYYY-MM-DD"));
+                }
+                var end = $("#end3").val();
+                var start = $("#start3").val();
+                dataCube(3, "getuserread", start, end);
+            }
+        });
+        //日期选择
+        laydate.render({
+            elem: '#workbench_time4',
+            range: true,
+            done: function (value, date, endDate) {
+                if (value) {
+                    $("#start4").val(value.substring(0, 10));
+                    $("#end4").val(value.substring(13));
+                } else {
+                    $("#start4").val(moment().add(-7, 'day').format("YYYY-MM-DD"));
+                    $("#end4").val(moment().add(-1, 'day').format("YYYY-MM-DD"));
+                }
+                var end = $("#end4").val();
+                var start = $("#start4").val();
+                dataCube(4, "getusershare", start, end);
+            }
+        });
+        // 折线图
+        var chart1 = echarts.init($("#chart1")[0], 'macarons');
+        var chart2 = echarts.init($("#chart2")[0], 'macarons');
+        var chart3 = echarts.init($("#chart3")[0], 'macarons');
+        var chart4 = echarts.init($("#chart4")[0], 'macarons');
+
+        $(window).resize(function () {
+            chart1.resize();
+            chart2.resize();
+            chart3.resize();
+            chart4.resize();
+        });
+
+        //增加初始化数据
+        dataCube(1, "getusersummary", moment().add(-7, 'day').format("YYYY-MM-DD"), moment().add(-1, 'day').format("YYYY-MM-DD"));
+        dataCube(2, "getusercumulate", moment().add(-7, 'day').format("YYYY-MM-DD"), moment().add(-1, 'day').format("YYYY-MM-DD"));
+        dataCube(3, "getuserread", moment().add(-3, 'day').format("YYYY-MM-DD"), moment().add(-1, 'day').format("YYYY-MM-DD"));
+        dataCube(4, "getusershare", moment().add(-7, 'day').format("YYYY-MM-DD"), moment().add(-1, 'day').format("YYYY-MM-DD"));
+        /**
+         index:对应的tab索引
+         type:统计分析类别
+         start:开始时间
+         end:结束时间
+         **/
+        function dataCube(index, type, start, end) {
+            if (index && type && start && end) {
+                var load = layer.load();
+                $.ajax({
+                    url: '/wxapi/dataCube',
+                    data: {
+                        type: type,
+                        start: start,
+                        end: end
+                    },
+                    success: function (result) {
+                        layer.close(load);
+                        console.log(result);
+                        if (result.success) {
+                            if (index == 1) {
+                                var xAxisData = Array();//x轴数据
+                                var seriesData1 = Array();//新增
+                                var seriesData2 = Array();//取消
+                                var seriesData3 = Array();//净增
+                                if (result.data.list.length > 0) {
+                                    $.each(result.data.list, function (i, el) {
+                                        xAxisData.push(el.ref_date);
+                                        seriesData1.push(el.new_user);
+                                        seriesData2.push(el.cancel_user);
+                                        var jz = (el.new_user - el.cancel_user) >= 0 ? (el.new_user - el.cancel_user) : 0;
+                                        seriesData3.push(jz);
+                                    });
+                                }
+                                chart1.setOption({
+                                    title: {
+                                        text: '用户增减数据'
+                                    },
+                                    xAxis: {
+                                        data: xAxisData,
+                                        boundaryGap: false,
+                                        axisTick: {
+                                            show: false
+                                        }
+                                    },
+                                    grid: {
+                                        left: 30,
+                                        right: 50,
+                                        bottom: 20,
+                                        top: 60,
+                                        containLabel: true
+                                    },
+                                    tooltip: {
+                                        trigger: 'axis',
+                                        axisPointer: {
+                                            type: 'cross'
+                                        },
+                                        padding: [5, 10]
+                                    },
+                                    yAxis: {
+                                        axisTick: {
+                                            show: false
+                                        }
+                                    },
+                                    legend: {
+                                        data: ['新增关注', '取消关注', '净增人数']
+                                    },
+                                    series: [{
+                                        name: '新增关注',
+                                        smooth: true,
+                                        type: 'line',
+                                        data: seriesData1,
+                                        animationDuration: 2800,
+                                        animationEasing: 'cubicInOut'
+                                    }, {
+                                        name: '取消关注',
+                                        smooth: true,
+                                        type: 'line',
+                                        data: seriesData2,
+                                        animationDuration: 2800,
+                                        animationEasing: 'quadraticOut'
+                                    }, {
+                                        name: '净增人数',
+                                        smooth: true,
+                                        type: 'line',
+                                        data: seriesData3,
+                                        animationDuration: 2800,
+                                        animationEasing: 'quadraticOut'
+                                    }]
+                                });
+                            } else if (index == 2) {
+                                var xAxisData = Array();//x轴数据
+                                var seriesData = Array();//新增
+                                if (result.data.list.length > 0) {
+                                    $.each(result.data.list, function (i, el) {
+                                        xAxisData.push(el.ref_date);
+                                        seriesData.push(el.cumulate_user);
+                                    });
+                                }
+                                chart2.setOption({
+                                    title: {
+                                        text: '累计关注数'
+                                    },
+                                    xAxis: {
+                                        type: 'category',
+                                        data: xAxisData,
+                                        boundaryGap: false,
+                                        axisTick: {
+                                            show: false
+                                        }
+                                    },
+                                    tooltip: {
+                                        trigger: 'axis',
+                                        axisPointer: {
+                                            type: 'cross'
+                                        },
+                                        padding: [5, 10]
+                                    },
+                                    yAxis: {
+                                        type: 'value',
+                                        axisTick: {
+                                            show: false
+                                        }
+                                    },
+                                    grid: {
+                                        left: 30,
+                                        right: 50,
+                                        bottom: 20,
+                                        top: 60,
+                                        containLabel: true
+                                    },
+                                    legend: {
+                                        data: ['累计人数']
+                                    },
+                                    series: [{
+                                        name: '累计人数',
+                                        smooth: true,
+                                        type: 'line',
+                                        data: seriesData,
+                                        animationDuration: 2800,
+                                        animationEasing: 'cubicInOut'
+                                    }]
+                                });
+                                if(!$("#fans").hasClass("load") && result.data.list.length>0){
+                                    $("#fans").text(result.data.list[result.data.list.length-1].cumulate_user);;;;;;
+//                                    numberHandle($("#fans").text(result.data.list[result.data.list.length-1].cumulate_user));
+                                    $("#fans").addClass("load");
+                                }
+                            } else if (index == 3) {
+                                var xAxisData = Array();//x轴数据
+                                var seriesData1 = Array();//图文页阅读人数
+                                var seriesData2 = Array();//图文页阅读次数
+                                var seriesData3 = Array();//收藏人数
+                                var seriesData4 = Array();//收藏次数
+                                if (result.data.list.length > 0) {
+                                    $.each(result.data.list, function (i, el) {
+                                        xAxisData.push(el.ref_date);
+                                        seriesData1.push(el.int_page_read_user);
+                                        seriesData2.push(el.int_page_read_count);
+                                        seriesData3.push(el.add_to_fav_user);
+                                        seriesData4.push(el.add_to_fav_count);
+                                    });
+                                }
+                                if(!$("#readcount").hasClass("load") && result.data.list.length>0){
+                                    $("#readcount").text(result.data.list[result.data.list.length-1].int_page_read_count);;;;;;
+//                                    numberHandle($("#readcount").text(result.data.list[result.data.list.length-1].int_page_read_count));
+                                    $("#readcount").addClass("load");
+                                }
+                                chart3.setOption({
+                                    title: {
+                                        text: '图文统计数据'
+                                    },
+                                    xAxis: {
+                                        data: xAxisData,
+                                        boundaryGap: false,
+                                        axisTick: {
+                                            show: false
+                                        }
+                                    },
+                                    grid: {
+                                        left: 30,
+                                        right: 50,
+                                        bottom: 20,
+                                        top: 60,
+                                        containLabel: true
+                                    },
+                                    tooltip: {
+                                        trigger: 'axis',
+                                        axisPointer: {
+                                            type: 'cross'
+                                        },
+                                        padding: [5, 10]
+                                    },
+                                    yAxis: {
+                                        axisTick: {
+                                            show: false
+                                        }
+                                    },
+                                    legend: {
+                                        data: ['阅读人数', '阅读次数', '收藏人数', '收藏次数']
+                                    },
+                                    series: [{
+                                        name: '阅读人数',
+                                        smooth: true,
+                                        type: 'line',
+                                        data: seriesData1,
+                                        animationDuration: 2800,
+                                        animationEasing: 'cubicInOut'
+                                    }, {
+                                        name: '阅读次数',
+                                        smooth: true,
+                                        type: 'line',
+                                        data: seriesData2,
+                                        animationDuration: 2800,
+                                        animationEasing: 'quadraticOut'
+                                    }, {
+                                        name: '收藏人数',
+                                        smooth: true,
+                                        type: 'line',
+                                        data: seriesData3,
+                                        animationDuration: 2800,
+                                        animationEasing: 'quadraticOut'
+                                    }, {
+                                        name: '收藏次数',
+                                        smooth: true,
+                                        type: 'line',
+                                        data: seriesData4,
+                                        animationDuration: 2800,
+                                        animationEasing: 'quadraticOut'
+                                    }]
+                                });
+                            } else if (index == 4) {
+                                var xAxisData = Array();//x轴数据
+                                var seriesData1 = Array();//分享人数
+                                var seriesData2 = Array();//分享次数
+                                if (result.data.list.length > 0) {
+                                    $.each(result.data.list, function (i, el) {
+                                        xAxisData.push(el.ref_date);
+                                        seriesData1.push(el.share_user);
+                                        seriesData2.push(el.share_count);
+                                    });
+                                }
+                                chart4.setOption({
+                                    title: {
+                                        text: '分享统计数据'
+                                    },
+                                    xAxis: {
+                                        data: xAxisData,
+                                        boundaryGap: false,
+                                        axisTick: {
+                                            show: false
+                                        }
+                                    },
+                                    grid: {
+                                        left: 30,
+                                        right: 50,
+                                        bottom: 20,
+                                        top: 60,
+                                        containLabel: true
+                                    },
+                                    tooltip: {
+                                        trigger: 'axis',
+                                        axisPointer: {
+                                            type: 'cross'
+                                        },
+                                        padding: [5, 10]
+                                    },
+                                    yAxis: {
+                                        axisTick: {
+                                            show: false
+                                        }
+                                    },
+                                    legend: {
+                                        data: ['分享人数', '分享次数']
+                                    },
+                                    series: [{
+                                        name: '分享人数',
+                                        smooth: true,
+                                        type: 'line',
+                                        data: seriesData1,
+                                        animationDuration: 2800,
+                                        animationEasing: 'cubicInOut'
+                                    }, {
+                                        name: '分享次数',
+                                        smooth: true,
+                                        type: 'line',
+                                        data: seriesData2,
+                                        animationDuration: 2800,
+                                        animationEasing: 'quadraticOut'
+                                    }]
+                                });
+                            }
+                        } else {
+                            layer.msg(result.msg);
+                        }
+                    }
+                })
+            } else {
+                //layer.msg("时间区间数据为空！！！");
+            }
+
+        }
+
+//        $(".card-panel-num").each(function () {
+//            var $this = $(this);
+//            var num = parseFloat($this.text()) || 0;
+//            var now = 0, step = parseInt(num / 60);
+//            var i = setInterval(function () {
+//                if (now < num) {
+//                    $this.text(now);
+//                } else {
+//                    $this.text(num);
+//                    clearInterval(i);
+//                }
+//                now += step;
+//            }, 20);
+//        });
+
+        function numberHandle(ele){
+            var $this = ele;
+            var num = parseFloat($this.text()) || 0;
+            debugger;;;;;;
+            var now = 0, step = parseInt(num / 60);
+            var i = setInterval(function () {
+                if (now < num) {
                     $this.text(now);
-                }else{
+                } else {
                     $this.text(num);
                     clearInterval(i);
                 }
-                now+=step;
-            },20);
-        });
+                now += step;
+            }, 20);
+        }
 
-        var tableObj = table.render({
-            id: 'list_table',
-            elem: '#list_table',
-            url: '/views/test/data/data.json',
-            align: "center",
-            cols: [[ //表头
-                {type: 'numbers'},
-                {field: 'title', title: '标题', width: 150, align: 'center',},
-                {field: 'content', title: '消息描述', align: 'center',},
-                {
-                    field: 'lock', title: '操作', width: 150, align: 'center', templet: function (d) {
-                    return '<a class="font-primary2" href="#">查看</a>';
-                }, unresize: true, align: 'center'
+        $.ajax({
+            url: '/msgnews/list',
+            type: 'POST',
+            async: false,
+            dataType: 'json',
+            success: function (result) {
+                if (result.success && result.data) {
+                    $("#articals").text(result.page.total);
+//                    numberHandle($("#articals").text(result.page.total));
+                    table.render({
+                        id: 'list_table',
+                        elem: '#list_table',
+                        align: "center",
+                        cols: [[ //表头
+                            {type: 'numbers'},
+                            {field: 'title', title: '标题', width: 150, align: 'center',},
+                            {field: 'brief', title: '描述', align: 'center',},
+                            {
+                                field: 'lock', title: '操作', width: 150, align: 'center', templet: function (d) {
+                                return '<a class="font-primary2" href="' + d.url + '" target="_blank">查看</a>';
+                            }, unresize: true, align: 'center'
+                            }
+                        ]],
+                        data:result.data,
+                        page: false
+                    });
                 }
-            ]],
-            page:false
-        });
-        util.loadJs([
-            "/js/plugin/echarts/echarts.min.js",
-            "/js/plugin/echarts/macarons.js"
-        ],function () {
-
-            var expectedData=[100, 120, 161, 134, 105, 160, 165];
-            var actualData=[120, 82, 91, 154, 162, 140, 145];
-
-            // 折线图
-            var chart1= echarts.init($("#chart1")[0], 'macarons');
-            chart1.setOption({
-                xAxis: {
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    boundaryGap: false,
-                    axisTick: {
-                        show: false
-                    }
-                },
-                grid: {
-                    left: 10,
-                    right: 10,
-                    bottom: 20,
-                    top: 30,
-                    containLabel: true
-                },
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                        type: 'cross'
-                    },
-                    padding: [5, 10]
-                },
-                yAxis: {
-                    axisTick: {
-                        show: false
-                    }
-                },
-                legend: {
-                    data: ['expected', 'actual']
-                },
-                series: [{
-                    name: 'expected', itemStyle: {
-                        normal: {
-                            color: '#FF005A',
-                            lineStyle: {
-                                color: '#FF005A',
-                                width: 2
-                            }
-                        }
-                    },
-                    smooth: true,
-                    type: 'line',
-                    data: expectedData,
-                    animationDuration: 2800,
-                    animationEasing: 'cubicInOut'
-                },
-                    {
-                        name: 'actual',
-                        smooth: true,
-                        type: 'line',
-                        itemStyle: {
-                            normal: {
-                                color: '#3888fa',
-                                lineStyle: {
-                                    color: '#3888fa',
-                                    width: 2
-                                },
-                                areaStyle: {
-                                    color: '#f3f8ff'
-                                }
-                            }
-                        },
-                        data: actualData,
-                        animationDuration: 2800,
-                        animationEasing: 'quadraticOut'
-                    }]
-            });
-
-            // 雷达图
-            var chart2= echarts.init($("#chart2")[0], 'macarons');
-            chart2.setOption({
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: { // 坐标轴指示器，坐标轴触发有效
-                        type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-                    }
-                },
-                radar: {
-                    radius: '66%',
-                    center: ['50%', '42%'],
-                    splitNumber: 8,
-                    splitArea: {
-                        areaStyle: {
-                            color: 'rgba(127,95,132,.3)',
-                            opacity: 1,
-                            shadowBlur: 45,
-                            shadowColor: 'rgba(0,0,0,.5)',
-                            shadowOffsetX: 0,
-                            shadowOffsetY: 15
-                        }
-                    },
-                    indicator: [
-                        { name: 'Sales', max: 10000 },
-                        { name: 'Administration', max: 20000 },
-                        { name: 'Information Techology', max: 20000 },
-                        { name: 'Customer Support', max: 20000 },
-                        { name: 'Development', max: 20000 },
-                        { name: 'Marketing', max: 20000 }
-                    ]
-                },
-                legend: {
-                    left: 'center',
-                    bottom: '10',
-                    data: ['Allocated Budget', 'Expected Spending', 'Actual Spending']
-                },
-                series: [{
-                    type: 'radar',
-                    symbolSize: 0,
-                    areaStyle: {
-                        normal: {
-                            shadowBlur: 13,
-                            shadowColor: 'rgba(0,0,0,.2)',
-                            shadowOffsetX: 0,
-                            shadowOffsetY: 10,
-                            opacity: 1
-                        }
-                    },
-                    data: [
-                        {
-                            value: [5000, 7000, 12000, 11000, 15000, 14000],
-                            name: 'Allocated Budget'
-                        },
-                        {
-                            value: [4000, 9000, 15000, 15000, 13000, 11000],
-                            name: 'Expected Spending'
-                        },
-                        {
-                            value: [5500, 11000, 12000, 15000, 12000, 12000],
-                            name: 'Actual Spending'
-                        }
-                    ],
-                    animationDuration: 3000
-                }]
-            });
-
-            //饼图
-            var chart3= echarts.init($("#chart3")[0], 'macarons');
-            chart3.setOption({
-                tooltip: {
-                    trigger: 'item',
-                    formatter: '{a} <br/>{b} : {c} ({d}%)'
-                },
-                legend: {
-                    left: 'center',
-                    bottom: '10',
-                    data: ['Industries', 'Technology', 'Forex', 'Gold', 'Forecasts']
-                },
-                calculable: true,
-                series: [
-                    {
-                        name: 'WEEKLY WRITE ARTICLES',
-                        type: 'pie',
-                        roseType: 'radius',
-                        radius: [15, 95],
-                        center: ['50%', '38%'],
-                        data: [
-                            { value: 320, name: 'Industries' },
-                            { value: 240, name: 'Technology' },
-                            { value: 149, name: 'Forex' },
-                            { value: 100, name: 'Gold' },
-                            { value: 59, name: 'Forecasts' }
-                        ],
-                        animationEasing: 'cubicInOut',
-                        animationDuration: 2600
-                    }
-                ]
-            });
-
-            // 柱状图
-            var chart4= echarts.init($("#chart4")[0], 'macarons');
-            chart4.setOption({
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: { // 坐标轴指示器，坐标轴触发有效
-                        type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-                    }
-                },
-                grid: {
-                    top: 10,
-                    left: '2%',
-                    right: '2%',
-                    bottom: '3%',
-                    containLabel: true
-                },
-                xAxis: [{
-                    type: 'category',
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    axisTick: {
-                        alignWithLabel: true
-                    }
-                }],
-                yAxis: [{
-                    type: 'value',
-                    axisTick: {
-                        show: false
-                    }
-                }],
-                series: [{
-                    name: 'pageA',
-                    type: 'bar',
-                    stack: 'vistors',
-                    barWidth: '60%',
-                    data: [79, 52, 200, 334, 390, 330, 220],
-                    animationDuration:6000
-                }, {
-                    name: 'pageB',
-                    type: 'bar',
-                    stack: 'vistors',
-                    barWidth: '60%',
-                    data: [80, 52, 200, 334, 390, 330, 220],
-                    animationDuration:6000
-                }, {
-                    name: 'pageC',
-                    type: 'bar',
-                    stack: 'vistors',
-                    barWidth: '60%',
-                    data: [30, 52, 200, 334, 390, 330, 220],
-                    animationDuration:6000
-                }]
-            });
+            }
         });
     })
 </script>

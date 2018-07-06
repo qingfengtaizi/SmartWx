@@ -1,5 +1,5 @@
 /*
- * FileName：XSSRequestWrapper.java
+ * FileName：XSSRequestWrapper.java 
  * <p>
  * Copyright (c) 2017-2020, <a href="http://www.webcsn.com">hermit (794890569@qq.com)</a>.
  * <p>
@@ -14,7 +14,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
+ * 
  */
 package com.wxmp.core.interceptor;
 
@@ -28,16 +28,13 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import com.wxmp.core.util.XSSUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.entity.ContentType;
 import org.apache.log4j.Logger;
-
-import com.wxmp.core.util.XSSUtils;
-
-
 
 /**
  * XSS攻击解决方案 
@@ -62,9 +59,7 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
         int count = values.length;
         String[] encodedValues = new String[count];
         for (int i = 0; i < count; i++) {
-        	logger.info("ParameterValues start==========: "+i+"=>"+values[i]);
             encodedValues[i] = stripXSS(values[i]);
-            logger.info("ParameterValues end==========: "+i+"=>"+encodedValues[i]);
         }
         return encodedValues;
     }
@@ -72,7 +67,6 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
     @Override
     public String getParameter(String parameter) {
         String value = super.getParameter(parameter);
-        logger.info("Parameter==========:"+value);
         if (StringUtils.isBlank(value)) {
             return super.getParameter(parameter);
         }
@@ -82,7 +76,6 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
     @Override
     public String getHeader(String name) {
         String value = super.getHeader(name);
-        logger.info("Header==========:"+value);
         if (StringUtils.isBlank(value)) {
             return super.getHeader(name);
         }
@@ -95,9 +88,7 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
         for (String key : parameters.keySet()) {
             String[] values = parameters.get(key);
             for (int i = 0; i < values.length; i++) {
-            	logger.info("getParameterMap==========:"+values[i]);
                 values[i] = stripXSS(values[i]);
-                logger.info("getParameterMap  end ==========:"+values[i]);
             }
             map.put(key, values);
         }
@@ -175,7 +166,7 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
 //            value=XSSUtils.escapeForLang(value);
             value=StringEscapeUtils.escapeSql(value);//
             //针对图文部分，这里要放开
-            value=XSSUtils.cleanXSS(value);
+            value= XSSUtils.cleanXSS(value);
         }
         return value;
     }

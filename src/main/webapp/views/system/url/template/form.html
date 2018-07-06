@@ -6,12 +6,16 @@
 <h2>
     将URL和Token填写到公众平台开发者中心中，即可升级成为开发者账号
 </h2>
+<div class="layui-btn-container" style="text-align: right">
+    <a class="layui-btn" href="/views/index.html#/index/addaccount/add"><i class="iconfont icon-add"></i>添加公众号</a>
+</div>
 <input name="id" type="hidden"  value="<%=data.account.id%>">
 <div class="layui-form-item">
     <label class="layui-form-label"><i>*</i>公众号名称</label>
     <div class="layui-input-block">
         <input type="text" name="name" lay-verify="required" placeholder="公众号名称" class="layui-input" value="<%=data.account.name%>">
     </div>
+
 </div>
 <div class="layui-form-item">
     <label class="layui-form-label"><i>*</i>公众号原始ID</label>
@@ -21,14 +25,16 @@
 </div>
 <div class="layui-form-item">
     <label class="layui-form-label">URL</label>
-    <div class="layui-input-block">
-        <input type="text" name="url" readonly placeholder="请输入url" class="layui-input" value="<%=data.account.url%>">
+    <button class="layui-btn btn-copy" style="float: right" data-clipboard-action="copy" data-clipboard-target="#copy_url"><i class="icon-fuzhi iconfont"></i>复制</button>
+    <div class="layui-input-block" style="margin-right: 100px;">
+        <input id="copy_url" type="text" name="url" readonly placeholder="请输入url" class="layui-input" value="<%=data.account.url%>">
     </div>
 </div>
 <div class="layui-form-item">
     <label class="layui-form-label">Token</label>
-    <div class="layui-input-block">
-        <input type="text" name="token" readonly placeholder="Token" class="layui-input" value="<%=data.account.token%>">
+    <button class="layui-btn btn-copy" style="float: right" data-clipboard-action="copy" data-clipboard-target="#copy_token"><i class="icon-fuzhi iconfont"></i>复制</button>
+    <div class="layui-input-block" style="margin-right: 100px;">
+        <input id="copy_token" type="text" name="token" readonly placeholder="Token" class="layui-input" value="<%=data.account.token%>">
     </div>
 </div>
 <div class="layui-form-item">
@@ -55,5 +61,17 @@
     <span class="tips">(回复图文消息条数)</span>
 </div>
 <script>
-    layui.form.render();
+    $(function () {
+        layui.form.render();
+        util.loadJs("/js/plugin/clipboard/clipboard.min.js",function () {
+            var clipboard = new ClipboardJS('.btn-copy');
+            clipboard.on('success', function(e) {
+                layer.msg("复制成功！");
+            });
+
+            clipboard.on('error', function(e) {
+                layer.msg("复制失败！");
+            });
+        });
+    });
 </script>
