@@ -14,7 +14,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
+ * 
  */
 package com.wxmp.wxcms.service.impl;
 
@@ -34,8 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
-import static com.wxmp.core.util.DateUtilOld.COMMON_FULL;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -54,7 +52,7 @@ public class MsgNewsServiceImpl implements MsgNewsService{
 	private MsgBaseDao baseDao;
 
 	@Resource
-	private MsgNewsDao entityDao;
+	private MsgNewsDao msgNewsDao;
 
 	@Resource
 	private MediaFilesDao mediaFilesDao;
@@ -63,15 +61,15 @@ public class MsgNewsServiceImpl implements MsgNewsService{
 	private MsgArticleDao articleDao;
 
 	public MsgNews getById(String id){
-		return entityDao.getById(id);
+		return msgNewsDao.getById(id);
 	}
 
 	public List<MsgNews> listForPage(MsgNews searchEntity){
-		return entityDao.listForPage(searchEntity);
+		return msgNewsDao.listForPage(searchEntity);
 	}
 	
 	public List<MsgNews> getWebNewsListByPage(MsgNews searchEntity){
-		return entityDao.getWebNewsListByPage(searchEntity);
+		return msgNewsDao.getWebNewsListByPage(searchEntity);
 	}
 
 	
@@ -84,7 +82,7 @@ public class MsgNewsServiceImpl implements MsgNewsService{
 		baseDao.add(base);
 		
 		entity.setBaseId(base.getId());
-		entityDao.add(entity);
+		msgNewsDao.add(entity);
 		
 		if(StringUtils.isEmpty(entity.getFromurl())){
 			entity.setUrl(entity.getUrl()+"?id="+entity.getId());
@@ -92,7 +90,7 @@ public class MsgNewsServiceImpl implements MsgNewsService{
 			entity.setUrl("");
 		}
 		
-		entityDao.updateUrl(entity);
+		msgNewsDao.updateUrl(entity);
 	}
 
 	public void update(MsgNews entity){
@@ -106,24 +104,24 @@ public class MsgNewsServiceImpl implements MsgNewsService{
 			entity.setUrl("");
 		}
 		
-		entityDao.update(entity);
+		msgNewsDao.update(entity);
 	}
 
 	public void delete(MsgNews entity){
 		MsgBase base = new MsgBase();
 		base.setId(entity.getBaseId());
 		articleDao.deleteByBatch(entity.getId().intValue());
-		entityDao.delete(entity);
+		msgNewsDao.delete(entity);
 		baseDao.delete(entity);
 		
 	}
 
 	public List<MsgNews> getRandomMsg(String inputCode,Integer num){
-		return entityDao.getRandomMsgByContent(inputCode,num);
+		return msgNewsDao.getRandomMsgByContent(inputCode,num);
 	}
 	
 	public MsgNews getByBaseId(String baseid){
-		return entityDao.getByBaseId(baseid);
+		return msgNewsDao.getByBaseId(baseid);
 	}
 
 	/* (non-Javadoc)
@@ -133,7 +131,7 @@ public class MsgNewsServiceImpl implements MsgNewsService{
 	public int updateMediaId(MsgNews entity) {
 		int n = 0 ;
 		try {
-			entityDao.updateMediaId(entity);
+			msgNewsDao.updateMediaId(entity);
 			n = 1;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -156,7 +154,7 @@ public class MsgNewsServiceImpl implements MsgNewsService{
 	    	//保存图文信息
 			news.setCreateTime(new Date());
 			news.setBaseId(base.getId());
-			Integer newId= this.entityDao.addNews(news);
+			Integer newId= this.msgNewsDao.addNews(news);
 	    	MsgArticle art = new MsgArticle();
 			art.setAuthor(news.getAuthor());
 			art.setContent(news.getDescription());
@@ -228,7 +226,7 @@ public class MsgNewsServiceImpl implements MsgNewsService{
 	 */
 	@Override
 	public List<MsgNews> getMsgNewsList() {
-		return this.entityDao.getMsgNewsList();
+		return this.msgNewsDao.getMsgNewsList();
 	}
 
 	/* (non-Javadoc)
@@ -250,7 +248,7 @@ public class MsgNewsServiceImpl implements MsgNewsService{
 			news.setBaseId(base.getId());
 			news.setCreateTime(new Date());
 	    	//保存图文信息
-	    	this.entityDao.addNews(news);
+	    	this.msgNewsDao.addNews(news);
 	    	for (int i = 0; i < articles.size(); i++) {
 	    		MsgArticle article=articles.get(i);
 	    		article.setNewsId(news.getId().intValue());
@@ -288,7 +286,7 @@ public class MsgNewsServiceImpl implements MsgNewsService{
 				one.setBaseId(base.getId());
 				one.setCreateTime(date);
 				//保存图文信息
-				this.entityDao.addNews(one);
+				this.msgNewsDao.addNews(one);
 			}
 			//添加到素材表中
 			MediaFiles entity = new MediaFiles();
@@ -310,7 +308,7 @@ public class MsgNewsServiceImpl implements MsgNewsService{
 	@Override
 	public void deleteNews(String mediaId) {
 		this.mediaFilesDao.deleteByMediaId(mediaId);
-		this.entityDao.deleteByMediaId(mediaId);
+		this.msgNewsDao.deleteByMediaId(mediaId);
 	}
 
 	/* (non-Javadoc)修改单图文
@@ -336,7 +334,7 @@ public class MsgNewsServiceImpl implements MsgNewsService{
 		int arId=articleDao.getByNewsId(news.getId().intValue()).get(0).getArId();
 		art.setArId(arId);
 		articleDao.update(art);
-		this.entityDao.updateNews(news);
+		this.msgNewsDao.updateNews(news);
 	}
 
 	/* (non-Javadoc)
@@ -345,7 +343,7 @@ public class MsgNewsServiceImpl implements MsgNewsService{
 	@Override
 	public List<MsgNews> getByMediaId(String mediaId) {
 		// TODO Auto-generated method stub
-		return this.entityDao.getByMediaId(mediaId);
+		return this.msgNewsDao.getByMediaId(mediaId);
 	}
 
 

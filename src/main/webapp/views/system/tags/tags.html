@@ -71,7 +71,7 @@
                 btn: ['确认', '取消'] //按钮
             }, function () {
                 $.ajax({
-                    url: '/userTag/syncUserTagList',
+                    url: '/wxapi/syncUserTagList',
                     success: function (result) {
                         if (result.success) {
                             layer.msg("同步成功");

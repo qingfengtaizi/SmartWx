@@ -14,7 +14,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
+ * 
  */
 package com.wxmp.wxcms.ctrl;
 
@@ -35,7 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.alibaba.fastjson.JSONObject;
 import com.wxmp.core.common.BaseCtrl;
 import com.wxmp.core.util.AjaxResult;
-import com.wxmp.core.util.ImgTypeUtil;
+import com.wxmp.core.util.MediaTypeUtil;
 import com.wxmp.core.util.PropertiesUtil;
 import com.wxmp.wxcms.domain.ImgResource;
 import com.wxmp.wxcms.service.ImgResourceService;
@@ -72,7 +72,7 @@ public class ImgResourceCtrl extends BaseCtrl {
 		String trueName = file.getOriginalFilename();
 		//文件后缀名
 		String ext = FilenameUtils.getExtension(trueName);
-		if (!ImgTypeUtil.isImg(ext)) {
+		if (!MediaTypeUtil.isImg(ext)) {
 			obj.put("message", "图片格式不正确");
 		}
 
@@ -85,7 +85,6 @@ public class ImgResourceCtrl extends BaseCtrl {
 		String fileName = System.currentTimeMillis() + new Random().nextInt(10000) + "." + ext;
 		//图片上传路径
 		String resURL = PropertiesUtil.getString("res.upload.url").toString();
-		System.out.println("图片上传路径：===== " + resURL);
 		String filePath = request.getSession().getServletContext().getRealPath("/");
 
 		//读取配置文上传件的路径
@@ -150,11 +149,9 @@ public class ImgResourceCtrl extends BaseCtrl {
 		String ext = FilenameUtils.getExtension(trueName);
 
 		//系统生成的文件名
-		String fileName = file.getOriginalFilename();
-		fileName = System.currentTimeMillis() + new Random().nextInt(10000) + "." + ext;
+		String fileName = System.currentTimeMillis() + new Random().nextInt(10000) + "." + ext;
 		//图片上传路径
 		String resURL = PropertiesUtil.getString("res.upload.url").toString();
-		System.out.println("图片上传路径：===== " + resURL);
 		String filePath = request.getSession().getServletContext().getRealPath("/");
 
 		//读取配置文上传件的路径

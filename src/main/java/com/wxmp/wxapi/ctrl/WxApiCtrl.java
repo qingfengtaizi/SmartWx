@@ -14,7 +14,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
+ * 
  */
 package com.wxmp.wxapi.ctrl;
 
@@ -31,7 +31,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.wxmp.core.common.EchartsData;
+import com.wxmp.core.common.Series;
 import com.wxmp.core.exception.WxErrorException;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -207,6 +210,23 @@ public class WxApiCtrl extends BaseCtrl{
 		return AjaxResult.failure();
 	}
 
+	/**
+	 * 同步用户标签列表
+	 * @return
+	 */
+	@RequestMapping(value = "/syncUserTagList")
+	@ResponseBody
+	public AjaxResult syncUserTagList() throws WxErrorException {
+		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
+		if(mpAccount != null){
+			boolean flag = myService.syncUserTagList(mpAccount);
+			if(flag){
+				return AjaxResult.success();
+			}
+		}
+		return AjaxResult.failure();
+	}
+
 	//根据用户的ID更新用户信息
 	@RequestMapping(value = "/syncAccountFans")
 	@ResponseBody
@@ -322,7 +342,6 @@ public class WxApiCtrl extends BaseCtrl{
 			openidList.add(openid);
 			//根据openid群发文本消息
 			JSONObject result = WxApiClient.massSendTextByOpenIds(openidList, content, mpAccount);
-			
 			try {
 				if(result.getIntValue("errcode") != 0){
 					response.getWriter().write("send failure");
@@ -376,7 +395,7 @@ public class WxApiCtrl extends BaseCtrl{
 
 			tplMsg.setUrl("https://www.smartwx.info");
 			Map<String, String> dataMap = new HashMap<String, String>();
-			dataMap.put("first", "多公众号管理开源平台");
+			dataMap.put("first", "smartadmin管理后台已经上线，欢迎吐槽");
 			dataMap.put("keyword1", "时间：" + DateUtil.changeDateTOStr(new Date()));
 			dataMap.put("keyword2", "码云平台地址：https://gitee.com/qingfengtaizi/wxmp");
 			dataMap.put("keyword3", "github平台地址：https://github.com/qingfengtaizi/wxmp-web");
@@ -389,55 +408,6 @@ public class WxApiCtrl extends BaseCtrl{
 		return AjaxResult.success();
 	}
 	
-	/**
-	 * 获取js ticket
-	 * @param request
-	 * @param url 
-	 * @return
-	 */
-	@RequestMapping(value = "/jsTicket")
-	@ResponseBody
-	public String jsTicket(HttpServletRequest request, String url) throws WxErrorException  {
-		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
-		String jsTicket = WxApiClient.getJSTicket(mpAccount);
-		WxSign sign = new WxSign(mpAccount.getAppid(),jsTicket,url);//sha1签名得到signature
-		
-		
-		JsonView jv = new JsonView();
-		jv.setData(sign);
-		
-		return jv.toString();
-	}
-	
-	/**
-	 * js支付
-	 * 支付授权目录一定要写对，否则js一直会提示 {chooseWXPay:fail}
-	 * 支付授权目录指的是调用jsapi支付页面的文件目录（且一定要以/结尾）
-	 * 现在jsapi支付的支付页面是为http://www.yjydt.cn/wxweb/jssdk.jsp
-	 * 故支付授权目录为http://www.yjydt.cn/wxweb/
-	 */
-	@RequestMapping(value = "/pay")
-	@ResponseBody
-	public String jsPay(HttpServletRequest request, String openid, String timestamp, String nonceStr) {
-		log.info("-------------------------------------jsPay-----<0>-------------------openid:"+openid);		
-		log.info("-------------------------------------jsPay-----<1>-------------------timestamp:"+timestamp);	
-		//String openid = WxMemoryCacheClient.getOpenid(request.getSession().getId());//先从缓存中获取openid
-		
-		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
-		log.info("-------------------------------------jsPay-----<2>-------------------mpAccount:"+mpAccount.getAppid());		
-		
-	/*	      timestamp: 1414723227,
-	      nonceStr: 'noncestr',
-	      package: 'addition=action_id%3dgaby1234%26limit_pay%3d&bank_type=WX&body=innertest&fee_type=1&input_charset=GBK&notify_url=http%3A%2F%2F120.204.206.246%2Fcgi-bin%2Fmmsupport-bin%2Fnotifypay&out_trade_no=1414723227818375338&partner=1900000109&spbill_create_ip=127.0.0.1&total_fee=1&sign=432B647FE95C7BF73BCD177CEECBEF8D',
-	      paySign: 'bd5b1933cda6e9548862944836a9b52e8c9a2b69'*/
-		
-		JsonView jv = new JsonView();
-		jv.setData(WxApiClient.getWSJSPayPara(mpAccount,openid,timestamp,nonceStr));
-		
-		return jv.toString();
-	}
-
-
 	/**
 	 * 微信异步返回
 	 * @param requestBodyXml
@@ -635,7 +605,7 @@ public class WxApiCtrl extends BaseCtrl{
 		return code;
 	}
 	
-	
+
 	/**
 	 * 高级群发-图文消息|
 	 * @param mediaId
@@ -715,20 +685,18 @@ public class WxApiCtrl extends BaseCtrl{
 		return code;
 	}
 	/**
-	 * 用户统计分析
+	 * 统计分析
 	 * @param start 开始时间
 	 * @param end 结束时间
 	 * @return
 	 * @throws WxErrorException
 	 */
-	@RequestMapping(value = "/userDataCube")
+	@RequestMapping(value = "/dataCube")
 	@ResponseBody
-	public AjaxResult userDataCube(String start,String end) throws WxErrorException  {
-		
+	public AjaxResult dataCube(String type,String start,String end) throws WxErrorException  {
 		MpAccount mpAccount = WxMemoryCacheClient.getMpAccount();//获取缓存中的唯一账号
 		String accessToken = WxApiClient.getAccessToken(mpAccount);
-		JSONObject result = WxApi.getUserSummary(accessToken, start, end);
-		
+		JSONObject result = WxApi.forDataCube(accessToken, type, start, end);
 		return AjaxResult.success(result);
 	}
 }

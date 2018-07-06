@@ -14,7 +14,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
+ * 
  */
 package com.wxmp.wxapi.service;
 
@@ -46,5 +46,7 @@ public interface MyService {
 	
 	//根据openid 获取粉丝，如果没有，同步粉丝
 	public AccountFans getFansByOpenId(String openid,MpAccount mpAccount) throws WxErrorException ;
-	
+
+	//同步服务器的用户标签
+	public boolean syncUserTagList(MpAccount mpAccount)throws WxErrorException ;
 }

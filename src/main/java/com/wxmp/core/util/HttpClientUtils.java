@@ -14,7 +14,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
+ * 
  */
 package com.wxmp.core.util;
 
@@ -250,6 +250,18 @@ public class HttpClientUtils {
         }
 
         return httpPost;
+    }
+
+    /**
+     * 发送 post请求（带文件）
+     *
+     * @param httpUrl
+     *            地址
+     * @param file
+     *            附件,名称和File对应
+     */
+    public static String sendHttpPost(String httpUrl, File file) {
+        return sendHttpPost(httpUrl,  ImmutableMap.of( "media", file), null, null);
     }
 
     /**

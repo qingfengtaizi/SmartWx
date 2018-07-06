@@ -706,3 +706,44 @@
     }
   }
 }
+
+
+// 编辑器
+.layui-layedit-tool .iconfont{
+  position: relative;
+  width: 32px;
+  height: 30px;
+  line-height: 30px;
+  margin: 3px 5px;
+  color: #777;
+  cursor: pointer;
+  border-radius: 2px;
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 18px;
+}
+.layui-layedit-tool .iconfont input {
+  position: absolute;
+  font-size: 0;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: .01;
+  filter: Alpha(opacity=1);
+  cursor: pointer;
+}
+
+.layui-tab-item{
+  position: relative;
+}
+.search-chart{
+  width: 100%;
+  text-align: right;
+  position: absolute;
+  top: 0;
+  z-index: 999;
+  padding: 10px 10px;
+  box-sizing: border-box;
+}

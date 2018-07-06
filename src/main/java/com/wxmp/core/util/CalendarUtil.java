@@ -14,11 +14,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
+ * 
  */
 package com.wxmp.core.util;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -427,7 +428,134 @@ public class CalendarUtil {
 	public static long getTimeInSeconds(){
 		return getTimeInMillis()/1000L;
 	}
-	
+	/**
+	 * 
+	*
+	* @Title: getMonthDay 
+	* @Description: TODO 获取前/后一月的日期 
+	* @param @param date
+	* @param @param operation
+	* @param @return    设定文件 
+	* @return String    返回类型 
+	* @throws
+	 */
+	public static String getMonthDay(String date,String operation){
+		Calendar c = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		int oper=30;
+		if(operation.equals("before")||operation=="before"){
+			oper=-30;
+		}
+		try {
+			c.setTime(sdf.parse(date));
+	        c.add(Calendar.DATE, oper);
+	        Date d = c.getTime();
+			String day = sdf.format(d);
+			return day;
+		} catch (ParseException e) {
+			e.getStackTrace();
+		}
+		return "";
+	}
+	/**
+	 * 
+	*
+	* @Title: getWeekDay 
+	* @Description: TODO 获取前/后一周的日期 
+	* @param @param date
+	* @param @param operation before或after
+	* @param @return    设定文件 
+	* @return String    返回类型 
+	* @throws
+	 */
+	public static String getWeekDay(String date,String operation){
+		Calendar c = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		int oper=7;
+		if(operation.equals("before")||operation=="before"){
+			oper=-7;
+		}
+		try {
+			c.setTime(sdf.parse(date));
+	        c.add(Calendar.DATE, oper);
+	        Date d = c.getTime();
+			String day = sdf.format(d);
+			return day;
+		} catch (ParseException e) {
+			e.getStackTrace();
+		}
+		return "";
+	}
+	/**
+	 * 
+	*
+	* @Title: getDay 
+	* @Description: TODO 获取前/后一天的日期 
+	* @param @param date
+	* @param @param operation
+	* @param @return    设定文件 
+	* @return String    返回类型 
+	* @throws
+	 */
+	public static String getDay(String date,String operation){
+		Calendar c = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		int oper=1;
+		if(operation.equals("before")||operation=="before"){
+			oper=-1;
+		}
+		try {
+			c.setTime(sdf.parse(date));
+	        c.add(Calendar.DATE, oper);
+	        Date d = c.getTime();
+			String day = sdf.format(d);
+			return day;
+		} catch (ParseException e) {
+			e.getStackTrace();
+		}
+		return "";
+	}
+	/**
+	 * 获取某一天的前一天或后一天
+	 * @param date
+	 * @param oper
+	 * @return
+	 */
+	public static String getDay(String date,int oper){
+		Calendar c = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			c.setTime(sdf.parse(date));
+	        c.add(Calendar.DATE, oper);
+	        Date d = c.getTime();
+			String day = sdf.format(d);
+			return day;
+		} catch (ParseException e) {
+			e.getStackTrace();
+		}
+		return "";
+	}
+	/**
+	 * 获取两个时间点的间隔天数
+	 * @param beginDate
+	 * @param endDate
+	 * @return
+	 */
+	public static int dayDiff(String beginDate,String endDate){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		long from;
+		long to;
+		try {
+			
+			from = sdf.parse(beginDate).getTime();
+			to = sdf.parse(endDate).getTime();  
+			int days = (int) ((to - from)/(1000 * 60 * 60 * 24));
+			return days;
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
 	public static void main(String[] args){
 		/*String startTime = "2009-12-14";
 		String endTime = "2010-1-14";
