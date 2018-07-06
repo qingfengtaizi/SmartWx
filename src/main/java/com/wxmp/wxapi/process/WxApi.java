@@ -200,11 +200,11 @@ public class WxApi {
     /**
      * 获取用户增减数据-7d-POST
      */
-    public static final String GET_USER_SUMMARY="	https://api.weixin.qq.com/datacube/getusersummary?access_token=%s";
+    public static final String GET_USER_SUMMARY="https://api.weixin.qq.com/datacube/getusersummary?access_token=%s";
     /**
      * 获取累计用户数据-7d-POST
      */
-    public static final String GET_USER_CUMULATE="	https://api.weixin.qq.com/datacube/getusercumulate?access_token=%s";
+    public static final String GET_USER_CUMULATE="https://api.weixin.qq.com/datacube/getusercumulate?access_token=%s";
 
     /**
      * 获取图文群发每日数据-1d-POST
