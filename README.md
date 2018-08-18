@@ -93,7 +93,7 @@ JAVA开发框架：Spring MVC+Spring+Mybatis
  ## 相关连接
 官方网址：[https://www.smartwx.info](https://www.smartwx.info/)
 
-版主QQ：[794890569](http://wpa.qq.com/msgrd?v=3&uin=794890569&site=qq&menu=yes/)
+版主QQ：[1154808491](http://wpa.qq.com/msgrd?v=3&uin=1154808491&site=qq&menu=yes/)
 
 服务器支持：[http://webcsn.com](http://webcsn.com/)
 
